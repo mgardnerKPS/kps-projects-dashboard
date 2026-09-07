@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KPS Projects Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0ede8;min-height:100vh;color:#1a1a1a;}
+
+/* HEADER */
+.hdr{background:#1a1a2e;color:#fff;padding:1rem 1.5rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.hdr h1{font-size:18px;font-weight:600;letter-spacing:-0.3px;}
+.hdr p{font-size:11px;color:rgba(255,255,255,0.45);margin-top:1px;}
+.hdr-right{display:flex;align-items:center;gap:14px;}
+.od-text{font-size:11px;color:rgba(255,255,255,0.6);}
+.od-text strong{color:#fff;}
+.od-text.warn strong{color:#e9a24d;}
+.od-action{font-size:11px;color:#e97132;font-weight:600;cursor:pointer;user-select:none;}
+.btn-new{background:#e97132;color:#fff;border:none;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.btn-new:active{transform:scale(0.98);}
+.btn-new:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* TOOLBAR */
+.toolbar{max-width:1200px;margin:0 auto;padding:1rem 1.5rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.view-toggle{display:flex;gap:6px;background:#e6e2db;border-radius:10px;padding:3px;}
+.view-btn{padding:7px 16px;font-size:13px;font-weight:600;border:none;border-radius:8px;background:transparent;color:#666;cursor:pointer;}
+.view-btn.on{background:#fff;color:#1a1a2e;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
+.search-box{flex:1;max-width:320px;}
+.search-box input{width:100%;padding:9px 12px;font-size:13px;border:1px solid #e0ddd8;border-radius:10px;background:#fff;}
+.search-box input:focus{outline:none;border-color:#e97132;}
+
+/* BOARD */
+.board{max-width:1200px;margin:0 auto;padding:1.25rem 1.5rem 3rem;display:flex;gap:14px;overflow-x:auto;}
+.col{flex:0 0 260px;display:flex;flex-direction:column;gap:10px;}
+.col-hdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#888;padding:0 4px 4px;display:flex;justify-content:space-between;}
+.col-count{color:#aaa;font-weight:600;}
+.col-body{display:flex;flex-direction:column;gap:8px;min-height:40px;}
+
+.pcard{background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);cursor:pointer;transition:transform 0.1s;border-left:3px solid #e0ddd8;}
+.pcard:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.pcard.stale{border-left-color:#e9a24d;}
+.pcard-name{font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:2px;}
+.pcard-id{font-size:10px;color:#aaa;font-family:ui-monospace,monospace;margin-bottom:8px;}
+.pcard-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+.chip{font-size:10px;padding:3px 8px;border-radius:10px;background:#f0ede8;color:#666;font-weight:600;}
+.pcard-foot{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#999;}
+.pcard-price{font-weight:600;color:#e97132;}
+.pcard-days.stale{color:#c9750f;font-weight:600;}
+.empty-col{font-size:12px;color:#bbb;text-align:center;padding:14px 0;}
+
+/* TABLE */
+.table-wrap{max-width:1200px;margin:0 auto;padding:1.25rem 1.5rem 3rem;}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+th{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:#888;text-align:left;padding:10px 14px;background:#faf9f7;border-bottom:1px solid #f0ede8;cursor:pointer;user-select:none;white-space:nowrap;}
+th:hover{color:#e97132;}
+td{padding:11px 14px;font-size:13px;border-bottom:1px solid #f5f3ef;color:#333;}
+tr:last-child td{border-bottom:none;}
+tr.rowclick{cursor:pointer;}
+tr.rowclick:hover{background:#faf9f7;}
+.stage-pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;background:#f0ede8;color:#666;white-space:nowrap;}
+
+/* EMPTY / LOADING */
+.centered-msg{max-width:1200px;margin:3rem auto;text-align:center;color:#999;font-size:14px;padding:0 1.5rem;}
+.centered-msg .btn-main{display:inline-block;width:auto;margin-top:14px;}
+
+/* BUTTONS (shared) */
+.btn-main{padding:13px 22px;background:#e97132;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;}
+.btn-main:active{transform:scale(0.98);}
+.btn-secondary{padding:13px 22px;background:#fff;color:#555;border:1px solid #e0ddd8;border-radius:12px;font-size:14px;cursor:pointer;}
+
+/* MODAL */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(20,18,30,0.5);z-index:200;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 16px;}
+.modal-backdrop.show{display:flex;}
+.modal{background:#fff;border-radius:16px;max-width:560px;width:100%;padding:1.75rem;margin-bottom:40px;}
+.modal h2{font-size:18px;margin-bottom:4px;}
+.modal .sub{font-size:12px;color:#999;margin-bottom:1.25rem;}
+.field{margin-bottom:0.9rem;}
+.field label{font-size:12px;color:#555;display:block;margin-bottom:5px;font-weight:600;}
+.field input,.field textarea,.field select{width:100%;padding:10px 12px;font-size:14px;border:1px solid #e0ddd8;border-radius:10px;background:#faf9f7;color:#1a1a1a;font-family:inherit;}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#e97132;background:#fff;box-shadow:0 0 0 3px rgba(233,113,50,0.1);}
+.field textarea{resize:vertical;min-height:80px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.hint{font-size:11px;color:#aaa;margin-top:4px;line-height:1.5;}
+.modal-actions{display:flex;gap:10px;margin-top:1.5rem;justify-content:flex-end;}
+.modal-close{position:absolute;}
+.modal-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.x-btn{background:none;border:none;font-size:20px;color:#aaa;cursor:pointer;line-height:1;padding:4px;}
+.modal-status{font-size:12px;margin-top:10px;min-height:16px;}
+.modal-status.err{color:#b3261e;}
+.modal-status.ok{color:#2d6a4f;}
+
+/* DRILL-IN PANEL */
+.panel{background:#fff;border-radius:16px;max-width:640px;width:100%;padding:1.75rem;margin-bottom:40px;}
+.panel-title{font-size:19px;font-weight:700;color:#1a1a2e;}
+.panel-id{font-size:11px;color:#aaa;font-family:ui-monospace,monospace;margin-top:2px;}
+.panel-section{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid #f0ede8;}
+.panel-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#888;margin-bottom:10px;}
+.est-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f5f3ef;}
+.est-row:last-child{border-bottom:none;}
+.est-trade{font-weight:600;font-size:13px;}
+.est-status{font-size:11px;color:#999;margin-top:2px;}
+.est-price{font-weight:600;color:#e97132;font-size:13px;}
+.stage-select select{width:auto;padding:6px 10px;font-size:12px;}
+.link-list a{display:block;font-size:12px;color:#5b7fdb;margin-top:4px;text-decoration:none;}
+.link-list a:hover{text-decoration:underline;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/lib/msal-browser.min.js"></script>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <h1>KPS Projects Dashboard</h1>
+    <p>Every trade, every stage, one board</p>
+  </div>
+  <div class="hdr-right">
+    <div>
+      <div class="od-text" id="odText">Not connected</div>
+      <div class="od-action" id="odAction" onclick="connectKPS()">Connect to KPS App Suite</div>
+    </div>
+    <button class="btn-new" id="btnNewProject" onclick="openNewProjectModal()" disabled>+ New Project</button>
+  </div>
+</div>
+
+<div class="toolbar" id="toolbar" style="display:none">
+  <div class="view-toggle">
+    <button class="view-btn on" id="viewBoardBtn" onclick="setView('board')">Board</button>
+    <button class="view-btn" id="viewTableBtn" onclick="setView('table')">Table</button>
+  </div>
+  <div class="search-box"><input id="searchInput" type="text" placeholder="Search property, project ID, contact…" oninput="renderAll()"/></div>
+</div>
+
+<div id="root">
+  <div class="centered-msg">
+    Sign in with your KPS account to load the Projects board.
+  </div>
+</div>
+
+<!-- NEW PROJECT MODAL -->
+<div class="modal-backdrop" id="newProjectModal">
+  <div class="modal">
+    <div class="modal-top">
+      <div>
+        <h2>New Project</h2>
+        <div class="sub">Paste in what you have from the client email — you can fix anything below before saving.</div>
+      </div>
+      <button class="x-btn" onclick="closeNewProjectModal()">&times;</button>
+    </div>
+
+    <div class="field">
+      <label>Paste email text (optional)</label>
+      <textarea id="npEmailPaste" placeholder="Paste the RFP/client email here — we'll try to pull out a contact name, phone, and email automatically." oninput="tryExtractFromPaste()"></textarea>
+      <div class="hint">Best-effort only — always double check the fields below before saving.</div>
+    </div>
+    <div class="field">
+      <label>Attach the original email or any files that came with it (optional)</label>
+      <input id="npFile" type="file" multiple/>
+    </div>
+
+    <div class="field">
+      <label>Property Name *</label>
+      <input id="npProperty" type="text" placeholder="e.g. Concord Greene" oninput="suggestProjectId()"/>
+    </div>
+    <div class="field">
+      <label>Address</label>
+      <input id="npAddress" type="text" placeholder="Street, City, State"/>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Client Contact Name</label>
+        <input id="npClientName" type="text"/>
+      </div>
+      <div class="field">
+        <label>Client Phone</label>
+        <input id="npClientPhone" type="text"/>
+      </div>
+    </div>
+    <div class="field">
+      <label>Client Email</label>
+      <input id="npClientEmail" type="text"/>
+    </div>
+    <div class="field">
+      <label>Project ID</label>
+      <input id="npProjectId" type="text"/>
+      <div class="hint" id="npIdHint">Auto-suggested from the property name — edit if needed.</div>
+    </div>
+    <div class="field">
+      <label>Notes</label>
+      <textarea id="npNotes" placeholder="Anything else worth flagging for whoever picks this up"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeNewProjectModal()">Cancel</button>
+      <button class="btn-main" id="npSaveBtn" onclick="saveNewProject()">Create Project</button>
+    </div>
+    <div class="modal-status" id="npStatus"></div>
+  </div>
+</div>
+
+<!-- DRILL-IN PANEL -->
+<div class="modal-backdrop" id="drillinModal">
+  <div class="panel" id="drillinContent"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════
+// CONFIG — same shared "KPS App Suite" Azure AD app + site every other KPS
+// app (Roofing Estimator, Field Inspection) already signs into. No new
+// registration, no new consent needed for anyone already using those apps.
+// ══════════════════════════════════════════════════════════════════════════
+const KPS_CONFIG = {
+  clientId:     'cb076a13-5e15-4ae7-80cb-68bdd077aea2',
+  tenantId:     '1979066b-105d-423c-9941-42fcd5ac0752',
+  siteHostname: 'kellyspropertyservices.sharepoint.com',
+  sitePath:     '/sites/KPSAppSuite',
+  listProjects: 'Projects',
+  listEstimates: 'Estimates',
+};
+const GRAPH_SCOPES = ['Sites.ReadWrite.All'];
+
+const STAGES = ['Intake','Estimating','Bidding','Won','Lost','Costing Active','Complete','Archived'];
+const TRADES = ['Roofing','Decks','Siding','Windows','Porches'];
+
+// ── MSAL / GRAPH PLUMBING — same pattern as the Roofing Estimator's KPS
+// Pricing Sync, so anyone already signed into that app is silently signed in
+// here too (same client, same cached account). ──────────────────────────────
+let kpsMsal = null;
+let kpsMsalReady = Promise.resolve();
+if (window.msal) {
+  try {
+    kpsMsal = new msal.PublicClientApplication({
+      auth: {
+        clientId: KPS_CONFIG.clientId,
+        authority: 'https://login.microsoftonline.com/' + KPS_CONFIG.tenantId,
+        redirectUri: window.location.href.split('#')[0].split('?')[0],
+      },
+      cache: { cacheLocation: 'localStorage' },
+    });
+    kpsMsalReady = kpsMsal.initialize().catch(e => { console.error('MSAL initialize failed', e); kpsMsal = null; });
+  } catch (e) { console.error('MSAL init failed', e); kpsMsal = null; }
+}
+
+function setOdStatus(html, warn) {
+  const t = document.getElementById('odText');
+  if (t) { t.innerHTML = html; t.classList.toggle('warn', !!warn); }
+}
+
+async function getGraphToken() {
+  await kpsMsalReady;
+  if (!kpsMsal) throw new Error('MSAL not initialized');
+  let account = kpsMsal.getActiveAccount() || kpsMsal.getAllAccounts()[0];
+  if (!account) {
+    const resp = await kpsMsal.loginPopup({ scopes: GRAPH_SCOPES });
+    kpsMsal.setActiveAccount(resp.account);
+    return resp.accessToken;
+  }
+  try {
+    const res = await kpsMsal.acquireTokenSilent({ scopes: GRAPH_SCOPES, account });
+    return res.accessToken;
+  } catch (e) {
+    const res = await kpsMsal.acquireTokenPopup({ scopes: GRAPH_SCOPES, account });
+    return res.accessToken;
+  }
+}
+
+async function graphFetch(url, token, opts = {}) {
+  const res = await fetch(url, { ...opts, headers: { ...(opts.headers || {}), Authorization: 'Bearer ' + token, ...(opts.body ? {'Content-Type':'application/json'} : {}) } });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error('Graph ' + res.status + ': ' + text.slice(0, 300));
+  }
+  if (res.status === 204) return null;
+  return res.json();
+}
+
+let SITE_ID = null, DRIVE_ID = null, ROOT_ID = null;
+async function getSuiteSite(token) {
+  if (SITE_ID) return { siteId: SITE_ID, driveId: DRIVE_ID, rootId: ROOT_ID };
+  const site = await graphFetch(`https://graph.microsoft.com/v1.0/sites/${KPS_CONFIG.siteHostname}:${KPS_CONFIG.sitePath}`, token);
+  const root = await graphFetch(`https://graph.microsoft.com/v1.0/sites/${site.id}/drive/root?$select=id,parentReference`, token);
+  SITE_ID = site.id; DRIVE_ID = root.parentReference.driveId; ROOT_ID = root.id;
+  return { siteId: SITE_ID, driveId: DRIVE_ID, rootId: ROOT_ID };
+}
+
+async function ensureFolder(token, driveId, parentId, name) {
+  const clean = (name || 'Untitled').replace(/[\\/:*?"<>|]/g, '-').trim() || 'Untitled';
+  const list = await graphFetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${parentId}/children?$select=id,name,folder`, token);
+  const existing = (list.value || []).find(it => it.folder && it.name.toLowerCase() === clean.toLowerCase());
+  if (existing) return existing.id;
+  try {
+    const created = await graphFetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${parentId}/children`, token, {
+      method: 'POST',
+      body: JSON.stringify({ name: clean, folder: {}, '@microsoft.graph.conflictBehavior': 'fail' })
+    });
+    return created.id;
+  } catch (e) {
+    const retryList = await graphFetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${parentId}/children?$select=id,name,folder`, token);
+    const found = (retryList.value || []).find(it => it.folder && it.name.toLowerCase() === clean.toLowerCase());
+    if (found) return found.id;
+    throw e;
+  }
+}
+async function ensurePath(token, driveId, rootId, segments) {
+  let parentId = rootId;
+  for (const seg of segments) parentId = await ensureFolder(token, driveId, parentId, seg);
+  return parentId;
+}
+async function uploadFile(token, driveId, parentId, filename, blob) {
+  const clean = filename.replace(/[\\/:*?"<>|]/g, '-');
+  await graphFetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${parentId}:/${encodeURIComponent(clean)}:/content`,
+    token, { method: 'PUT', headers: { 'Content-Type': blob.type || 'application/octet-stream' }, body: blob });
+}
+
+// ── SharePoint LIST access — Lists are the actual "database" here, separate
+// from the document library used for folders/PDFs above. Every list is
+// looked up by display name once and cached by ID. ─────────────────────────
+const LIST_ID_CACHE = {};
+async function getListId(token, siteId, displayName) {
+  if (LIST_ID_CACHE[displayName]) return LIST_ID_CACHE[displayName];
+  const res = await graphFetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/lists?$filter=displayName eq '${displayName}'&$select=id,displayName`, token);
+  const list = (res.value || [])[0];
+  if (!list) throw new Error(`SharePoint list "${displayName}" not found on the KPS App Suite site — has it been created yet?`);
+  LIST_ID_CACHE[displayName] = list.id;
+  return list.id;
+}
+
+// Pages through every item in a list, expanding fields. Small lists (low
+// hundreds of rows) — a single unpaginated fetch would work today, but this
+// follows @odata.nextLink so it keeps working as the list grows.
+async function listAllItems(token, siteId, listId) {
+  let url = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items?$expand=fields&$top=200`;
+  const out = [];
+  while (url) {
+    const page = await graphFetch(url, token);
+    out.push(...(page.value || []));
+    url = page['@odata.nextLink'] || null;
+  }
+  return out;
+}
+
+async function createListItem(token, siteId, listId, fields) {
+  return graphFetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items`, token, {
+    method: 'POST', body: JSON.stringify({ fields })
+  });
+}
+async function updateListItemFields(token, siteId, listId, itemId, fields) {
+  return graphFetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items/${itemId}/fields`, token, {
+    method: 'PATCH', body: JSON.stringify(fields)
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// APP STATE
+// ══════════════════════════════════════════════════════════════════════════
+let PROJECTS = [];   // [{id (SP item id), fields: {...}}]
+let ESTIMATES = [];  // [{id, fields: {...}}]
+let currentView = 'board';
+let signedIn = false;
+
+async function connectKPS() {
+  setOdStatus('Signing in…');
+  try {
+    const token = await getGraphToken();
+    signedIn = true;
+    document.getElementById('btnNewProject').disabled = false;
+    document.getElementById('odAction').textContent = 'Refresh';
+    document.getElementById('odAction').onclick = loadAll;
+    await loadAll();
+  } catch (err) {
+    console.error('KPS sign-in failed', err);
+    setOdStatus('Sign-in failed — <strong>' + (err.message||err) + '</strong>', true);
+  }
+}
+
+async function loadAll() {
+  setOdStatus('Loading projects…');
+  try {
+    const token = await getGraphToken();
+    const { siteId } = await getSuiteSite(token);
+    const [projListId, estListId] = await Promise.all([
+      getListId(token, siteId, KPS_CONFIG.listProjects),
+      getListId(token, siteId, KPS_CONFIG.listEstimates),
+    ]);
+    const [projItems, estItems] = await Promise.all([
+      listAllItems(token, siteId, projListId),
+      listAllItems(token, siteId, estListId),
+    ]);
+    PROJECTS = projItems;
+    ESTIMATES = estItems;
+    const stamp = new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+    setOdStatus(`Connected · <strong>${PROJECTS.length} projects</strong> · synced ${stamp}`);
+    document.getElementById('toolbar').style.display = 'flex';
+    renderAll();
+  } catch (err) {
+    console.error('Load failed', err);
+    setOdStatus('Load failed — <strong>' + (err.message||err) + '</strong>', true);
+    document.getElementById('root').innerHTML = `<div class="centered-msg">
+      Couldn't load the Projects/Estimates lists.<br/>${(err.message||err)}<br/>
+      <span style="font-size:12px">If these lists don't exist on the KPS App Suite site yet, they need to be created first — see the setup guide.</span>
+    </div>`;
+  }
+}
+
+function projectIdOf(fields) { return fields.Title || ''; }
+
+function estimatesFor(projectId) {
+  return ESTIMATES.filter(e => (e.fields.ProjectID || '') === projectId);
+}
+
+function daysSince(dateStr) {
+  if (!dateStr) return null;
+  const ms = Date.now() - new Date(dateStr).getTime();
+  return Math.floor(ms / 86400000);
+}
+
+function projectSellTotal(projectId) {
+  return estimatesFor(projectId).reduce((s,e)=> s + (parseFloat(e.fields.SellPrice)||0), 0);
+}
+
+function projectTrades(projectId) {
+  const fromEstimates = estimatesFor(projectId).map(e=>e.fields.Trade).filter(Boolean);
+  const stated = (PROJECTS.find(p=>projectIdOf(p.fields)===projectId)?.fields.TradesInvolved||'')
+    .split(',').map(s=>s.trim()).filter(Boolean);
+  return Array.from(new Set([...stated, ...fromEstimates]));
+}
+
+function fmtMoney(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+
+function matchesSearch(p, q) {
+  if (!q) return true;
+  const f = p.fields;
+  const hay = [projectIdOf(f), f.PropertyName, f.Address, f.ClientName, f.ClientEmail].join(' ').toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
+
+function setView(v) {
+  currentView = v;
+  document.getElementById('viewBoardBtn').classList.toggle('on', v==='board');
+  document.getElementById('viewTableBtn').classList.toggle('on', v==='table');
+  renderAll();
+}
+
+function renderAll() {
+  const q = document.getElementById('searchInput')?.value || '';
+  const visible = PROJECTS.filter(p => matchesSearch(p, q));
+  document.getElementById('root').innerHTML = currentView === 'board' ? renderBoard(visible) : renderTable(visible);
+}
+
+function renderBoard(items) {
+  const byStage = {};
+  STAGES.forEach(s => byStage[s] = []);
+  items.forEach(p => {
+    const stage = STAGES.includes(p.fields.CurrentStage) ? p.fields.CurrentStage : 'Intake';
+    byStage[stage].push(p);
+  });
+  return `<div class="board">` + STAGES.map(stage => `
+    <div class="col">
+      <div class="col-hdr"><span>${stage}</span><span class="col-count">${byStage[stage].length}</span></div>
+      <div class="col-body">
+        ${byStage[stage].length ? byStage[stage].map(p=>cardHTML(p)).join('') : '<div class="empty-col">—</div>'}
+      </div>
+    </div>`).join('') + `</div>`;
+}
+
+function cardHTML(p) {
+  const f = p.fields;
+  const pid = projectIdOf(f);
+  const trades = projectTrades(pid);
+  const days = daysSince(p.lastModifiedDateTime);
+  const stale = days !== null && days >= 10;
+  const total = projectSellTotal(pid);
+  return `<div class="pcard${stale?' stale':''}" onclick="openDrillin('${pid.replace(/'/g,"\\'")}')">
+    <div class="pcard-name">${(f.PropertyName||'(untitled)').replace(/</g,'&lt;')}</div>
+    <div class="pcard-id">${pid}</div>
+    <div class="pcard-chips">${trades.map(t=>`<span class="chip">${t}</span>`).join('') || '<span class="chip">no trade yet</span>'}</div>
+    <div class="pcard-foot">
+      <span class="${stale?'pcard-days stale':'pcard-days'}">${days===null?'—':days+'d since update'}</span>
+      ${total>0?`<span class="pcard-price">${fmtMoney(total)}</span>`:''}
+    </div>
+  </div>`;
+}
+
+let sortField = null, sortDir = 1;
+function sortTable(field) {
+  if (sortField === field) sortDir *= -1; else { sortField = field; sortDir = 1; }
+  renderAll();
+}
+
+function renderTable(items) {
+  let rows = items.slice();
+  if (sortField) {
+    rows.sort((a,b)=>{
+      const av = sortField==='sell' ? projectSellTotal(projectIdOf(a.fields)) : (a.fields[sortField]||'');
+      const bv = sortField==='sell' ? projectSellTotal(projectIdOf(b.fields)) : (b.fields[sortField]||'');
+      return (av > bv ? 1 : av < bv ? -1 : 0) * sortDir;
+    });
+  }
+  return `<div class="table-wrap"><table>
+    <thead><tr>
+      <th onclick="sortTable('PropertyName')">Property</th>
+      <th onclick="sortTable('Title')">Project ID</th>
+      <th onclick="sortTable('CurrentStage')">Stage</th>
+      <th>Trades</th>
+      <th onclick="sortTable('sell')">Sell Price</th>
+      <th>Client</th>
+      <th onclick="sortTable('Source')">Source</th>
+    </tr></thead>
+    <tbody>
+      ${rows.map(p=>{
+        const f = p.fields; const pid = projectIdOf(f);
+        return `<tr class="rowclick" onclick="openDrillin('${pid.replace(/'/g,"\\'")}')">
+          <td>${(f.PropertyName||'').replace(/</g,'&lt;')}</td>
+          <td style="font-family:ui-monospace,monospace;font-size:11px">${pid}</td>
+          <td><span class="stage-pill">${f.CurrentStage||'Intake'}</span></td>
+          <td>${projectTrades(pid).join(', ')||'—'}</td>
+          <td>${projectSellTotal(pid)>0?fmtMoney(projectSellTotal(pid)):'—'}</td>
+          <td>${(f.ClientName||'').replace(/</g,'&lt;')}</td>
+          <td>${f.Source||'—'}</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table></div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// DRILL-IN
+// ══════════════════════════════════════════════════════════════════════════
+function openDrillin(projectId) {
+  const p = PROJECTS.find(pr => projectIdOf(pr.fields) === projectId);
+  if (!p) return;
+  const f = p.fields;
+  const ests = estimatesFor(projectId);
+  document.getElementById('drillinContent').innerHTML = `
+    <div class="modal-top">
+      <div>
+        <div class="panel-title">${(f.PropertyName||'(untitled)').replace(/</g,'&lt;')}</div>
+        <div class="panel-id">${projectId}</div>
+      </div>
+      <button class="x-btn" onclick="closeDrillin()">&times;</button>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">Project</div>
+      <div style="font-size:13px;color:#555;line-height:1.7">
+        ${f.Address?`${f.Address}<br/>`:''}
+        ${f.ClientName?`${f.ClientName}`:''} ${f.ClientPhone?` · ${f.ClientPhone}`:''}${f.ClientEmail?` · ${f.ClientEmail}`:''}<br/>
+        <span class="stage-select">Stage:
+          <select onchange="changeStage('${projectId.replace(/'/g,"\\'")}', this.value)">
+            ${STAGES.map(s=>`<option value="${s}" ${s===(f.CurrentStage||'Intake')?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </span>
+      </div>
+      ${f.Notes?`<div style="font-size:12px;color:#888;margin-top:8px;white-space:pre-wrap">${f.Notes.replace(/</g,'&lt;')}</div>`:''}
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">Estimates (${ests.length})</div>
+      ${ests.length ? ests.map(e=>{
+        const ef = e.fields;
+        return `<div class="est-row">
+          <div>
+            <div class="est-trade">${ef.Trade||'—'}</div>
+            <div class="est-status">${ef.InternalStatus||'—'} · ${ef.BidStatus||'—'}</div>
+          </div>
+          <div class="est-price">${ef.SellPrice?fmtMoney(parseFloat(ef.SellPrice)):'—'}</div>
+        </div>`;
+      }).join('') : '<div style="font-size:12px;color:#aaa">No estimate started yet.</div>'}
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">Project Folder</div>
+      <div class="link-list">
+        <a href="https://${KPS_CONFIG.siteHostname}${KPS_CONFIG.sitePath}/Shared%20Documents/Projects/${encodeURIComponent(projectId)}" target="_blank">Open Projects/${projectId} in SharePoint →</a>
+      </div>
+    </div>
+  `;
+  document.getElementById('drillinModal').classList.add('show');
+}
+function closeDrillin(){ document.getElementById('drillinModal').classList.remove('show'); }
+
+async function changeStage(projectId, newStage) {
+  const p = PROJECTS.find(pr => projectIdOf(pr.fields) === projectId);
+  if (!p) return;
+  try {
+    const token = await getGraphToken();
+    const { siteId } = await getSuiteSite(token);
+    const listId = await getListId(token, siteId, KPS_CONFIG.listProjects);
+    await updateListItemFields(token, siteId, listId, p.id, { CurrentStage: newStage });
+    p.fields.CurrentStage = newStage;
+    renderAll();
+  } catch (err) {
+    alert('Could not update stage: ' + (err.message||err));
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// NEW PROJECT
+// ══════════════════════════════════════════════════════════════════════════
+let projectIdDirty = false;
+function slugifyProjectName(str){
+  const clean = (str||'').replace(/[^a-zA-Z0-9]+/g,'');
+  return clean.substring(0,30) || '';
+}
+function suggestProjectId(){
+  if (projectIdDirty) return;
+  const slug = slugifyProjectName(document.getElementById('npProperty').value);
+  document.getElementById('npProjectId').value = nextProjectId(slug);
+}
+// Finds the next unused sequence number for this property/year against
+// whatever's already loaded in PROJECTS, so re-bidding the same property
+// later this year doesn't collide with an existing Project ID.
+function nextProjectId(slug){
+  if (!slug) return '';
+  const year = new Date().getFullYear();
+  const prefix = `${slug}-${year}-`;
+  const used = PROJECTS.map(p => projectIdOf(p.fields)).filter(id => id.startsWith(prefix));
+  let n = 1;
+  while (used.includes(prefix + String(n).padStart(3,'0'))) n++;
+  return prefix + String(n).padStart(3,'0');
+}
+document.addEventListener('input', (e) => {
+  if (e.target && e.target.id === 'npProjectId') projectIdDirty = true;
+});
+
+// Best-effort extraction from pasted email text — never trusted blindly,
+// just saves retyping when it works. Leaves fields alone if nothing found.
+function tryExtractFromPaste(){
+  const text = document.getElementById('npEmailPaste').value;
+  const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  const phoneMatch = text.match(/(\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/);
+  if (emailMatch && !document.getElementById('npClientEmail').value) {
+    document.getElementById('npClientEmail').value = emailMatch[0];
+  }
+  if (phoneMatch && !document.getElementById('npClientPhone').value) {
+    document.getElementById('npClientPhone').value = phoneMatch[0];
+  }
+}
+
+function openNewProjectModal(){
+  ['npEmailPaste','npAddress','npClientName','npClientPhone','npClientEmail','npProjectId','npNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('npProperty').value = '';
+  document.getElementById('npFile').value = '';
+  document.getElementById('npStatus').textContent = '';
+  document.getElementById('npStatus').className = 'modal-status';
+  projectIdDirty = false;
+  document.getElementById('newProjectModal').classList.add('show');
+}
+function closeNewProjectModal(){ document.getElementById('newProjectModal').classList.remove('show'); }
+
+function setNpStatus(msg, cls){
+  const el = document.getElementById('npStatus');
+  el.textContent = msg; el.className = 'modal-status' + (cls?' '+cls:'');
+}
+
+async function saveNewProject(){
+  const property = document.getElementById('npProperty').value.trim();
+  if (!property) { setNpStatus('Property name is required.', 'err'); return; }
+  let projectId = document.getElementById('npProjectId').value.trim();
+  if (!projectId) projectId = nextProjectId(slugifyProjectName(property));
+  if (!projectId) { setNpStatus('Could not generate a Project ID — enter one manually.', 'err'); return; }
+  if (PROJECTS.some(p => projectIdOf(p.fields) === projectId)) {
+    setNpStatus(`Project ID "${projectId}" already exists — pick a different one.`, 'err'); return;
+  }
+
+  const btn = document.getElementById('npSaveBtn');
+  btn.disabled = true;
+  setNpStatus('Creating project…');
+  try {
+    const token = await getGraphToken();
+    const { siteId, driveId, rootId } = await getSuiteSite(token);
+
+    setNpStatus('Setting up the project folder…');
+    const folderId = await ensurePath(token, driveId, rootId, ['Projects', projectId, 'Intake']);
+
+    const emailText = document.getElementById('npEmailPaste').value.trim();
+    if (emailText) {
+      const blob = new Blob([emailText], { type: 'text/plain' });
+      await uploadFile(token, driveId, folderId, 'Client Email.txt', blob);
+    }
+    const fileInput = document.getElementById('npFile');
+    for (const file of fileInput.files) {
+      setNpStatus(`Uploading ${file.name}…`);
+      await uploadFile(token, driveId, folderId, file.name, file);
+    }
+
+    setNpStatus('Saving project record…');
+    const listId = await getListId(token, siteId, KPS_CONFIG.listProjects);
+    const fields = {
+      Title: projectId,
+      PropertyName: property,
+      Address: document.getElementById('npAddress').value.trim(),
+      ClientName: document.getElementById('npClientName').value.trim(),
+      ClientPhone: document.getElementById('npClientPhone').value.trim(),
+      ClientEmail: document.getElementById('npClientEmail').value.trim(),
+      Source: 'Manual',
+      CurrentStage: 'Intake',
+      Notes: document.getElementById('npNotes').value.trim(),
+    };
+    const created = await createListItem(token, siteId, listId, fields);
+    PROJECTS.push({ id: created.id, fields, lastModifiedDateTime: new Date().toISOString() });
+
+    setNpStatus('Created ' + projectId + '.', 'ok');
+    renderAll();
+    setTimeout(closeNewProjectModal, 700);
+  } catch (err) {
+    console.error('Create project failed', err);
+    setNpStatus('Failed: ' + (err.message||err), 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// On load: if already signed in from a previous visit (e.g. just used the
+// Roofing Estimator), connect silently — no popup.
+(async () => {
+  await kpsMsalReady;
+  if (!kpsMsal) return;
+  const account = kpsMsal.getAllAccounts()[0];
+  if (account) { kpsMsal.setActiveAccount(account); connectKPS(); }
+})();
+</script>
+</body>
+</html>
