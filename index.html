@@ -104,8 +104,71 @@ tr.rowclick:hover{background:#faf9f7;}
 .stage-select select{width:auto;padding:6px 10px;font-size:12px;}
 .link-list a{display:block;font-size:12px;color:#5b7fdb;margin-top:4px;text-decoration:none;}
 .link-list a:hover{text-decoration:underline;}
+
+/* COSTING */
+.cost-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;}
+.cost-stat{background:#faf9f7;border-radius:10px;padding:10px 12px;}
+.cost-stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:#999;font-weight:700;margin-bottom:3px;}
+.cost-stat-val{font-size:15px;font-weight:700;color:#1a1a2e;}
+.cost-stat-val.over{color:#b3261e;}
+.cat-block{margin-bottom:10px;}
+.cat-hdr{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:#444;margin-bottom:4px;}
+.cat-hdr .nums{color:#888;font-weight:500;}
+.budget-bar{height:7px;border-radius:4px;background:#f0ede8;overflow:hidden;}
+.budget-bar-fill{height:100%;background:#e97132;border-radius:4px;}
+.budget-bar-fill.over{background:#b3261e;}
+.entry-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid #f5f3ef;font-size:12px;}
+.entry-row:last-child{border-bottom:none;}
+.entry-cat{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:8px;background:#f0ede8;color:#777;margin-bottom:2px;}
+.entry-desc{color:#333;}
+.entry-file{color:#5b7fdb;text-decoration:none;font-size:11px;}
+.entry-amt{font-weight:600;color:#1a1a2e;white-space:nowrap;margin-left:10px;}
+.no-baseline{font-size:12px;color:#aaa;padding:10px 0;}
+.baseline-file{font-size:11px;color:#5b7fdb;text-decoration:none;}
+.btn-small{padding:8px 14px;font-size:12px;background:#1a1a2e;color:#fff;border:none;border-radius:9px;cursor:pointer;font-weight:600;}
+.btn-small.secondary{background:#f0ede8;color:#555;}
+.costing-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+
+/* IMPORT PREVIEW TABLE */
+.import-hdr{display:grid;grid-template-columns:1fr 1fr 2fr 90px;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;color:#999;padding:0 8px 6px;}
+.import-row{display:grid;grid-template-columns:1fr 1fr 2fr 90px;gap:6px;align-items:center;padding:6px 8px;border-radius:8px;margin-bottom:4px;background:#faf9f7;}
+.import-row.needs-review{background:#fdf1e3;}
+.import-row input{width:100%;padding:6px 8px;font-size:12px;border:1px solid #e0ddd8;border-radius:7px;background:#fff;}
+.import-flag{font-size:9px;color:#c9750f;font-weight:700;grid-column:1/5;padding:2px 0 0;}
+.import-amt{font-size:12px;font-weight:600;text-align:right;color:#1a1a2e;}
+
+/* BASELINE PDF-EXTRACT PREVIEW */
+.bl-hdr{display:grid;grid-template-columns:1fr 1fr 90px;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;color:#999;padding:0 8px 6px;}
+.bl-row{display:grid;grid-template-columns:1fr 1fr 90px;gap:6px;align-items:center;padding:6px 8px;border-radius:8px;margin-bottom:4px;background:#faf9f7;}
+.bl-row input{width:100%;padding:6px 8px;font-size:12px;border:1px solid #e0ddd8;border-radius:7px;background:#fff;}
+.bl-amt{font-size:12px;font-weight:600;text-align:right;color:#1a1a2e;}
+.pdf-extract-status{font-size:11px;color:#888;margin:6px 0;}
+.pdf-extract-status.ok{color:#2d6a4f;}
+.pdf-extract-status.err{color:#b3261e;}
+
+/* VARIANCE / DELTA */
+.delta-pos{color:#2d6a4f;font-weight:600;}
+.delta-neg{color:#b3261e;font-weight:600;}
+.rebaseline-note{font-size:11px;color:#888;margin-bottom:10px;}
+
+/* CHARTS */
+.charts-row{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0;}
+.chart-box{flex:1;min-width:220px;background:#faf9f7;border-radius:10px;padding:10px;}
+.chart-box-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:#888;margin-bottom:6px;}
+.chart-box canvas{max-height:180px;}
+
+/* PDF INVOICE IMPORT */
+.pdf-import-card{background:#faf9f7;border-radius:10px;padding:10px;margin-bottom:8px;}
+.pdf-import-card.needs-review{background:#fdf1e3;}
+.pdf-import-fname{font-size:11px;font-weight:600;color:#555;margin-bottom:6px;display:flex;justify-content:space-between;gap:8px;}
+.pdf-import-grid{display:grid;grid-template-columns:1fr 1fr 2fr 90px;gap:6px;}
+.pdf-import-grid input{width:100%;padding:6px 8px;font-size:12px;border:1px solid #e0ddd8;border-radius:7px;background:#fff;}
+.low-confidence{color:#c9750f;font-weight:600;font-size:10px;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/lib/msal-browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -203,6 +266,126 @@ tr.rowclick:hover{background:#faf9f7;}
   <div class="panel" id="drillinContent"></div>
 </div>
 
+<!-- SET BUDGET BASELINE MODAL -->
+<div class="modal-backdrop" id="baselineModal">
+  <div class="modal">
+    <div class="modal-top">
+      <div>
+        <h2>Set Budget Baseline</h2>
+        <div class="sub">Upload the estimator's Cost Sheet PDF to auto-extract the budget by building and task, or enter it manually. Locking a new baseline supersedes the prior one (kept, not deleted) and shows the delta.</div>
+      </div>
+      <button class="x-btn" onclick="closeBaselineModal()">&times;</button>
+    </div>
+    <div class="field">
+      <label>Estimator Cost Sheet PDF (optional — auto-extracts budget by building/task)</label>
+      <input id="blPdfFile" type="file" accept=".pdf" onchange="handleBaselinePdf()"/>
+      <div class="pdf-extract-status" id="blPdfStatus"></div>
+    </div>
+    <div id="blBreakdownWrap" style="display:none">
+      <div class="hint" style="margin-bottom:8px">Extracted from the PDF — review and fix before locking (edit any Building/Task/Amount, or delete a row by clearing its amount to 0).</div>
+      <div class="bl-hdr"><span>Building</span><span>Task</span><span style="text-align:right">Amount</span></div>
+      <div id="blBreakdown"></div>
+    </div>
+    <div class="field"><label>Final Budget (total)</label><input id="blBudget" type="number" step="0.01" placeholder="0.00"/></div>
+    <div class="field">
+      <label>Other source files (PO Summary Excel, additional PDFs — attached for reference only, not parsed)</label>
+      <input id="blFile" type="file" multiple accept=".pdf,.xlsx,.xls,.csv"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeBaselineModal()">Cancel</button>
+      <button class="btn-main" id="blSaveBtn" onclick="saveBaseline()">Lock Baseline</button>
+    </div>
+    <div class="modal-status" id="blStatus"></div>
+  </div>
+</div>
+
+<!-- LOG A COST MODAL -->
+<div class="modal-backdrop" id="costEntryModal">
+  <div class="modal">
+    <div class="modal-top">
+      <div>
+        <h2>Log a Cost</h2>
+        <div class="sub">Tracked against the project's active budget baseline.</div>
+      </div>
+      <button class="x-btn" onclick="closeCostEntryModal()">&times;</button>
+    </div>
+    <div class="field">
+      <label>Building (optional — leave blank for General Overhead)</label>
+      <input id="ceBuilding" type="text" placeholder="e.g. Building 3"/>
+    </div>
+    <div class="field">
+      <label>Task (optional)</label>
+      <input id="ceTask" type="text" placeholder="e.g. Roof tear-off"/>
+    </div>
+    <div class="field"><label>Description</label><input id="ceDescription" type="text" placeholder="e.g. Redi-Mix Concrete invoice #4471"/></div>
+    <div class="row2">
+      <div class="field"><label>Amount</label><input id="ceAmount" type="number" step="0.01" placeholder="0.00"/></div>
+      <div class="field"><label>Date</label><input id="ceDate" type="date"/></div>
+    </div>
+    <div class="field">
+      <label>Supporting file (invoice, timesheet, etc. — optional)</label>
+      <input id="ceFile" type="file"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeCostEntryModal()">Cancel</button>
+      <button class="btn-main" id="ceSaveBtn" onclick="saveCostEntry()">Save Cost</button>
+    </div>
+    <div class="modal-status" id="ceStatus"></div>
+  </div>
+</div>
+
+<!-- IMPORT COSTS FROM EXCEL MODAL -->
+<div class="modal-backdrop" id="importModal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-top">
+      <div>
+        <h2>Import Costs from Excel</h2>
+        <div class="sub">Expects columns for Building, Task, Description, and Amount. Rows with no Building/Task are flagged as General Overhead — fill one in below if a row actually belongs to a building/task.</div>
+      </div>
+      <button class="x-btn" onclick="closeImportModal()">&times;</button>
+    </div>
+    <div class="field">
+      <label>Cost file (.xlsx, .xls, or .csv)</label>
+      <input id="imFile" type="file" accept=".xlsx,.xls,.csv" onchange="handleImportFile()"/>
+    </div>
+    <div id="imPreviewWrap" style="display:none">
+      <div class="hint" style="margin-bottom:8px">Review and fix any rows before importing — especially ones flagged as General Overhead.</div>
+      <div id="imPreview" style="max-height:340px;overflow-y:auto"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeImportModal()">Cancel</button>
+      <button class="btn-main" id="imSaveBtn" onclick="saveImport()" disabled>Import All</button>
+    </div>
+    <div class="modal-status" id="imStatus"></div>
+  </div>
+</div>
+
+<!-- IMPORT COSTS FROM PDF (INVOICES) MODAL -->
+<div class="modal-backdrop" id="pdfImportModal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-top">
+      <div>
+        <h2>Import Costs from PDF</h2>
+        <div class="sub">Upload one or more vendor invoices. Each gets a best-effort amount guess — invoices don't say which building or task they belong to, so review and fill that in for each one before importing.</div>
+      </div>
+      <button class="x-btn" onclick="closePdfImportModal()">&times;</button>
+    </div>
+    <div class="field">
+      <label>Invoice PDFs</label>
+      <input id="piFiles" type="file" accept=".pdf" multiple onchange="handlePdfImportFiles()"/>
+    </div>
+    <div class="pdf-extract-status" id="piStatus"></div>
+    <div id="piPreviewWrap" style="display:none;max-height:380px;overflow-y:auto">
+      <div id="piPreview"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closePdfImportModal()">Cancel</button>
+      <button class="btn-main" id="piSaveBtn" onclick="savePdfImport()" disabled>Import All</button>
+    </div>
+    <div class="modal-status" id="piSaveStatus"></div>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════════════════════════════════
 // CONFIG — same shared "KPS App Suite" Azure AD app + site every other KPS
@@ -216,6 +399,8 @@ const KPS_CONFIG = {
   sitePath:     '/sites/KPSAppSuite',
   listProjects: 'Projects',
   listEstimates: 'Estimates',
+  listCostBaselines: 'CostBaselines',
+  listCostEntries: 'CostEntries',
 };
 const GRAPH_SCOPES = ['Sites.ReadWrite.All'];
 
@@ -308,7 +493,7 @@ async function ensurePath(token, driveId, rootId, segments) {
 }
 async function uploadFile(token, driveId, parentId, filename, blob) {
   const clean = filename.replace(/[\\/:*?"<>|]/g, '-');
-  await graphFetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${parentId}:/${encodeURIComponent(clean)}:/content`,
+  return graphFetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${parentId}:/${encodeURIComponent(clean)}:/content`,
     token, { method: 'PUT', headers: { 'Content-Type': blob.type || 'application/octet-stream' }, body: blob });
 }
 
@@ -355,6 +540,11 @@ async function updateListItemFields(token, siteId, listId, itemId, fields) {
 // ══════════════════════════════════════════════════════════════════════════
 let PROJECTS = [];   // [{id (SP item id), fields: {...}}]
 let ESTIMATES = [];  // [{id, fields: {...}}]
+let COST_BASELINES = []; // [{id, fields: {ProjectID,Status,BudgetTotal,FileURLs}}]
+let COST_ENTRIES = [];   // [{id, fields: {ProjectID,BaselineID,Building,Task,Description,Amount,EntryDate,SourceFile,FileURL,FileName}}]
+let costingReady = false; // false until CostBaselines/CostEntries lists are found on the site
+let costBuildingChart = null, costTaskChart = null; // Chart.js instances, destroyed/recreated on each drill-in render
+let LAST_COSTING_CHART_DATA = null; // {budget, actual} stashed by renderCostingSection for the chart pass right after
 let currentView = 'board';
 let signedIn = false;
 
@@ -388,6 +578,27 @@ async function loadAll() {
     ]);
     PROJECTS = projItems;
     ESTIMATES = estItems;
+
+    // Costing lists are newer and may not exist on every site yet — load them
+    // separately so a missing CostBaselines/CostEntries list doesn't break the
+    // rest of the dashboard. costingReady stays false until both are found.
+    try {
+      const [baseListId, entryListId] = await Promise.all([
+        getListId(token, siteId, KPS_CONFIG.listCostBaselines),
+        getListId(token, siteId, KPS_CONFIG.listCostEntries),
+      ]);
+      const [baseItems, entryItems] = await Promise.all([
+        listAllItems(token, siteId, baseListId),
+        listAllItems(token, siteId, entryListId),
+      ]);
+      COST_BASELINES = baseItems;
+      COST_ENTRIES = entryItems;
+      costingReady = true;
+    } catch (err) {
+      console.warn('Costing lists not available yet:', err.message || err);
+      COST_BASELINES = []; COST_ENTRIES = []; costingReady = false;
+    }
+
     const stamp = new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
     setOdStatus(`Connected · <strong>${PROJECTS.length} projects</strong> · synced ${stamp}`);
     document.getElementById('toolbar').style.display = 'flex';
@@ -426,6 +637,106 @@ function projectTrades(projectId) {
 }
 
 function fmtMoney(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+
+// ══════════════════════════════════════════════════════════════════════════
+// COSTING — budget baseline (locked "final" cost sheet) + logged cost entries
+// tracked against it, per project.
+// ══════════════════════════════════════════════════════════════════════════
+function activeBaselineFor(projectId) {
+  return COST_BASELINES.find(b => b.fields.ProjectID === projectId && b.fields.Status === 'Active') || null;
+}
+function entriesForBaseline(baselineId) {
+  return COST_ENTRIES.filter(e => String(e.fields.BaselineID) === String(baselineId));
+}
+// Buckets ACTUAL entries by Building (blank Building = General Overhead,
+// tracked separately), and within each building by Task.
+function groupEntriesByBuilding(entries) {
+  const buildings = {};
+  let overheadTotal = 0;
+  entries.forEach(e => {
+    const amt = parseFloat(e.fields.Amount) || 0;
+    const bldg = (e.fields.Building || '').trim();
+    if (!bldg) { overheadTotal += amt; return; }
+    const task = (e.fields.Task || '').trim() || '(no task)';
+    if (!buildings[bldg]) buildings[bldg] = { total: 0, tasks: {} };
+    buildings[bldg].total += amt;
+    buildings[bldg].tasks[task] = (buildings[bldg].tasks[task] || 0) + amt;
+  });
+  return { buildings, overheadTotal };
+}
+// Same shape, but for the BUDGET side — parsed from the baseline's
+// BudgetBreakdown JSON (Building/Task/Amount rows extracted from the
+// estimator PDF, or entered/edited manually before locking).
+function budgetBreakdownFor(baseline) {
+  const out = { buildings: {}, overheadTotal: 0 };
+  let rows = [];
+  try { rows = JSON.parse(baseline.fields.BudgetBreakdown || '[]'); } catch(e) { rows = []; }
+  rows.forEach(r => {
+    const amt = parseFloat(r.amount) || 0;
+    const bldg = (r.building || '').trim();
+    if (!bldg) { out.overheadTotal += amt; return; }
+    const task = (r.task || '').trim() || '(no task)';
+    if (!out.buildings[bldg]) out.buildings[bldg] = { total: 0, tasks: {} };
+    out.buildings[bldg].total += amt;
+    out.buildings[bldg].tasks[task] = (out.buildings[bldg].tasks[task] || 0) + amt;
+  });
+  return out;
+}
+function fmtDelta(n) {
+  const cls = n < 0 ? 'delta-neg' : 'delta-pos';
+  return `<span class="${cls}">(${n>=0?'+':''}${fmtMoney(n)})</span>`;
+}
+// Merges budget + actual building/task maps into one HTML block with a
+// budget/actual/delta line per building and per task within it.
+function renderBuildingTaskTable(budget, actual) {
+  const buildingKeys = Array.from(new Set([...Object.keys(budget.buildings), ...Object.keys(actual.buildings)])).sort();
+  let html = '';
+  buildingKeys.forEach(bldg => {
+    const bB = budget.buildings[bldg] || { total: 0, tasks: {} };
+    const aB = actual.buildings[bldg] || { total: 0, tasks: {} };
+    const delta = bB.total - aB.total;
+    html += `<div class="cat-block">
+      <div class="cat-hdr"><span>${bldg.replace(/</g,'&lt;')}</span><span class="nums">${fmtMoney(aB.total)} of ${fmtMoney(bB.total)} ${fmtDelta(delta)}</span></div>`;
+    const taskKeys = Array.from(new Set([...Object.keys(bB.tasks), ...Object.keys(aB.tasks)])).sort();
+    taskKeys.forEach(task => {
+      const bAmt = bB.tasks[task] || 0, aAmt = aB.tasks[task] || 0, d = bAmt - aAmt;
+      html += `<div class="cat-hdr" style="padding-left:10px;font-weight:500"><span>${task==='(no task)'?'—':task.replace(/</g,'&lt;')}</span><span class="nums">${fmtMoney(aAmt)} of ${fmtMoney(bAmt)} ${fmtDelta(d)}</span></div>`;
+    });
+    html += `</div>`;
+  });
+  if (budget.overheadTotal > 0 || actual.overheadTotal > 0) {
+    const oDelta = budget.overheadTotal - actual.overheadTotal;
+    html += `<div class="cat-block"><div class="cat-hdr"><span>General Overhead</span><span class="nums">${fmtMoney(actual.overheadTotal)} of ${fmtMoney(budget.overheadTotal)} ${fmtDelta(oDelta)}</span></div></div>`;
+  }
+  return html;
+}
+function renderCostingCharts(budget, actual) {
+  if (typeof Chart === 'undefined') return; // Chart.js failed to load — charts just don't render
+  const buildingKeys = Array.from(new Set([...Object.keys(budget.buildings), ...Object.keys(actual.buildings)])).sort();
+  const taskBudget = {}, taskActual = {};
+  Object.values(budget.buildings).forEach(b => Object.entries(b.tasks).forEach(([t,v]) => taskBudget[t] = (taskBudget[t]||0) + v));
+  Object.values(actual.buildings).forEach(b => Object.entries(b.tasks).forEach(([t,v]) => taskActual[t] = (taskActual[t]||0) + v));
+  const taskKeys = Array.from(new Set([...Object.keys(taskBudget), ...Object.keys(taskActual)])).sort();
+
+  if (costBuildingChart) { costBuildingChart.destroy(); costBuildingChart = null; }
+  if (costTaskChart) { costTaskChart.destroy(); costTaskChart = null; }
+  const chartOpts = { responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{font:{size:10}}}}, scales:{ y:{beginAtZero:true, ticks:{font:{size:9}}}, x:{ticks:{font:{size:9}}} } };
+
+  const bCanvas = document.getElementById('costBuildingChart');
+  if (bCanvas && buildingKeys.length) {
+    costBuildingChart = new Chart(bCanvas, { type:'bar', data:{ labels: buildingKeys, datasets:[
+      { label:'Budget', data: buildingKeys.map(b=>(budget.buildings[b]||{total:0}).total), backgroundColor:'#d8d4cc' },
+      { label:'Actual', data: buildingKeys.map(b=>(actual.buildings[b]||{total:0}).total), backgroundColor:'#e97132' },
+    ]}, options: chartOpts });
+  }
+  const tCanvas = document.getElementById('costTaskChart');
+  if (tCanvas && taskKeys.length) {
+    costTaskChart = new Chart(tCanvas, { type:'bar', data:{ labels: taskKeys, datasets:[
+      { label:'Budget', data: taskKeys.map(t=>taskBudget[t]||0), backgroundColor:'#d8d4cc' },
+      { label:'Actual', data: taskKeys.map(t=>taskActual[t]||0), backgroundColor:'#e97132' },
+    ]}, options: chartOpts });
+  }
+}
 
 function matchesSearch(p, q) {
   if (!q) return true;
@@ -523,6 +834,78 @@ function renderTable(items) {
   </table></div>`;
 }
 
+function renderCostingSection(projectId) {
+  LAST_COSTING_CHART_DATA = null;
+  if (!costingReady) {
+    return `<div class="no-baseline">Costing isn't set up on the KPS App Suite site yet — the CostBaselines and CostEntries lists need to be created first (see setup notes).</div>`;
+  }
+  const baseline = activeBaselineFor(projectId);
+  if (!baseline) {
+    return `<div class="no-baseline">No budget baseline set for this project yet.</div>
+      <div class="costing-actions">
+        <button class="btn-small" onclick="openBaselineModal('${projectId.replace(/'/g,"\\'")}')">Set Budget Baseline</button>
+        <button class="btn-small secondary" onclick="exportProjectToExcel('${projectId.replace(/'/g,"\\'")}')">Export to Excel</button>
+      </div>`;
+  }
+  const bf = baseline.fields;
+  const budgetTotal = parseFloat(bf.BudgetTotal) || 0;
+  const entries = entriesForBaseline(baseline.id).sort((a,b)=> (b.fields.EntryDate||'').localeCompare(a.fields.EntryDate||''));
+  const actualTotal = entries.reduce((s,e)=> s + (parseFloat(e.fields.Amount)||0), 0);
+  const overTotal = actualTotal > budgetTotal;
+  const pct = budgetTotal > 0 ? Math.min(100, Math.round((actualTotal/budgetTotal)*100)) : (actualTotal>0?100:0);
+
+  const actual = groupEntriesByBuilding(entries);
+  const budget = budgetBreakdownFor(baseline);
+  const breakdownHtml = renderBuildingTaskTable(budget, actual);
+  const hasBreakdown = Object.keys(budget.buildings).length || Object.keys(actual.buildings).length || budget.overheadTotal || actual.overheadTotal;
+  if (hasBreakdown) LAST_COSTING_CHART_DATA = { budget, actual };
+
+  let filesHtml = '';
+  try {
+    const files = JSON.parse(bf.FileURLs || '[]');
+    if (files.length) filesHtml = files.map(f => `<a class="baseline-file" href="${f.url}" target="_blank">${(f.name||'file').replace(/</g,'&lt;')} →</a>`).join('<br/>');
+  } catch(e) { /* ignore malformed FileURLs */ }
+
+  const priorTotal = parseFloat(bf.PriorBudgetTotal);
+  const rebaselineNote = !isNaN(priorTotal) ? `<div class="rebaseline-note">Re-baselined from ${fmtMoney(priorTotal)} → ${fmtMoney(budgetTotal)} ${fmtDelta(budgetTotal-priorTotal)}</div>` : '';
+
+  return `
+    ${rebaselineNote}
+    <div class="cost-summary">
+      <div class="cost-stat"><div class="cost-stat-label">Budget</div><div class="cost-stat-val">${fmtMoney(budgetTotal)}</div></div>
+      <div class="cost-stat"><div class="cost-stat-label">Actual</div><div class="cost-stat-val${overTotal?' over':''}">${fmtMoney(actualTotal)}</div></div>
+      <div class="cost-stat"><div class="cost-stat-label">Remaining</div><div class="cost-stat-val${overTotal?' over':''}">${fmtMoney(budgetTotal-actualTotal)}</div></div>
+    </div>
+    <div class="budget-bar" style="margin-bottom:12px"><div class="budget-bar-fill${overTotal?' over':''}" style="width:${pct}%"></div></div>
+    ${filesHtml ? `<div style="margin-bottom:10px">${filesHtml}</div>` : ''}
+    ${hasBreakdown ? `<div class="charts-row">
+      <div class="chart-box"><div class="chart-box-title">By Building</div><canvas id="costBuildingChart"></canvas></div>
+      <div class="chart-box"><div class="chart-box-title">By Task</div><canvas id="costTaskChart"></canvas></div>
+    </div>` : ''}
+    ${breakdownHtml ? `<div class="panel-section-title" style="margin-top:4px">By Building / Task (Actual of Budget)</div>${breakdownHtml}` : ''}
+    <div class="panel-section-title" style="margin-top:14px">Cost Entries (${entries.length})</div>
+    ${entries.length ? entries.map(e => {
+      const ef = e.fields;
+      const tag = ef.Building ? `${ef.Building}${ef.Task?' · '+ef.Task:''}` : 'General Overhead';
+      return `<div class="entry-row">
+        <div>
+          <div class="entry-cat">${tag.replace(/</g,'&lt;')}</div>
+          <div class="entry-desc">${(ef.Description||'').replace(/</g,'&lt;')}${ef.EntryDate?` · ${ef.EntryDate}`:''}</div>
+          ${ef.FileURL?`<a class="entry-file" href="${ef.FileURL}" target="_blank">${(ef.FileName||'attachment').replace(/</g,'&lt;')}</a>`:''}
+        </div>
+        <div class="entry-amt">${fmtMoney(parseFloat(ef.Amount)||0)}</div>
+      </div>`;
+    }).join('') : '<div style="font-size:12px;color:#aaa">No costs logged yet.</div>'}
+    <div class="costing-actions">
+      <button class="btn-small" onclick="openCostEntryModal('${projectId.replace(/'/g,"\\'")}', '${baseline.id}')">Log a Cost</button>
+      <button class="btn-small" onclick="openImportModal('${projectId.replace(/'/g,"\\'")}', '${baseline.id}')">Import Costs (Excel)</button>
+      <button class="btn-small" onclick="openPdfImportModal('${projectId.replace(/'/g,"\\'")}', '${baseline.id}')">Import Costs (PDF)</button>
+      <button class="btn-small secondary" onclick="openBaselineModal('${projectId.replace(/'/g,"\\'")}')">Re-baseline</button>
+      <button class="btn-small secondary" onclick="exportProjectToExcel('${projectId.replace(/'/g,"\\'")}')">Export to Excel</button>
+    </div>
+  `;
+}
+
 // ══════════════════════════════════════════════════════════════════════════
 // DRILL-IN
 // ══════════════════════════════════════════════════════════════════════════
@@ -566,12 +949,17 @@ function openDrillin(projectId) {
       }).join('') : '<div style="font-size:12px;color:#aaa">No estimate started yet.</div>'}
     </div>
     <div class="panel-section">
+      <div class="panel-section-title">Costing</div>
+      ${renderCostingSection(projectId)}
+    </div>
+    <div class="panel-section">
       <div class="panel-section-title">Project Folder</div>
       <div class="link-list">
         <a href="https://${KPS_CONFIG.siteHostname}${KPS_CONFIG.sitePath}/Shared%20Documents/Projects/${encodeURIComponent(projectId)}" target="_blank">Open Projects/${projectId} in SharePoint →</a>
       </div>
     </div>
   `;
+  if (LAST_COSTING_CHART_DATA) renderCostingCharts(LAST_COSTING_CHART_DATA.budget, LAST_COSTING_CHART_DATA.actual);
   document.getElementById('drillinModal').classList.add('show');
 }
 function closeDrillin(){ document.getElementById('drillinModal').classList.remove('show'); }
@@ -705,6 +1093,742 @@ async function saveNewProject(){
     setNpStatus('Failed: ' + (err.message||err), 'err');
   } finally {
     btn.disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// COSTING — set/re-baseline and log-a-cost modals
+// ══════════════════════════════════════════════════════════════════════════
+let blProjectId = null;
+let BL_BREAKDOWN_ROWS = []; // [{building,task,amount}] parsed from the estimator PDF (or edited manually)
+function openBaselineModal(projectId) {
+  blProjectId = projectId;
+  BL_BREAKDOWN_ROWS = [];
+  document.getElementById('blBudget').value = '';
+  document.getElementById('blPdfFile').value = '';
+  document.getElementById('blPdfStatus').textContent = '';
+  document.getElementById('blPdfStatus').className = 'pdf-extract-status';
+  document.getElementById('blBreakdownWrap').style.display = 'none';
+  document.getElementById('blFile').value = '';
+  document.getElementById('blStatus').textContent = '';
+  document.getElementById('blStatus').className = 'modal-status';
+  document.getElementById('baselineModal').classList.add('show');
+}
+function closeBaselineModal(){ document.getElementById('baselineModal').classList.remove('show'); }
+function setBlStatus(msg, cls){
+  const el = document.getElementById('blStatus');
+  el.textContent = msg; el.className = 'modal-status' + (cls?' '+cls:'');
+}
+function setBlPdfStatus(msg, cls){
+  const el = document.getElementById('blPdfStatus');
+  el.textContent = msg; el.className = 'pdf-extract-status' + (cls?' '+cls:'');
+}
+
+// ── Estimator PDF extraction ────────────────────────────────────────────────
+// Reads the Cost Sheet PDF text via pdf.js, reconstructs visual lines from
+// the positioned text items, then pattern-matches against KPS's own fixed
+// cost-sheet template (Building N / MATERIALS/LABOR/etc. section headers,
+// labeled subtotals, and the whole-job Total Cost line). Always shown as an
+// editable preview — never trusted blindly — since this is financial data.
+async function extractPdfLines(file) {
+  const buf = await file.arrayBuffer();
+  if (window.pdfjsLib && pdfjsLib.GlobalWorkerOptions && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+  }
+  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+  const lines = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const page = await pdf.getPage(p);
+    const content = await page.getTextContent();
+    const rows = {};
+    content.items.forEach(item => {
+      const y = Math.round(item.transform[5]);
+      (rows[y] = rows[y] || []).push({ x: item.transform[4], str: item.str });
+    });
+    Object.keys(rows).map(Number).sort((a,b)=>b-a).forEach(y => {
+      const line = rows[y].sort((a,b)=>a.x-b.x).map(it=>it.str).join(' ').replace(/\s+/g,' ').trim();
+      if (line) lines.push(line);
+    });
+  }
+  return lines;
+}
+
+function parseAmt(s){ return parseFloat(String(s).replace(/,/g,'')) || 0; }
+
+function parseCostSheetLines(lines) {
+  const catHeaderRe = /^(MATERIALS|FLAT ROOF\s*\/\s*EPDM|LABOR|GENERAL CONDITIONS|OPTIONAL UPGRADES)\s*[—-]\s*Building\s*(\d+)/i;
+  const skipRe = /subtotal|^tax\b|^item\b.*total|^description|pricing summary|soft costs|total materials|additional repairs|priced in the field/i;
+  let curBuilding = null, curCategory = null;
+  const catSums = {}, explicitSubtotals = {};
+  let overallTotal = 0, permitAmount = 0;
+
+  function normalizeCat(raw) {
+    const u = raw.toUpperCase();
+    if (u.startsWith('MATERIALS')) return 'Materials';
+    if (u.startsWith('FLAT ROOF')) return 'Flat Roof / EPDM';
+    if (u.startsWith('LABOR')) return 'Labor';
+    if (u.startsWith('GENERAL CONDITIONS')) return 'General Conditions';
+    if (u.startsWith('OPTIONAL UPGRADES')) return 'Optional Upgrades';
+    return raw;
+  }
+
+  lines.forEach(line => {
+    const catMatch = line.match(catHeaderRe);
+    if (catMatch) { curCategory = normalizeCat(catMatch[1]); curBuilding = `Building ${catMatch[2]}`; return; }
+    // Once we're past the per-building tables into whole-job summary
+    // sections, stop attributing numbers to whatever category came last —
+    // otherwise summary/total lines silently get counted as building costs.
+    if (/^(ADDITIONAL REPAIRS|SOFT COSTS SUMMARY|PRICING SUMMARY|TOTAL MATERIALS)/i.test(line)) { curCategory = null; return; }
+    if (/Building\s*\d+\s*Subtotal/i.test(line)) return; // informational only, not a task row
+    const matMatch = line.match(/^Material Subtotal\s*\$?([\d,]+)/i);
+    if (matMatch && curBuilding) { explicitSubtotals[`${curBuilding}|Materials`] = parseAmt(matMatch[1]); return; }
+    const flatMatch = line.match(/Flat Roof Material Subtotal\s*\$?([\d,]+)/i);
+    if (flatMatch && curBuilding) { explicitSubtotals[`${curBuilding}|Flat Roof / EPDM`] = parseAmt(flatMatch[1]); return; }
+    const totalCostMatch = line.match(/Total Cost \(hard costs? \+ soft costs?\)\s*\$?([\d,]+)/i);
+    if (totalCostMatch) { overallTotal = parseAmt(totalCostMatch[1]); return; }
+    const permitMatch = line.match(/^Permit\s*\(1\.5%\)\s*\$?([\d,]+)/i);
+    if (permitMatch) { permitAmount = parseAmt(permitMatch[1]); return; }
+    if (skipRe.test(line)) return;
+
+    const amtMatch = line.match(/\$([\d,]+(?:\.\d{2})?)\s*$/);
+    if (amtMatch && curBuilding && curCategory) {
+      const key = `${curBuilding}|${curCategory}`;
+      catSums[key] = (catSums[key] || 0) + parseAmt(amtMatch[1]);
+    }
+  });
+
+  const rows = [];
+  const keys = new Set([...Object.keys(catSums), ...Object.keys(explicitSubtotals)]);
+  keys.forEach(key => {
+    const [building, task] = key.split('|');
+    const amount = explicitSubtotals[key] !== undefined ? explicitSubtotals[key] : catSums[key];
+    if (amount) rows.push({ building, task, amount });
+  });
+  if (permitAmount) rows.push({ building: '', task: 'Permit', amount: permitAmount });
+  const rowSum = rows.reduce((s,r)=>s+r.amount, 0);
+  if (!overallTotal) overallTotal = rowSum;
+  // Reconcile any leftover (tax, rounding, anything not attributed to a
+  // task) into its own line so the breakdown always ties out to the total
+  // the estimator printed — never leaves money silently unaccounted for.
+  const residual = Math.round((overallTotal - rowSum) * 100) / 100;
+  if (Math.abs(residual) >= 1) rows.push({ building: '', task: 'Tax / Other', amount: residual });
+  return { rows, overallTotal };
+}
+
+async function handleBaselinePdf() {
+  const fileInput = document.getElementById('blPdfFile');
+  const file = fileInput.files[0];
+  if (!file) return;
+  if (typeof pdfjsLib === 'undefined') {
+    setBlPdfStatus('PDF parsing isn\'t available right now — enter the budget manually below and attach the PDF as a source file for reference.', 'err');
+    return;
+  }
+  setBlPdfStatus('Reading PDF…');
+  try {
+    const lines = await extractPdfLines(file);
+    const { rows, overallTotal } = parseCostSheetLines(lines);
+    if (!rows.length) {
+      setBlPdfStatus('Couldn\'t recognize this as a KPS estimator cost sheet — enter the budget manually below.', 'err');
+      return;
+    }
+    BL_BREAKDOWN_ROWS = rows;
+    document.getElementById('blBudget').value = overallTotal || rows.reduce((s,r)=>s+r.amount,0);
+    setBlPdfStatus(`Extracted ${rows.length} line(s) — review below before locking.`, 'ok');
+    renderBlBreakdown();
+  } catch (err) {
+    console.error('PDF extract failed', err);
+    setBlPdfStatus('Couldn\'t read that PDF — enter the budget manually below: ' + (err.message||err), 'err');
+  }
+}
+
+function renderBlBreakdown() {
+  const wrap = document.getElementById('blBreakdownWrap');
+  const el = document.getElementById('blBreakdown');
+  if (!BL_BREAKDOWN_ROWS.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  el.innerHTML = BL_BREAKDOWN_ROWS.map((row, i) => `
+    <div class="bl-row">
+      <input value="${(row.building||'').replace(/"/g,'&quot;')}" placeholder="(General Overhead)" oninput="updateBlRow(${i},'building',this.value)"/>
+      <input value="${(row.task||'').replace(/"/g,'&quot;')}" placeholder="—" oninput="updateBlRow(${i},'task',this.value)"/>
+      <input type="number" step="0.01" value="${row.amount}" style="text-align:right" oninput="updateBlRow(${i},'amount',this.value)"/>
+    </div>`).join('');
+}
+function updateBlRow(i, field, value) {
+  BL_BREAKDOWN_ROWS[i][field] = field === 'amount' ? (parseFloat(value)||0) : value;
+  document.getElementById('blBudget').value = BL_BREAKDOWN_ROWS.reduce((s,r)=>s+r.amount,0);
+}
+
+async function saveBaseline() {
+  const projectId = blProjectId;
+  const total = parseFloat(document.getElementById('blBudget').value) || 0;
+  if (total <= 0) { setBlStatus('Enter the final budget amount.', 'err'); return; }
+
+  const btn = document.getElementById('blSaveBtn');
+  btn.disabled = true;
+  setBlStatus('Locking baseline…');
+  try {
+    const token = await getGraphToken();
+    const { siteId, driveId, rootId } = await getSuiteSite(token);
+    const baseListId = await getListId(token, siteId, KPS_CONFIG.listCostBaselines);
+
+    // Supersede any currently-active baseline for this project first, so
+    // there's only ever one Active baseline per project at a time. Its total
+    // becomes the "prior" figure for the delta shown on the new one.
+    const prior = activeBaselineFor(projectId);
+    const priorTotal = prior ? (parseFloat(prior.fields.BudgetTotal) || 0) : null;
+    if (prior) {
+      await updateListItemFields(token, siteId, baseListId, prior.id, { Status: 'Superseded' });
+      prior.fields.Status = 'Superseded';
+    }
+
+    const files = [];
+    const fileInput = document.getElementById('blFile');
+    const pdfInput = document.getElementById('blPdfFile');
+    const allFiles = [...(pdfInput.files.length ? [pdfInput.files[0]] : []), ...fileInput.files];
+    if (allFiles.length) {
+      const folderId = await ensurePath(token, driveId, rootId, ['Projects', projectId, 'Costing', 'Baselines']);
+      for (const file of allFiles) {
+        setBlStatus(`Uploading ${file.name}…`);
+        const uploaded = await uploadFile(token, driveId, folderId, file.name, file);
+        files.push({ name: file.name, url: uploaded && uploaded.webUrl ? uploaded.webUrl : '' });
+      }
+    }
+
+    setBlStatus('Saving baseline record…');
+    const fields = {
+      Title: `${projectId} Baseline ${new Date().toISOString().slice(0,10)}`,
+      ProjectID: projectId,
+      Status: 'Active',
+      BudgetTotal: total,
+      BudgetBreakdown: JSON.stringify(BL_BREAKDOWN_ROWS),
+      FileURLs: JSON.stringify(files),
+    };
+    if (priorTotal !== null) fields.PriorBudgetTotal = priorTotal;
+    const created = await createListItem(token, siteId, baseListId, fields);
+    COST_BASELINES.push({ id: created.id, fields, lastModifiedDateTime: new Date().toISOString() });
+
+    setBlStatus(priorTotal !== null ? `Baseline locked. Δ ${total-priorTotal>=0?'+':''}${fmtMoney(total-priorTotal)} vs prior.` : 'Baseline locked.', 'ok');
+    openDrillin(projectId);
+    setTimeout(closeBaselineModal, 800);
+  } catch (err) {
+    console.error('Save baseline failed', err);
+    setBlStatus('Failed: ' + (err.message||err), 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+let ceProjectId = null, ceBaselineId = null;
+function openCostEntryModal(projectId, baselineId) {
+  ceProjectId = projectId; ceBaselineId = baselineId;
+  document.getElementById('ceBuilding').value = '';
+  document.getElementById('ceTask').value = '';
+  document.getElementById('ceDescription').value = '';
+  document.getElementById('ceAmount').value = '';
+  document.getElementById('ceDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('ceFile').value = '';
+  document.getElementById('ceStatus').textContent = '';
+  document.getElementById('ceStatus').className = 'modal-status';
+  document.getElementById('costEntryModal').classList.add('show');
+}
+function closeCostEntryModal(){ document.getElementById('costEntryModal').classList.remove('show'); }
+function setCeStatus(msg, cls){
+  const el = document.getElementById('ceStatus');
+  el.textContent = msg; el.className = 'modal-status' + (cls?' '+cls:'');
+}
+
+async function saveCostEntry() {
+  const projectId = ceProjectId, baselineId = ceBaselineId;
+  const amount = parseFloat(document.getElementById('ceAmount').value) || 0;
+  const description = document.getElementById('ceDescription').value.trim();
+  if (amount <= 0) { setCeStatus('Enter an amount.', 'err'); return; }
+  if (!description) { setCeStatus('Enter a description.', 'err'); return; }
+
+  const btn = document.getElementById('ceSaveBtn');
+  btn.disabled = true;
+  setCeStatus('Saving…');
+  try {
+    const token = await getGraphToken();
+    const { siteId, driveId, rootId } = await getSuiteSite(token);
+    const entryListId = await getListId(token, siteId, KPS_CONFIG.listCostEntries);
+
+    let fileURL = '', fileName = '';
+    const fileInput = document.getElementById('ceFile');
+    if (fileInput.files[0]) {
+      const file = fileInput.files[0];
+      setCeStatus(`Uploading ${file.name}…`);
+      const folderId = await ensurePath(token, driveId, rootId, ['Projects', projectId, 'Costing', 'Entries']);
+      const uploaded = await uploadFile(token, driveId, folderId, file.name, file);
+      fileURL = uploaded && uploaded.webUrl ? uploaded.webUrl : '';
+      fileName = file.name;
+    }
+
+    const fields = {
+      Title: `${projectId} Cost ${new Date().toISOString().slice(0,10)}`,
+      ProjectID: projectId,
+      BaselineID: String(baselineId),
+      Building: document.getElementById('ceBuilding').value.trim(),
+      Task: document.getElementById('ceTask').value.trim(),
+      Description: description,
+      Amount: amount,
+      EntryDate: document.getElementById('ceDate').value,
+      SourceFile: 'Manual',
+      FileURL: fileURL,
+      FileName: fileName,
+    };
+    const created = await createListItem(token, siteId, entryListId, fields);
+    COST_ENTRIES.push({ id: created.id, fields, lastModifiedDateTime: new Date().toISOString() });
+
+    setCeStatus('Saved.', 'ok');
+    openDrillin(projectId);
+    setTimeout(closeCostEntryModal, 500);
+  } catch (err) {
+    console.error('Save cost entry failed', err);
+    setCeStatus('Failed: ' + (err.message||err), 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// IMPORT COSTS FROM EXCEL — parses Building/Task/Description/Amount columns,
+// flags rows with no Building/Task as needing review (General Overhead
+// unless the user fills one in) before committing them as Cost Entries.
+// ══════════════════════════════════════════════════════════════════════════
+let imProjectId = null, imBaselineId = null, imSourceFile = null;
+let IMPORT_ROWS = []; // [{building,task,description,amount}]
+
+function openImportModal(projectId, baselineId) {
+  imProjectId = projectId; imBaselineId = baselineId; imSourceFile = null;
+  IMPORT_ROWS = [];
+  document.getElementById('imFile').value = '';
+  document.getElementById('imPreviewWrap').style.display = 'none';
+  document.getElementById('imSaveBtn').disabled = true;
+  document.getElementById('imStatus').textContent = '';
+  document.getElementById('imStatus').className = 'modal-status';
+  document.getElementById('importModal').classList.add('show');
+}
+function closeImportModal(){ document.getElementById('importModal').classList.remove('show'); }
+function setImStatus(msg, cls){
+  const el = document.getElementById('imStatus');
+  el.textContent = msg; el.className = 'modal-status' + (cls?' '+cls:'');
+}
+
+// Matches header text against known variants for each expected column.
+function findCol(headerRow, variants) {
+  for (let i = 0; i < headerRow.length; i++) {
+    const h = String(headerRow[i]||'').toLowerCase().trim();
+    if (variants.some(v => h.includes(v))) return i;
+  }
+  return -1;
+}
+
+function handleImportFile() {
+  const fileInput = document.getElementById('imFile');
+  const file = fileInput.files[0];
+  if (!file) return;
+  imSourceFile = file;
+  setImStatus('Reading file…');
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array' });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+      if (!rows.length) { setImStatus('File appears to be empty.', 'err'); return; }
+
+      const headerRow = rows[0];
+      const buildingCol = findCol(headerRow, ['building','bldg']);
+      const taskCol = findCol(headerRow, ['task']);
+      const descCol = findCol(headerRow, ['description','desc','item','notes']);
+      const amountCol = findCol(headerRow, ['amount','cost','total','price']);
+      if (descCol === -1 || amountCol === -1) {
+        setImStatus('Could not find Description/Amount columns — check the file has headers like Building, Task, Description, Amount.', 'err');
+        return;
+      }
+
+      IMPORT_ROWS = [];
+      for (let i = 1; i < rows.length; i++) {
+        const r = rows[i];
+        const amount = parseFloat(r[amountCol]) || 0;
+        const description = String(descCol>-1 ? r[descCol] : '').trim();
+        if (!amount && !description) continue; // skip blank rows
+        IMPORT_ROWS.push({
+          building: buildingCol>-1 ? String(r[buildingCol]||'').trim() : '',
+          task: taskCol>-1 ? String(r[taskCol]||'').trim() : '',
+          description,
+          amount,
+        });
+      }
+      if (!IMPORT_ROWS.length) { setImStatus('No usable rows found in the file.', 'err'); return; }
+      setImStatus('');
+      renderImportPreview();
+    } catch (err) {
+      console.error('Parse import file failed', err);
+      setImStatus('Could not read that file: ' + (err.message||err), 'err');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function renderImportPreview() {
+  const wrap = document.getElementById('imPreviewWrap');
+  const el = document.getElementById('imPreview');
+  wrap.style.display = 'block';
+  el.innerHTML = `<div class="import-hdr"><span>Building</span><span>Task</span><span>Description</span><span style="text-align:right">Amount</span></div>` +
+    IMPORT_ROWS.map((row, i) => {
+      const needsReview = !row.building && !row.task;
+      return `<div class="import-row${needsReview?' needs-review':''}">
+        <input value="${row.building.replace(/"/g,'&quot;')}" placeholder="—" oninput="updateImportRow(${i},'building',this.value)"/>
+        <input value="${row.task.replace(/"/g,'&quot;')}" placeholder="—" oninput="updateImportRow(${i},'task',this.value)"/>
+        <input value="${row.description.replace(/"/g,'&quot;')}" oninput="updateImportRow(${i},'description',this.value)"/>
+        <div class="import-amt">${fmtMoney(row.amount)}</div>
+        ${needsReview ? '<div class="import-flag">No building/task — will import as General Overhead unless you fill one in above</div>' : ''}
+      </div>`;
+    }).join('');
+  document.getElementById('imSaveBtn').disabled = false;
+}
+
+function updateImportRow(i, field, value) {
+  IMPORT_ROWS[i][field] = value;
+  // Only re-render if the needs-review flag would change, to avoid losing
+  // focus mid-type; a light debounce-free check is enough at this row count.
+  const needsReview = !IMPORT_ROWS[i].building && !IMPORT_ROWS[i].task;
+  const rowEl = document.getElementById('imPreview').children[i+1];
+  if (rowEl) rowEl.classList.toggle('needs-review', needsReview);
+}
+
+async function saveImport() {
+  const projectId = imProjectId, baselineId = imBaselineId;
+  if (!IMPORT_ROWS.length) return;
+  const btn = document.getElementById('imSaveBtn');
+  btn.disabled = true;
+  setImStatus('Importing…');
+  try {
+    const token = await getGraphToken();
+    const { siteId, driveId, rootId } = await getSuiteSite(token);
+    const entryListId = await getListId(token, siteId, KPS_CONFIG.listCostEntries);
+
+    let fileURL = '', fileName = '';
+    if (imSourceFile) {
+      setImStatus(`Uploading ${imSourceFile.name}…`);
+      const folderId = await ensurePath(token, driveId, rootId, ['Projects', projectId, 'Costing', 'Entries']);
+      const uploaded = await uploadFile(token, driveId, folderId, imSourceFile.name, imSourceFile);
+      fileURL = uploaded && uploaded.webUrl ? uploaded.webUrl : '';
+      fileName = imSourceFile.name;
+    }
+
+    const today = new Date().toISOString().slice(0,10);
+    for (let i = 0; i < IMPORT_ROWS.length; i++) {
+      const row = IMPORT_ROWS[i];
+      setImStatus(`Importing row ${i+1} of ${IMPORT_ROWS.length}…`);
+      const fields = {
+        Title: `${projectId} Cost ${today} #${i+1}`,
+        ProjectID: projectId,
+        BaselineID: String(baselineId),
+        Building: row.building,
+        Task: row.task,
+        Description: row.description,
+        Amount: row.amount,
+        EntryDate: today,
+        SourceFile: fileName || 'Import',
+        FileURL: fileURL,
+        FileName: fileName,
+      };
+      const created = await createListItem(token, siteId, entryListId, fields);
+      COST_ENTRIES.push({ id: created.id, fields, lastModifiedDateTime: new Date().toISOString() });
+    }
+
+    setImStatus(`Imported ${IMPORT_ROWS.length} cost entries.`, 'ok');
+    openDrillin(projectId);
+    setTimeout(closeImportModal, 700);
+  } catch (err) {
+    console.error('Import costs failed', err);
+    setImStatus('Failed: ' + (err.message||err), 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// IMPORT COSTS FROM PDF — bulk-upload vendor invoices. Unlike the estimator's
+// own cost sheet, vendor invoices have no fixed template, so this only
+// best-effort-guesses the dollar amount (looking for "Total/Amount Due"
+// style lines, falling back to the largest $ figure on the page) and always
+// leaves Building/Task blank for the user to fill in per invoice — there's
+// no reliable way to infer that from an arbitrary vendor PDF.
+// ══════════════════════════════════════════════════════════════════════════
+let piProjectId = null, piBaselineId = null;
+let PDF_IMPORT_ROWS = []; // [{file, building, task, description, amount, confident, readError}]
+
+function openPdfImportModal(projectId, baselineId) {
+  piProjectId = projectId; piBaselineId = baselineId;
+  PDF_IMPORT_ROWS = [];
+  document.getElementById('piFiles').value = '';
+  document.getElementById('piPreviewWrap').style.display = 'none';
+  document.getElementById('piSaveBtn').disabled = true;
+  document.getElementById('piStatus').textContent = '';
+  document.getElementById('piStatus').className = 'pdf-extract-status';
+  document.getElementById('piSaveStatus').textContent = '';
+  document.getElementById('piSaveStatus').className = 'modal-status';
+  document.getElementById('pdfImportModal').classList.add('show');
+}
+function closePdfImportModal(){ document.getElementById('pdfImportModal').classList.remove('show'); }
+function setPiStatus(msg, cls){
+  const el = document.getElementById('piStatus');
+  el.textContent = msg; el.className = 'pdf-extract-status' + (cls?' '+cls:'');
+}
+
+function detectInvoiceAmount(lines) {
+  const labeled = /(?:grand total|amount due|balance due|total due|invoice total)\D{0,15}\$?\s*([\d,]+\.\d{2})/i;
+  for (const line of lines) {
+    const m = line.match(labeled);
+    if (m) return { amount: parseAmt(m[1]), confident: true };
+  }
+  // No confidently-labeled total found — fall back to the largest dollar
+  // figure anywhere on the page as a rough guess, flagged for the user.
+  let max = 0;
+  lines.forEach(line => {
+    (line.match(/\$\s*[\d,]+\.\d{2}/g) || []).forEach(m => {
+      const v = parseAmt(m.replace('$','').trim());
+      if (v > max) max = v;
+    });
+  });
+  return { amount: max, confident: false };
+}
+
+async function handlePdfImportFiles() {
+  const files = Array.from(document.getElementById('piFiles').files);
+  if (!files.length) return;
+  if (typeof pdfjsLib === 'undefined') {
+    setPiStatus('PDF reading isn\'t available right now — log these one at a time with Log a Cost instead.', 'err');
+    return;
+  }
+  PDF_IMPORT_ROWS = [];
+  setPiStatus(`Reading ${files.length} file(s)…`);
+  for (const file of files) {
+    try {
+      const lines = await extractPdfLines(file);
+      const { amount, confident } = detectInvoiceAmount(lines);
+      PDF_IMPORT_ROWS.push({ file, building: '', task: '', description: file.name.replace(/\.pdf$/i,''), amount, confident });
+    } catch (err) {
+      console.error('Read invoice failed', file.name, err);
+      PDF_IMPORT_ROWS.push({ file, building: '', task: '', description: file.name.replace(/\.pdf$/i,''), amount: 0, confident: false, readError: true });
+    }
+  }
+  setPiStatus('');
+  renderPiPreview();
+}
+
+function renderPiPreview() {
+  const wrap = document.getElementById('piPreviewWrap');
+  const el = document.getElementById('piPreview');
+  wrap.style.display = 'block';
+  el.innerHTML = PDF_IMPORT_ROWS.map((row, i) => {
+    const needsReview = !row.building && !row.task;
+    const flag = row.readError ? '<span class="low-confidence">Couldn\'t read this file — enter amount manually</span>'
+      : (!row.confident ? '<span class="low-confidence">Amount is a guess — double check it</span>' : '');
+    return `<div class="pdf-import-card${needsReview?' needs-review':''}">
+      <div class="pdf-import-fname"><span>${row.file.name.replace(/</g,'&lt;')}</span>${flag}</div>
+      <div class="pdf-import-grid">
+        <input value="${row.building.replace(/"/g,'&quot;')}" placeholder="Building" oninput="updatePiRow(${i},'building',this.value)"/>
+        <input value="${row.task.replace(/"/g,'&quot;')}" placeholder="Task" oninput="updatePiRow(${i},'task',this.value)"/>
+        <input value="${row.description.replace(/"/g,'&quot;')}" oninput="updatePiRow(${i},'description',this.value)"/>
+        <input type="number" step="0.01" value="${row.amount}" style="text-align:right" oninput="updatePiRow(${i},'amount',this.value)"/>
+      </div>
+      ${needsReview ? '<div class="import-flag">No building/task — will import as General Overhead unless you fill one in above</div>' : ''}
+    </div>`;
+  }).join('');
+  document.getElementById('piSaveBtn').disabled = false;
+}
+function updatePiRow(i, field, value) {
+  PDF_IMPORT_ROWS[i][field] = field === 'amount' ? (parseFloat(value)||0) : value;
+  const needsReview = !PDF_IMPORT_ROWS[i].building && !PDF_IMPORT_ROWS[i].task;
+  const cardEl = document.getElementById('piPreview').children[i];
+  if (cardEl) cardEl.classList.toggle('needs-review', needsReview);
+}
+
+async function savePdfImport() {
+  const projectId = piProjectId, baselineId = piBaselineId;
+  if (!PDF_IMPORT_ROWS.length) return;
+  const btn = document.getElementById('piSaveBtn');
+  btn.disabled = true;
+  const setStat = (msg, cls) => { const el = document.getElementById('piSaveStatus'); el.textContent = msg; el.className = 'modal-status' + (cls?' '+cls:''); };
+  setStat('Importing…');
+  try {
+    const token = await getGraphToken();
+    const { siteId, driveId, rootId } = await getSuiteSite(token);
+    const entryListId = await getListId(token, siteId, KPS_CONFIG.listCostEntries);
+    const folderId = await ensurePath(token, driveId, rootId, ['Projects', projectId, 'Costing', 'Entries']);
+    const today = new Date().toISOString().slice(0,10);
+    for (let i = 0; i < PDF_IMPORT_ROWS.length; i++) {
+      const row = PDF_IMPORT_ROWS[i];
+      setStat(`Importing ${i+1} of ${PDF_IMPORT_ROWS.length}: ${row.file.name}…`);
+      const uploaded = await uploadFile(token, driveId, folderId, row.file.name, row.file);
+      const fields = {
+        Title: `${projectId} Cost ${today} #${i+1}`,
+        ProjectID: projectId,
+        BaselineID: String(baselineId),
+        Building: row.building,
+        Task: row.task,
+        Description: row.description,
+        Amount: row.amount,
+        EntryDate: today,
+        SourceFile: row.file.name,
+        FileURL: uploaded && uploaded.webUrl ? uploaded.webUrl : '',
+        FileName: row.file.name,
+      };
+      const created = await createListItem(token, siteId, entryListId, fields);
+      COST_ENTRIES.push({ id: created.id, fields, lastModifiedDateTime: new Date().toISOString() });
+    }
+    setStat(`Imported ${PDF_IMPORT_ROWS.length} invoice(s).`, 'ok');
+    openDrillin(projectId);
+    setTimeout(closePdfImportModal, 700);
+  } catch (err) {
+    console.error('PDF import failed', err);
+    setStat('Failed: ' + (err.message||err), 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// EXPORT TO EXCEL — per-project, full costing detail: a Summary sheet, a
+// Budget/Actual/Delta breakdown by Building & Task, and the full itemized
+// Cost Entries log. Built client-side with SheetJS; downloads directly,
+// no server round-trip. The SharePoint Lists remain the source of truth —
+// this is a formatted snapshot for offline review/sharing.
+// ══════════════════════════════════════════════════════════════════════════
+function styleHeaderRow(ws, numCols) {
+  for (let c = 0; c < numCols; c++) {
+    const addr = XLSX.utils.encode_cell({ r:0, c });
+    if (ws[addr]) ws[addr].s = { font:{ bold:true, color:{ rgb:'FFFFFF' } }, fill:{ fgColor:{ rgb:'1A1A2E' } } };
+  }
+}
+function styleTitleCell(ws, addr) {
+  if (ws[addr]) ws[addr].s = { font:{ bold:true, sz:14 } };
+}
+function applyCurrencyCols(ws, cols, startRow, endRow) {
+  cols.forEach(c => {
+    for (let r = startRow; r <= endRow; r++) {
+      const addr = XLSX.utils.encode_cell({ r, c });
+      if (ws[addr] && typeof ws[addr].v === 'number') ws[addr].z = '"$"#,##0.00';
+    }
+  });
+}
+function applyPercentCol(ws, col, startRow, endRow) {
+  for (let r = startRow; r <= endRow; r++) {
+    const addr = XLSX.utils.encode_cell({ r, c: col });
+    if (ws[addr] && typeof ws[addr].v === 'number') ws[addr].z = '0%';
+  }
+}
+// Finds label rows in a two-column "Summary" sheet (label in col A, value in
+// col B) and applies a number format to the value cell — used since that
+// sheet is laid out as key/value pairs rather than a flat table.
+function applyFormatToLabelRows(ws, labels, format) {
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  for (let r = range.s.r; r <= range.e.r; r++) {
+    const cell = ws[XLSX.utils.encode_cell({ r, c:0 })];
+    if (cell && labels.includes(cell.v)) {
+      const valCell = ws[XLSX.utils.encode_cell({ r, c:1 })];
+      if (valCell && typeof valCell.v === 'number') valCell.z = format;
+    }
+  }
+}
+
+function exportProjectToExcel(projectId) {
+  if (typeof XLSX === 'undefined') { alert('Excel export isn\'t available right now — try again in a moment.'); return; }
+  try {
+    const p = PROJECTS.find(pr => projectIdOf(pr.fields) === projectId);
+    if (!p) return;
+    const f = p.fields;
+    const baseline = activeBaselineFor(projectId);
+    const wb = XLSX.utils.book_new();
+
+    // --- Summary ---
+    const summaryRows = [
+      ['KPS Project Costing Export'], [],
+      ['Property', f.PropertyName || ''],
+      ['Project ID', projectId],
+      ['Address', f.Address || ''],
+      ['Client', f.ClientName || ''],
+      ['Stage', f.CurrentStage || ''], [],
+    ];
+    let budgetTotal = 0, actualTotal = 0, entries = [];
+    if (baseline) {
+      budgetTotal = parseFloat(baseline.fields.BudgetTotal) || 0;
+      entries = entriesForBaseline(baseline.id);
+      actualTotal = entries.reduce((s,e)=> s + (parseFloat(e.fields.Amount)||0), 0);
+      summaryRows.push(['Budget Baseline', 'Active']);
+      summaryRows.push(['Budget Total', budgetTotal]);
+      summaryRows.push(['Actual Total', actualTotal]);
+      summaryRows.push(['Remaining', budgetTotal - actualTotal]);
+      summaryRows.push(['% of Budget Used', budgetTotal>0 ? (actualTotal/budgetTotal) : 0]);
+      const priorTotal = parseFloat(baseline.fields.PriorBudgetTotal);
+      if (!isNaN(priorTotal)) {
+        summaryRows.push(['Re-baselined From', priorTotal]);
+        summaryRows.push(['Budget Delta', budgetTotal - priorTotal]);
+      }
+      let files = [];
+      try { files = JSON.parse(baseline.fields.FileURLs || '[]'); } catch(e) {}
+      if (files.length) {
+        summaryRows.push([]); summaryRows.push(['Source Files']);
+        files.forEach(fl => summaryRows.push([fl.name||'', fl.url||'']));
+      }
+    } else {
+      summaryRows.push(['Budget Baseline', 'Not set']);
+    }
+    summaryRows.push([]);
+    summaryRows.push(['Exported', new Date().toLocaleString('en-US')]);
+    const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
+    wsSummary['!cols'] = [{wch:22},{wch:34}];
+    styleTitleCell(wsSummary, 'A1');
+    applyFormatToLabelRows(wsSummary, ['Budget Total','Actual Total','Remaining','Re-baselined From','Budget Delta'], '"$"#,##0.00');
+    applyFormatToLabelRows(wsSummary, ['% of Budget Used'], '0%');
+    XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
+
+    // --- By Building & Task ---
+    const budget = baseline ? budgetBreakdownFor(baseline) : { buildings:{}, overheadTotal:0 };
+    const actual = groupEntriesByBuilding(entries);
+    const btRows = [['Building','Task','Budget','Actual','Delta','% Used']];
+    const buildingKeys = Array.from(new Set([...Object.keys(budget.buildings), ...Object.keys(actual.buildings)])).sort();
+    buildingKeys.forEach(bldg => {
+      const bB = budget.buildings[bldg] || { total:0, tasks:{} };
+      const aB = actual.buildings[bldg] || { total:0, tasks:{} };
+      const taskKeys = Array.from(new Set([...Object.keys(bB.tasks), ...Object.keys(aB.tasks)])).sort();
+      taskKeys.forEach(task => {
+        const b = bB.tasks[task] || 0, a = aB.tasks[task] || 0;
+        btRows.push([bldg, task==='(no task)'?'':task, b, a, b-a, b>0?(a/b):(a>0?1:0)]);
+      });
+    });
+    if (budget.overheadTotal > 0 || actual.overheadTotal > 0) {
+      btRows.push(['General Overhead', '', budget.overheadTotal, actual.overheadTotal, budget.overheadTotal-actual.overheadTotal,
+        budget.overheadTotal>0 ? (actual.overheadTotal/budget.overheadTotal) : (actual.overheadTotal>0?1:0)]);
+    }
+    btRows.push(['TOTAL', '', budgetTotal, actualTotal, budgetTotal-actualTotal, budgetTotal>0?(actualTotal/budgetTotal):0]);
+    const wsBT = XLSX.utils.aoa_to_sheet(btRows);
+    wsBT['!cols'] = [{wch:18},{wch:22},{wch:14},{wch:14},{wch:14},{wch:10}];
+    styleHeaderRow(wsBT, 6);
+    applyCurrencyCols(wsBT, [2,3,4], 1, btRows.length-1);
+    applyPercentCol(wsBT, 5, 1, btRows.length-1);
+    XLSX.utils.book_append_sheet(wb, wsBT, 'By Building & Task');
+
+    // --- Cost Entries (full itemized log) ---
+    const ceRows = [['Date','Building','Task','Description','Amount','Source File']];
+    entries.slice().sort((a,b)=> (a.fields.EntryDate||'').localeCompare(b.fields.EntryDate||'')).forEach(e => {
+      const ef = e.fields;
+      ceRows.push([ef.EntryDate||'', ef.Building||'', ef.Task||'', ef.Description||'', parseFloat(ef.Amount)||0, ef.SourceFile||ef.FileName||'']);
+    });
+    const wsCE = XLSX.utils.aoa_to_sheet(ceRows);
+    wsCE['!cols'] = [{wch:12},{wch:16},{wch:18},{wch:38},{wch:12},{wch:26}];
+    styleHeaderRow(wsCE, 6);
+    applyCurrencyCols(wsCE, [4], 1, Math.max(1, ceRows.length-1));
+    XLSX.utils.book_append_sheet(wb, wsCE, 'Cost Entries');
+
+    XLSX.writeFile(wb, `${projectId} Costing Export ${new Date().toISOString().slice(0,10)}.xlsx`);
+  } catch (err) {
+    console.error('Excel export failed', err);
+    alert('Could not generate the Excel file: ' + (err.message||err));
   }
 }
 
