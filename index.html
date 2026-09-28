@@ -1,1844 +1,1667 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>KPS Projects Dashboard</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0ede8;min-height:100vh;color:#1a1a1a;}
-
-/* HEADER */
-.hdr{background:#1a1a2e;color:#fff;padding:1rem 1.5rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.hdr h1{font-size:18px;font-weight:600;letter-spacing:-0.3px;}
-.hdr p{font-size:11px;color:rgba(255,255,255,0.45);margin-top:1px;}
-.hdr-right{display:flex;align-items:center;gap:14px;}
-.od-text{font-size:11px;color:rgba(255,255,255,0.6);}
-.od-text strong{color:#fff;}
-.od-text.warn strong{color:#e9a24d;}
-.od-action{font-size:11px;color:#e97132;font-weight:600;cursor:pointer;user-select:none;}
-.btn-new{background:#e97132;color:#fff;border:none;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
-.btn-new:active{transform:scale(0.98);}
-.btn-new:disabled{opacity:0.4;cursor:not-allowed;}
-
-/* TOOLBAR */
-.toolbar{max-width:1200px;margin:0 auto;padding:1rem 1.5rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-.view-toggle{display:flex;gap:6px;background:#e6e2db;border-radius:10px;padding:3px;}
-.view-btn{padding:7px 16px;font-size:13px;font-weight:600;border:none;border-radius:8px;background:transparent;color:#666;cursor:pointer;}
-.view-btn.on{background:#fff;color:#1a1a2e;box-shadow:0 1px 2px rgba(0,0,0,0.08);}
-.search-box{flex:1;max-width:320px;}
-.search-box input{width:100%;padding:9px 12px;font-size:13px;border:1px solid #e0ddd8;border-radius:10px;background:#fff;}
-.search-box input:focus{outline:none;border-color:#e97132;}
-
-/* BOARD */
-.board{max-width:1200px;margin:0 auto;padding:1.25rem 1.5rem 3rem;display:flex;gap:14px;overflow-x:auto;}
-.col{flex:0 0 260px;display:flex;flex-direction:column;gap:10px;}
-.col-hdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#888;padding:0 4px 4px;display:flex;justify-content:space-between;}
-.col-count{color:#aaa;font-weight:600;}
-.col-body{display:flex;flex-direction:column;gap:8px;min-height:40px;}
-
-.pcard{background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);cursor:pointer;transition:transform 0.1s;border-left:3px solid #e0ddd8;}
-.pcard:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-.pcard.stale{border-left-color:#e9a24d;}
-.pcard-name{font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:2px;}
-.pcard-id{font-size:10px;color:#aaa;font-family:ui-monospace,monospace;margin-bottom:8px;}
-.pcard-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
-.chip{font-size:10px;padding:3px 8px;border-radius:10px;background:#f0ede8;color:#666;font-weight:600;}
-.pcard-foot{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#999;}
-.pcard-price{font-weight:600;color:#e97132;}
-.pcard-days.stale{color:#c9750f;font-weight:600;}
-.empty-col{font-size:12px;color:#bbb;text-align:center;padding:14px 0;}
-
-/* TABLE */
-.table-wrap{max-width:1200px;margin:0 auto;padding:1.25rem 1.5rem 3rem;}
-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
-th{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:#888;text-align:left;padding:10px 14px;background:#faf9f7;border-bottom:1px solid #f0ede8;cursor:pointer;user-select:none;white-space:nowrap;}
-th:hover{color:#e97132;}
-td{padding:11px 14px;font-size:13px;border-bottom:1px solid #f5f3ef;color:#333;}
-tr:last-child td{border-bottom:none;}
-tr.rowclick{cursor:pointer;}
-tr.rowclick:hover{background:#faf9f7;}
-.stage-pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;background:#f0ede8;color:#666;white-space:nowrap;}
-
-/* EMPTY / LOADING */
-.centered-msg{max-width:1200px;margin:3rem auto;text-align:center;color:#999;font-size:14px;padding:0 1.5rem;}
-.centered-msg .btn-main{display:inline-block;width:auto;margin-top:14px;}
-
-/* BUTTONS (shared) */
-.btn-main{padding:13px 22px;background:#e97132;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;}
-.btn-main:active{transform:scale(0.98);}
-.btn-secondary{padding:13px 22px;background:#fff;color:#555;border:1px solid #e0ddd8;border-radius:12px;font-size:14px;cursor:pointer;}
-
-/* MODAL */
-.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(20,18,30,0.5);z-index:200;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 16px;}
-.modal-backdrop.show{display:flex;}
-.modal{background:#fff;border-radius:16px;max-width:560px;width:100%;padding:1.75rem;margin-bottom:40px;}
-.modal h2{font-size:18px;margin-bottom:4px;}
-.modal .sub{font-size:12px;color:#999;margin-bottom:1.25rem;}
-.field{margin-bottom:0.9rem;}
-.field label{font-size:12px;color:#555;display:block;margin-bottom:5px;font-weight:600;}
-.field input,.field textarea,.field select{width:100%;padding:10px 12px;font-size:14px;border:1px solid #e0ddd8;border-radius:10px;background:#faf9f7;color:#1a1a1a;font-family:inherit;}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#e97132;background:#fff;box-shadow:0 0 0 3px rgba(233,113,50,0.1);}
-.field textarea{resize:vertical;min-height:80px;}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.hint{font-size:11px;color:#aaa;margin-top:4px;line-height:1.5;}
-.modal-actions{display:flex;gap:10px;margin-top:1.5rem;justify-content:flex-end;}
-.modal-close{position:absolute;}
-.modal-top{display:flex;justify-content:space-between;align-items:flex-start;}
-.x-btn{background:none;border:none;font-size:20px;color:#aaa;cursor:pointer;line-height:1;padding:4px;}
-.modal-status{font-size:12px;margin-top:10px;min-height:16px;}
-.modal-status.err{color:#b3261e;}
-.modal-status.ok{color:#2d6a4f;}
-
-/* DRILL-IN PANEL */
-.panel{background:#fff;border-radius:16px;max-width:640px;width:100%;padding:1.75rem;margin-bottom:40px;}
-.panel-title{font-size:19px;font-weight:700;color:#1a1a2e;}
-.panel-id{font-size:11px;color:#aaa;font-family:ui-monospace,monospace;margin-top:2px;}
-.panel-section{margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid #f0ede8;}
-.panel-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#888;margin-bottom:10px;}
-.est-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f5f3ef;}
-.est-row:last-child{border-bottom:none;}
-.est-trade{font-weight:600;font-size:13px;}
-.est-status{font-size:11px;color:#999;margin-top:2px;}
-.est-price{font-weight:600;color:#e97132;font-size:13px;}
-.stage-select select{width:auto;padding:6px 10px;font-size:12px;}
-.link-list a{display:block;font-size:12px;color:#5b7fdb;margin-top:4px;text-decoration:none;}
-.link-list a:hover{text-decoration:underline;}
-
-/* COSTING */
-.cost-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;}
-.cost-stat{background:#faf9f7;border-radius:10px;padding:10px 12px;}
-.cost-stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:#999;font-weight:700;margin-bottom:3px;}
-.cost-stat-val{font-size:15px;font-weight:700;color:#1a1a2e;}
-.cost-stat-val.over{color:#b3261e;}
-.cat-block{margin-bottom:10px;}
-.cat-hdr{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:#444;margin-bottom:4px;}
-.cat-hdr .nums{color:#888;font-weight:500;}
-.budget-bar{height:7px;border-radius:4px;background:#f0ede8;overflow:hidden;}
-.budget-bar-fill{height:100%;background:#e97132;border-radius:4px;}
-.budget-bar-fill.over{background:#b3261e;}
-.entry-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid #f5f3ef;font-size:12px;}
-.entry-row:last-child{border-bottom:none;}
-.entry-cat{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:8px;background:#f0ede8;color:#777;margin-bottom:2px;}
-.entry-desc{color:#333;}
-.entry-file{color:#5b7fdb;text-decoration:none;font-size:11px;}
-.entry-amt{font-weight:600;color:#1a1a2e;white-space:nowrap;margin-left:10px;}
-.no-baseline{font-size:12px;color:#aaa;padding:10px 0;}
-.baseline-file{font-size:11px;color:#5b7fdb;text-decoration:none;}
-.btn-small{padding:8px 14px;font-size:12px;background:#1a1a2e;color:#fff;border:none;border-radius:9px;cursor:pointer;font-weight:600;}
-.btn-small.secondary{background:#f0ede8;color:#555;}
-.costing-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
-
-/* IMPORT PREVIEW TABLE */
-.import-hdr{display:grid;grid-template-columns:1fr 1fr 2fr 90px;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;color:#999;padding:0 8px 6px;}
-.import-row{display:grid;grid-template-columns:1fr 1fr 2fr 90px;gap:6px;align-items:center;padding:6px 8px;border-radius:8px;margin-bottom:4px;background:#faf9f7;}
-.import-row.needs-review{background:#fdf1e3;}
-.import-row input{width:100%;padding:6px 8px;font-size:12px;border:1px solid #e0ddd8;border-radius:7px;background:#fff;}
-.import-flag{font-size:9px;color:#c9750f;font-weight:700;grid-column:1/5;padding:2px 0 0;}
-.import-amt{font-size:12px;font-weight:600;text-align:right;color:#1a1a2e;}
-
-/* BASELINE PDF-EXTRACT PREVIEW */
-.bl-hdr{display:grid;grid-template-columns:1fr 1fr 90px;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;color:#999;padding:0 8px 6px;}
-.bl-row{display:grid;grid-template-columns:1fr 1fr 90px;gap:6px;align-items:center;padding:6px 8px;border-radius:8px;margin-bottom:4px;background:#faf9f7;}
-.bl-row input{width:100%;padding:6px 8px;font-size:12px;border:1px solid #e0ddd8;border-radius:7px;background:#fff;}
-.bl-amt{font-size:12px;font-weight:600;text-align:right;color:#1a1a2e;}
-.pdf-extract-status{font-size:11px;color:#888;margin:6px 0;}
-.pdf-extract-status.ok{color:#2d6a4f;}
-.pdf-extract-status.err{color:#b3261e;}
-
-/* VARIANCE / DELTA */
-.delta-pos{color:#2d6a4f;font-weight:600;}
-.delta-neg{color:#b3261e;font-weight:600;}
-.rebaseline-note{font-size:11px;color:#888;margin-bottom:10px;}
-
-/* CHARTS */
-.charts-row{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0;}
-.chart-box{flex:1;min-width:220px;background:#faf9f7;border-radius:10px;padding:10px;}
-.chart-box-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:#888;margin-bottom:6px;}
-.chart-box canvas{max-height:180px;}
-
-/* PDF INVOICE IMPORT */
-.pdf-import-card{background:#faf9f7;border-radius:10px;padding:10px;margin-bottom:8px;}
-.pdf-import-card.needs-review{background:#fdf1e3;}
-.pdf-import-fname{font-size:11px;font-weight:600;color:#555;margin-bottom:6px;display:flex;justify-content:space-between;gap:8px;}
-.pdf-import-grid{display:grid;grid-template-columns:1fr 1fr 2fr 90px;gap:6px;}
-.pdf-import-grid input{width:100%;padding:6px 8px;font-size:12px;border:1px solid #e0ddd8;border-radius:7px;background:#fff;}
-.low-confidence{color:#c9750f;font-weight:600;font-size:10px;}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KPS App Suite</title>
 <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/lib/msal-browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root{
+  color-scheme: light;
+  --plane:#f4f4f1; --surface:#fcfcfb; --surface-2:#f7f7f4;
+  --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+  --line:#e1e0d9; --ring:rgba(11,11,11,.10);
+  --brand:#1c5cab; --brand-soft:#e8f0fb; --brand-ink:#184f95;
+  --urgent:#d03b3b; --urgent-bg:#fbe8e8;
+  --progress:#b67c00; --progress-bg:#fdf3da;
+  --watch:#0ca30c; --watch-bg:#e4f5e4;
+  --fill-urgent:#d03b3b; --fill-progress:#eda100; --fill-watch:#1baf7a;
+  --shadow:0 1px 2px rgba(11,11,11,.05), 0 4px 16px rgba(11,11,11,.05);
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --plane:#0d0d0d; --surface:#1a1a19; --surface-2:#212120;
+    --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+    --line:#2c2c2a; --ring:rgba(255,255,255,.10);
+    --brand:#3987e5; --brand-soft:#16273d; --brand-ink:#86b6ef;
+    --urgent:#e66767; --urgent-bg:#3a1e1e;
+    --progress:#fab219; --progress-bg:#3a2f12;
+    --watch:#0ca30c; --watch-bg:#16301a;
+  --fill-urgent:#e66767; --fill-progress:#c98500; --fill-watch:#199e70;
+    --fill-urgent:#e66767; --fill-progress:#c98500; --fill-watch:#199e70;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --plane:#0d0d0d; --surface:#1a1a19; --surface-2:#212120;
+  --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+  --line:#2c2c2a; --ring:rgba(255,255,255,.10);
+  --brand:#3987e5; --brand-soft:#16273d; --brand-ink:#86b6ef;
+  --urgent:#e66767; --urgent-bg:#3a1e1e;
+  --progress:#fab219; --progress-bg:#3a2f12;
+  --watch:#0ca30c; --watch-bg:#16301a;
+  --fill-urgent:#e66767; --fill-progress:#c98500; --fill-watch:#199e70;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden}
+body{
+  background:var(--plane); color:var(--ink);
+  font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1360px;margin:0 auto;padding:0 16px 64px}
+
+/* ---------- header ---------- */
+header{
+  position:sticky; top:0; z-index:40;
+  background:color-mix(in srgb, var(--plane) 88%, transparent);
+  backdrop-filter:saturate(1.6) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.hbar{max-width:1360px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;min-width:0;overflow:hidden}
+.logo .mark{
+  width:30px;height:30px;border-radius:8px;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--brand),var(--brand-ink));
+  color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;letter-spacing:.02em;
+}
+.logo small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.02em}
+.spacer{flex:1}
+.navbtns{display:flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:10px;border:1px solid var(--line)}
+.navbtns button{
+  appearance:none;border:0;background:transparent;color:var(--ink-2);
+  font:inherit;font-weight:600;font-size:13px;padding:6px 14px;border-radius:7px;cursor:pointer;
+}
+.navbtns button[aria-current="page"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.icbtn{
+  appearance:none;width:34px;height:34px;border-radius:9px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-2);cursor:pointer;display:grid;place-items:center;flex:0 0 auto;
+}
+.icbtn:hover{color:var(--ink);border-color:var(--ring)}
+
+/* ---------- generic ---------- */
+h1{font-size:24px;letter-spacing:-.02em;margin:26px 0 4px}
+.sub{color:var(--ink-2);margin:0 0 22px;font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.btn{
+  appearance:none;text-decoration:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  font:inherit;font-weight:600;font-size:13px;padding:8px 14px;border-radius:9px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+}
+.btn:hover{border-color:var(--ring);background:var(--surface-2)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-ink);border-color:var(--brand-ink)}
+.btn svg{width:15px;height:15px;flex:0 0 auto}
+
+/* ---------- home ---------- */
+.hero{
+  display:flex;gap:20px;align-items:center;flex-wrap:wrap;
+  padding:24px; margin:0 0 26px; border-radius:var(--r);
+  background:linear-gradient(135deg,var(--brand),var(--brand-ink)); color:#fff;
+  box-shadow:var(--shadow);
+}
+.hero h2{margin:0 0 6px;font-size:20px;letter-spacing:-.02em}
+.hero p{margin:0;opacity:.85;font-size:14px;max-width:52ch}
+.hero .btn{background:#fff;border-color:#fff;color:var(--brand-ink);font-size:14px;padding:11px 18px}
+.hero .btn:hover{background:#eef4fd}
+.hstat{display:flex;gap:22px;margin-top:14px;flex-wrap:wrap}
+.hstat div{font-size:13px;opacity:.9}
+.hstat b{display:block;font-size:21px;font-weight:700;opacity:1}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.prog{padding:18px;display:flex;flex-direction:column;gap:12px}
+.prog .top{display:flex;align-items:flex-start;gap:11px}
+.prog .ic{
+  width:38px;height:38px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;
+  background:var(--brand-soft);color:var(--brand);
+}
+.prog .ic svg{width:20px;height:20px}
+.prog h3{margin:0;font-size:15px;letter-spacing:-.01em}
+.prog .meta{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.prog p{margin:0;font-size:13px;color:var(--ink-2);flex:1}
+.prog .acts{display:flex;gap:8px;flex-wrap:wrap}
+.tag{
+  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+  padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line);
+}
+.tag.live{background:var(--watch-bg);color:var(--watch);border-color:transparent}
+.tag.soon{background:var(--progress-bg);color:var(--progress);border-color:transparent}
+.devnote{
+  margin-top:26px;padding:14px 16px;border-radius:var(--r);
+  border:1px dashed var(--line);background:var(--surface);font-size:13px;color:var(--ink-2);
+}
+.devnote b{color:var(--ink)}
+/* ---------- stat tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.tile{padding:14px 16px}
+.tile .lab{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.01em;display:flex;align-items:center;gap:6px}
+.tile .val{font-size:27px;font-weight:700;letter-spacing:-.02em;margin-top:3px;line-height:1.1}
+.tile .note{font-size:12px;color:var(--ink-2);margin-top:2px}
+.tile.u .val{color:var(--urgent)}
+.dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;display:inline-block}
+
+/* ---------- filters ---------- */
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.search{position:relative;flex:1 1 240px;min-width:190px}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted)}
+.search input{
+  width:100%;padding:9px 11px 9px 33px;border-radius:9px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);font:inherit;font-size:13px;
+}
+.search input:focus{outline:2px solid var(--brand);outline-offset:-1px;border-color:var(--brand)}
+select{
+  padding:9px 11px;border-radius:9px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);font:inherit;font-size:13px;cursor:pointer;
+}
+select:focus{outline:2px solid var(--brand);outline-offset:-1px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{
+  appearance:none;font:inherit;font-size:12px;font-weight:600;cursor:pointer;
+  padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;
+}
+.chip:hover{border-color:var(--ring)}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip .n{opacity:.65;font-weight:500}
+
+/* ---------- table ---------- */
+.tblwrap{overflow:auto;max-height:calc(100vh - 150px);border-radius:var(--r);border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);overscroll-behavior:contain}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:960px;font-size:13px}
+thead th{
+  position:sticky;top:0;z-index:5;
+  background:var(--surface-2);color:var(--ink-2);
+  text-align:left;font-weight:600;font-size:12px;letter-spacing:.01em;
+  padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;
+}
+thead th.s{cursor:pointer;user-select:none}
+thead th.s:hover{color:var(--ink)}
+thead th .ar{opacity:0;margin-left:4px;font-size:10px}
+thead th[aria-sort] .ar{opacity:1;color:var(--brand)}
+thead th[aria-sort]{color:var(--ink)}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--surface-2)}
+tbody tr.sel td{background:var(--brand-soft)}
+td.prop{font-weight:600;letter-spacing:-.005em;min-width:190px}
+td.prop .scope{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:1px}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.notes{color:var(--ink-2);max-width:300px;font-size:12px}
+.pcell{width:34px;padding-left:14px!important}
+.pflag{width:9px;height:9px;border-radius:50%;display:block;margin-top:4px}
+.pflag.urgent{background:var(--urgent);box-shadow:0 0 0 3px var(--urgent-bg)}
+.pflag.progress{background:var(--progress);box-shadow:0 0 0 3px var(--progress-bg)}
+.pflag.watch{background:var(--watch);box-shadow:0 0 0 3px var(--watch-bg)}
+.pflag.none{background:var(--muted);opacity:.35}
+tr.p-urgent td:first-child{box-shadow:inset 3px 0 0 var(--urgent)}
+tr.p-progress td:first-child{box-shadow:inset 3px 0 0 var(--progress)}
+tr.p-watch td:first-child{box-shadow:inset 3px 0 0 var(--watch)}
+.pm{
+  display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;
+  background:var(--brand-soft);color:var(--brand-ink);font-size:11px;font-weight:700;letter-spacing:.01em;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+  padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);
+  white-space:nowrap;
+}
+.badge.won{background:var(--watch-bg);color:var(--watch);border-color:transparent}
+.badge.lost,.badge.pass{background:var(--urgent-bg);color:var(--urgent);border-color:transparent}
+.badge.sent{background:var(--brand-soft);color:var(--brand-ink);border-color:transparent}
+.age-old{color:var(--urgent);font-weight:700}
+.age-mid{color:var(--progress);font-weight:600}
+.empty{padding:50px 20px;text-align:center;color:var(--muted);font-size:14px}
+
+/* ---------- chart ---------- */
+.chartcard{padding:16px 18px;margin-bottom:16px}
+.chartcard h3{margin:0 0 2px;font-size:14px;letter-spacing:-.01em}
+.chartcard .cap{margin:0 0 14px;font-size:12px;color:var(--muted)}
+.bars{display:grid;gap:7px}
+.barrow{display:grid;grid-template-columns:36px 1fr 34px;align-items:center;gap:10px;font-size:12px}
+.barrow .who{font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.bartrack{height:19px;background:var(--surface-2);border-radius:5px;overflow:hidden;display:flex}
+.bartrack i{display:block;height:100%;border-radius:4px}
+.bartrack i+i{margin-left:2px}
+.barrow .tot{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink-2)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:13px;font-size:12px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed;inset:0;background:rgba(11,11,11,.42);z-index:60;opacity:0;pointer-events:none;transition:opacity .18s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);z-index:61;
+  background:var(--surface);border-left:1px solid var(--line);
+  transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+.drawer.on{transform:none}
+.dhead{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.dhead h2{margin:0;font-size:17px;letter-spacing:-.02em}
+.dhead p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+.dbody{padding:18px 20px;overflow-y:auto;flex:1}
+.frow{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.frow:last-of-type{border-bottom:0}
+.frow .k{color:var(--muted);font-weight:600;flex:0 0 auto}
+.frow .v{text-align:right;color:var(--ink)}
+.dsec{margin-top:20px}
+.dsec h4{margin:0 0 8px;font-size:12px;color:var(--muted);letter-spacing:.02em;text-transform:uppercase}
+.notebox{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:13px;color:var(--ink-2);white-space:pre-wrap}
+.prset{display:flex;gap:7px;flex-wrap:wrap}
+.prset .chip[aria-pressed="true"].u{background:var(--urgent);border-color:var(--urgent)}
+.prset .chip[aria-pressed="true"].p{background:var(--progress);border-color:var(--progress);color:#0b0b0b}
+.prset .chip[aria-pressed="true"].w{background:var(--watch);border-color:var(--watch)}
+
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);z-index:80;
+  background:var(--ink);color:var(--plane);padding:10px 18px;border-radius:999px;
+  font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:all .2s;box-shadow:var(--shadow);
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.hide{display:none!important}
+
+/* ---------- identity ---------- */
+.who{display:flex;align-items:center;gap:7px;padding:4px 11px 4px 5px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font:inherit;font-size:12px;font-weight:600;color:var(--ink-2);flex:0 0 auto}
+.who:hover{border-color:var(--ring);color:var(--ink)}
+.who .av{width:24px;height:24px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);display:grid;place-items:center;font-size:10px;font-weight:800;flex:0 0 auto}
+.modal{position:fixed;inset:0;z-index:90;display:grid;place-items:center;background:rgba(11,11,11,.5);padding:20px}
+.modal .box{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);max-width:400px;width:100%;padding:24px;max-height:86vh;overflow:auto}
+.modal h2{margin:0 0 4px;font-size:18px;letter-spacing:-.02em}
+.modal p{margin:0 0 16px;font-size:13px;color:var(--ink-2)}
+.pick{display:grid;gap:6px}
+.pick button{
+  appearance:none;font:inherit;text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13px;font-weight:600;
+}
+.pick button:hover{background:var(--surface-2);border-color:var(--ring)}
+.pick button[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft)}
+.pick .av{width:28px;height:28px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);display:grid;place-items:center;font-size:11px;font-weight:800;flex:0 0 auto}
+.pick .r{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted)}
+
+/* ---------- manager strip ---------- */
+.mgr{
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:11px 15px;border-radius:var(--r);margin-bottom:14px;
+  background:var(--brand-soft);border:1px solid var(--brand);font-size:13px;color:var(--brand-ink);
+}
+.mgr b{font-weight:700}
+.mgr .pill{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--brand);color:#fff;letter-spacing:.02em}
+.mgr .note{margin-left:auto;font-size:11px;color:var(--ink-2);opacity:.85}
+
+/* ---------- editing & comments ---------- */
+.editable{margin-bottom:12px}
+.editable label{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.editable input,.editable select,.cbox textarea{
+  width:100%;padding:8px 11px;border-radius:9px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);font:inherit;font-size:13px;
+}
+.editable input:focus,.editable select:focus,.cbox textarea:focus{outline:2px solid var(--brand);outline-offset:-1px;border-color:var(--brand)}
+.cbox textarea{min-height:62px;resize:vertical}
+.cbox .row{display:flex;gap:8px;margin-top:8px;align-items:center}
+.hint{font-size:11.5px;color:var(--muted)}
+.pend{
+  margin-top:8px;padding:9px 12px;border-radius:9px;font-size:12px;
+  background:var(--progress-bg);color:var(--progress);border:1px solid color-mix(in srgb,var(--progress) 35%,transparent);font-weight:600;
+}
+
+/* ---------- activity feed ---------- */
+.day{margin-bottom:24px}
+.dayhd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.dayhd h3{margin:0;font-size:14px;letter-spacing:-.01em}
+.dayhd span{font-size:12px;color:var(--muted)}
+.ev{display:flex;gap:11px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.ev:last-child{border-bottom:0}
+.ev .av{width:28px;height:28px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);display:grid;place-items:center;font-size:10px;font-weight:800;flex:0 0 auto}
+.ev .txt{flex:1;font-size:13px;min-width:0}
+.ev .txt .ln{color:var(--ink-2)}
+.ev .txt .ln b{color:var(--ink)}
+.ev .lead{font-weight:700;letter-spacing:-.005em}
+.ev time{font-size:11px;color:var(--muted);white-space:nowrap;flex:0 0 auto}
+.ev .cmt{margin-top:6px;padding:8px 11px;background:var(--surface-2);border-radius:9px;border:1px solid var(--line);color:var(--ink-2);white-space:pre-wrap;font-size:12.5px}
+.fr{color:var(--muted);text-decoration:line-through}
+.to{color:var(--ink);font-weight:600}
+.hist .ev{padding:10px 0}
+
+
+/* ---------- signed-out banner, price + account cards ---------- */
+.signedout{
+  display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:13px 16px;border-radius:var(--r);margin-bottom:14px;
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);font-size:13px;color:var(--ink-2);
+}
+.signedout b{color:var(--ink);display:block}
+.signedout .btn{margin-left:auto}
+.pricecard,.acct{padding:18px 20px;margin-bottom:18px}
+.pc-head{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.pc-head h3{margin:0 0 3px;font-size:15px;letter-spacing:-.01em}
+.pc-head p{margin:0;font-size:13px;color:var(--ink-2);max-width:62ch}
+.pc-head .btn{margin-left:auto}
+.pc-rows{margin-top:12px}
+.prog.planned{opacity:.72}
+.prog.planned .ic{background:var(--surface-2);color:var(--muted)}
+.btn[disabled]{opacity:.5;cursor:default}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--surface-2);padding:1px 5px;border-radius:5px;border:1px solid var(--line)}
+
+
+.syncpill{
+  font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap;
+  border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);flex:0 0 auto;
+}
+.syncpill.ok{background:var(--watch-bg);color:var(--watch);border-color:transparent}
+.syncpill.busy{background:var(--brand-soft);color:var(--brand-ink);border-color:transparent}
+.syncpill.bad{background:var(--urgent-bg);color:var(--urgent);border-color:transparent}
+.syncpill.off{background:var(--progress-bg);color:var(--progress);border-color:transparent}
+
+@media (max-width:720px){
+  h1{font-size:20px}
+  .hero{padding:18px}
+  .hstat b{font-size:18px}
+  .logo small{display:none}
+  .logo span:not(.mark){font-size:14px}
+  .hbar{gap:8px;padding:10px 12px}
+  .navbtns button{padding:6px 9px;font-size:12px}
+  .who span{display:none}
+  .syncpill{display:none}
+  .who{padding:4px}
+  .wrap{padding:0 12px 56px}
+  .tblwrap{max-height:none}
+  thead th{position:static}
+  .filters .btn{flex:1 1 auto;justify-content:center}
+  .signedout .btn,.pc-head .btn{margin-left:0}
+}
+@media (max-width:560px){
+  .logo span:not(.mark){display:none}
+  .logo{flex:0 0 auto}
+}
+@media (max-width:430px){
+  .logo{display:none}
+  .navbtns{margin-right:auto}
+}
+@media print{
+  header,.filters,.chips,.hero,.navbtns,.icbtn,.devnote{display:none!important}
+  body{background:#fff}
+}
+</style>
 </head>
 <body>
-
-<div class="hdr">
-  <div>
-    <h1>KPS Projects Dashboard</h1>
-    <p>Every trade, every stage, one board</p>
+<header>
+  <div class="hbar">
+    <div class="logo">
+      <span class="mark">KPS</span>
+      <span>KPS App Suite<small>Kelly's Property Services</small></span>
+    </div>
+    <div class="spacer"></div>
+    <nav class="navbtns" role="tablist">
+      <button id="navPipeline"   role="tab" aria-current="page" onclick="go('pipeline')">Pipeline</button>
+      <button id="navEstimating" role="tab" onclick="go('estimating')">Estimating</button>
+      <button id="navProjects"   role="tab" onclick="go('projects')">Projects</button>
+      <button id="navGen"        role="tab" class="hide" onclick="go('general')">General</button>
+    </nav>
+    <span class="syncpill hide" id="syncPill"></span>
+    <button class="who" id="whoBtn"></button>
+    <button class="icbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle light or dark mode" onclick="toggleTheme()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    </button>
   </div>
-  <div class="hdr-right">
+</header>
+
+<div class="wrap">
+
+<!-- ================= HOME ================= -->
+<!-- ================= PIPELINE ================= -->
+<section id="viewPipeline">
+  <h1>Pipeline</h1>
+  <p class="sub" id="leadsSub"></p>
+
+  <div class="signedout hide" id="signedOut">
     <div>
-      <div class="od-text" id="odText">Not connected</div>
-      <div class="od-action" id="odAction" onclick="connectKPS()">Connect to KPS App Suite</div>
+      <b>You're not signed in.</b>
+      <span>Sign in with your Microsoft account to edit leads, leave notes and pick up live pricing in the estimators.</span>
     </div>
-    <button class="btn-new" id="btnNewProject" onclick="openNewProjectModal()" disabled>+ New Project</button>
+    <button class="btn primary" onclick="signIn()">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px"><path d="M3 3h8.5v8.5H3zM12.5 3H21v8.5h-8.5zM3 12.5h8.5V21H3zM12.5 12.5H21V21h-8.5z"/></svg>
+      Sign in with Microsoft</button>
+  </div>
+  <div class="mgr hide" id="mgrBar"></div>
+  <div class="tiles" id="tiles"></div>
+
+  <div class="card chartcard">
+    <h3>Open leads by project manager</h3>
+    <p class="cap">Excludes won, lost and passed. Segments show priority.</p>
+    <div class="bars" id="pmBars"></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--fill-urgent)"></i> Needs immediate response</span>
+      <span><i class="dot" style="background:var(--fill-progress)"></i> In progress — prioritize</span>
+      <span><i class="dot" style="background:var(--fill-watch)"></i> No action — follow up may be needed</span>
+    </div>
+  </div>
+
+  <div class="filters">
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search property, scope, PM or notes…" oninput="render()" aria-label="Search leads">
+    </label>
+    <select id="fPM" onchange="render()" aria-label="Filter by project manager"></select>
+    <select id="fStage" onchange="render()" aria-label="Filter by stage"></select>
+    <select id="fType" onchange="render()" aria-label="Filter by project type"></select>
+    <button class="btn" onclick="exportPDF()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+      Export PDF
+    </button>
+    <button class="btn" onclick="document.getElementById('xf').click()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"/><path d="M8 13l4-4 4 4"/><path d="M4 7V5a2 2 0 012-2h12a2 2 0 012 2v2"/></svg>
+      Import weekly export
+    </button>
+    <input id="xf" type="file" accept=".xlsx,.xls" class="hide" onchange="importXlsx(this)">
+  </div>
+
+  <div class="chips" id="prChips"></div>
+
+  <div class="tblwrap">
+    <table id="tbl">
+      <thead><tr>
+        <th class="pcell" title="Priority"><span class="dot" style="background:var(--muted)"></span></th>
+        <th class="s" data-k="property" onclick="sortBy('property')">Property / scope<span class="ar"></span></th>
+        <th class="s" data-k="pm" onclick="sortBy('pm')">PM<span class="ar"></span></th>
+        <th class="s" data-k="stage" onclick="sortBy('stage')">Stage<span class="ar"></span></th>
+        <th class="s" data-k="type" onclick="sortBy('type')">Project type<span class="ar"></span></th>
+        <th class="s" data-k="created" onclick="sortBy('created')">Created<span class="ar"></span></th>
+        <th class="s" data-k="age" onclick="sortBy('age')" style="text-align:right">Age<span class="ar"></span></th>
+        <th>Latest note</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty hide" id="empty">No leads match those filters.</div>
+  </div>
+</section>
+
+<!-- ================= ESTIMATING ================= -->
+<section id="viewEstimating" class="hide">
+  <h1>Estimating</h1>
+  <p class="sub">The estimating tools, and the price list they all read from.</p>
+  <div class="card pricecard" id="priceCard"></div>
+  <div class="grid" id="gridEstimating"></div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section id="viewProjects" class="hide">
+  <h1>Projects</h1>
+  <p class="sub" id="projSub"></p>
+  <div class="tiles" id="projTiles"></div>
+  <div class="tblwrap" style="margin-bottom:26px">
+    <table><thead><tr>
+      <th class="pcell"><span class="dot" style="background:var(--muted)"></span></th>
+      <th>Property / scope</th><th>PM</th><th>Suggested Project ID</th>
+      <th>Won</th><th style="text-align:right">Days</th><th>Latest note</th>
+    </tr></thead><tbody id="projBody"></tbody></table>
+    <div class="empty hide" id="projEmpty">Nothing won yet. Leads move here when their stage is set to Won.</div>
+  </div>
+  <h2 style="font-size:16px;letter-spacing:-.01em;margin:0 0 4px">Project management tools</h2>
+  <p class="sub">Modules that hang off a project once it's won.</p>
+  <div class="grid" id="gridProjects"></div>
+</section>
+
+<!-- ================= GENERAL ================= -->
+<section id="viewGeneral" class="hide">
+  <h1>General</h1>
+  <p class="sub">Your account, the data behind the pipeline, and everything built so far.</p>
+
+  <div class="card acct" id="acctCard"></div>
+
+  <div class="dsec" data-mgr>
+    <h2 style="font-size:16px;letter-spacing:-.01em;margin:26px 0 4px">Activity</h2>
+    <p class="sub" id="actSub"></p>
+    <div class="filters">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="aq" type="search" placeholder="Search notes, people or leads…" oninput="renderActivity()" aria-label="Search activity">
+      </label>
+      <select id="aWho" onchange="renderActivity()" aria-label="Filter by person"></select>
+      <button class="btn" onclick="clearLog()">Clear log</button>
+    </div>
+    <div id="actFeed"></div>
+  </div>
+
+  <h2 style="font-size:16px;letter-spacing:-.01em;margin:30px 0 4px">All programs</h2>
+  <p class="sub">Everything built for KPS so far.</p>
+  <div class="grid" id="gridAll"></div>
+
+  <div class="devnote hide" id="devNote" data-mgr>
+    <b>Access.</b> <span id="devNoteTxt"></span>
+  </div>
+</section>
+</div>
+
+<div class="modal hide" id="idModal" onclick="if(event.target===this)this.classList.add('hide')">
+  <div class="box">
+    <h2 id="idTitle">Account</h2>
+    <div class="pick" id="idPick"></div>
   </div>
 </div>
 
-<div class="toolbar" id="toolbar" style="display:none">
-  <div class="view-toggle">
-    <button class="view-btn on" id="viewBoardBtn" onclick="setView('board')">Board</button>
-    <button class="view-btn" id="viewTableBtn" onclick="setView('table')">Table</button>
+<div class="scrim" id="scrim" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="dhead">
+    <div style="flex:1">
+      <h2 id="dTitle"></h2>
+      <p id="dScope"></p>
+    </div>
+    <button class="icbtn" onclick="closeDrawer()" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
   </div>
-  <div class="search-box"><input id="searchInput" type="text" placeholder="Search property, project ID, contact…" oninput="renderAll()"/></div>
-</div>
-
-<div id="root">
-  <div class="centered-msg">
-    Sign in with your KPS account to load the Projects board.
-  </div>
-</div>
-
-<!-- NEW PROJECT MODAL -->
-<div class="modal-backdrop" id="newProjectModal">
-  <div class="modal">
-    <div class="modal-top">
-      <div>
-        <h2>New Project</h2>
-        <div class="sub">Paste in what you have from the client email — you can fix anything below before saving.</div>
-      </div>
-      <button class="x-btn" onclick="closeNewProjectModal()">&times;</button>
-    </div>
-
-    <div class="field">
-      <label>Paste email text (optional)</label>
-      <textarea id="npEmailPaste" placeholder="Paste the RFP/client email here — we'll try to pull out a contact name, phone, and email automatically." oninput="tryExtractFromPaste()"></textarea>
-      <div class="hint">Best-effort only — always double check the fields below before saving.</div>
-    </div>
-    <div class="field">
-      <label>Attach the original email or any files that came with it (optional)</label>
-      <input id="npFile" type="file" multiple/>
-    </div>
-
-    <div class="field">
-      <label>Property Name *</label>
-      <input id="npProperty" type="text" placeholder="e.g. Concord Greene" oninput="suggestProjectId()"/>
-    </div>
-    <div class="field">
-      <label>Address</label>
-      <input id="npAddress" type="text" placeholder="Street, City, State"/>
-    </div>
-    <div class="row2">
-      <div class="field">
-        <label>Client Contact Name</label>
-        <input id="npClientName" type="text"/>
-      </div>
-      <div class="field">
-        <label>Client Phone</label>
-        <input id="npClientPhone" type="text"/>
-      </div>
-    </div>
-    <div class="field">
-      <label>Client Email</label>
-      <input id="npClientEmail" type="text"/>
-    </div>
-    <div class="field">
-      <label>Project ID</label>
-      <input id="npProjectId" type="text"/>
-      <div class="hint" id="npIdHint">Auto-suggested from the property name — edit if needed.</div>
-    </div>
-    <div class="field">
-      <label>Notes</label>
-      <textarea id="npNotes" placeholder="Anything else worth flagging for whoever picks this up"></textarea>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeNewProjectModal()">Cancel</button>
-      <button class="btn-main" id="npSaveBtn" onclick="saveNewProject()">Create Project</button>
-    </div>
-    <div class="modal-status" id="npStatus"></div>
-  </div>
-</div>
-
-<!-- DRILL-IN PANEL -->
-<div class="modal-backdrop" id="drillinModal">
-  <div class="panel" id="drillinContent"></div>
-</div>
-
-<!-- SET BUDGET BASELINE MODAL -->
-<div class="modal-backdrop" id="baselineModal">
-  <div class="modal">
-    <div class="modal-top">
-      <div>
-        <h2>Set Budget Baseline</h2>
-        <div class="sub">Upload the estimator's Cost Sheet PDF to auto-extract the budget by building and task, or enter it manually. Locking a new baseline supersedes the prior one (kept, not deleted) and shows the delta.</div>
-      </div>
-      <button class="x-btn" onclick="closeBaselineModal()">&times;</button>
-    </div>
-    <div class="field">
-      <label>Estimator Cost Sheet PDF (optional — auto-extracts budget by building/task)</label>
-      <input id="blPdfFile" type="file" accept=".pdf" onchange="handleBaselinePdf()"/>
-      <div class="pdf-extract-status" id="blPdfStatus"></div>
-    </div>
-    <div id="blBreakdownWrap" style="display:none">
-      <div class="hint" style="margin-bottom:8px">Extracted from the PDF — review and fix before locking (edit any Building/Task/Amount, or delete a row by clearing its amount to 0).</div>
-      <div class="bl-hdr"><span>Building</span><span>Task</span><span style="text-align:right">Amount</span></div>
-      <div id="blBreakdown"></div>
-    </div>
-    <div class="field"><label>Final Budget (total)</label><input id="blBudget" type="number" step="0.01" placeholder="0.00"/></div>
-    <div class="field">
-      <label>Other source files (PO Summary Excel, additional PDFs — attached for reference only, not parsed)</label>
-      <input id="blFile" type="file" multiple accept=".pdf,.xlsx,.xls,.csv"/>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeBaselineModal()">Cancel</button>
-      <button class="btn-main" id="blSaveBtn" onclick="saveBaseline()">Lock Baseline</button>
-    </div>
-    <div class="modal-status" id="blStatus"></div>
-  </div>
-</div>
-
-<!-- LOG A COST MODAL -->
-<div class="modal-backdrop" id="costEntryModal">
-  <div class="modal">
-    <div class="modal-top">
-      <div>
-        <h2>Log a Cost</h2>
-        <div class="sub">Tracked against the project's active budget baseline.</div>
-      </div>
-      <button class="x-btn" onclick="closeCostEntryModal()">&times;</button>
-    </div>
-    <div class="field">
-      <label>Building (optional — leave blank for General Overhead)</label>
-      <input id="ceBuilding" type="text" placeholder="e.g. Building 3"/>
-    </div>
-    <div class="field">
-      <label>Task (optional)</label>
-      <input id="ceTask" type="text" placeholder="e.g. Roof tear-off"/>
-    </div>
-    <div class="field"><label>Description</label><input id="ceDescription" type="text" placeholder="e.g. Redi-Mix Concrete invoice #4471"/></div>
-    <div class="row2">
-      <div class="field"><label>Amount</label><input id="ceAmount" type="number" step="0.01" placeholder="0.00"/></div>
-      <div class="field"><label>Date</label><input id="ceDate" type="date"/></div>
-    </div>
-    <div class="field">
-      <label>Supporting file (invoice, timesheet, etc. — optional)</label>
-      <input id="ceFile" type="file"/>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeCostEntryModal()">Cancel</button>
-      <button class="btn-main" id="ceSaveBtn" onclick="saveCostEntry()">Save Cost</button>
-    </div>
-    <div class="modal-status" id="ceStatus"></div>
-  </div>
-</div>
-
-<!-- IMPORT COSTS FROM EXCEL MODAL -->
-<div class="modal-backdrop" id="importModal">
-  <div class="modal" style="max-width:680px">
-    <div class="modal-top">
-      <div>
-        <h2>Import Costs from Excel</h2>
-        <div class="sub">Expects columns for Building, Task, Description, and Amount. Rows with no Building/Task are flagged as General Overhead — fill one in below if a row actually belongs to a building/task.</div>
-      </div>
-      <button class="x-btn" onclick="closeImportModal()">&times;</button>
-    </div>
-    <div class="field">
-      <label>Cost file (.xlsx, .xls, or .csv)</label>
-      <input id="imFile" type="file" accept=".xlsx,.xls,.csv" onchange="handleImportFile()"/>
-    </div>
-    <div id="imPreviewWrap" style="display:none">
-      <div class="hint" style="margin-bottom:8px">Review and fix any rows before importing — especially ones flagged as General Overhead.</div>
-      <div id="imPreview" style="max-height:340px;overflow-y:auto"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeImportModal()">Cancel</button>
-      <button class="btn-main" id="imSaveBtn" onclick="saveImport()" disabled>Import All</button>
-    </div>
-    <div class="modal-status" id="imStatus"></div>
-  </div>
-</div>
-
-<!-- IMPORT COSTS FROM PDF (INVOICES) MODAL -->
-<div class="modal-backdrop" id="pdfImportModal">
-  <div class="modal" style="max-width:680px">
-    <div class="modal-top">
-      <div>
-        <h2>Import Costs from PDF</h2>
-        <div class="sub">Upload one or more vendor invoices. Each gets a best-effort amount guess — invoices don't say which building or task they belong to, so review and fill that in for each one before importing.</div>
-      </div>
-      <button class="x-btn" onclick="closePdfImportModal()">&times;</button>
-    </div>
-    <div class="field">
-      <label>Invoice PDFs</label>
-      <input id="piFiles" type="file" accept=".pdf" multiple onchange="handlePdfImportFiles()"/>
-    </div>
-    <div class="pdf-extract-status" id="piStatus"></div>
-    <div id="piPreviewWrap" style="display:none;max-height:380px;overflow-y:auto">
-      <div id="piPreview"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closePdfImportModal()">Cancel</button>
-      <button class="btn-main" id="piSaveBtn" onclick="savePdfImport()" disabled>Import All</button>
-    </div>
-    <div class="modal-status" id="piSaveStatus"></div>
-  </div>
-</div>
-
+  <div class="dbody" id="dBody"></div>
+</aside>
+<div class="toast" id="toast"></div>
 <script>
-// ══════════════════════════════════════════════════════════════════════════
-// CONFIG — same shared "KPS App Suite" Azure AD app + site every other KPS
-// app (Roofing Estimator, Field Inspection) already signs into. No new
-// registration, no new consent needed for anyone already using those apps.
-// ══════════════════════════════════════════════════════════════════════════
-const KPS_CONFIG = {
-  clientId:     'cb076a13-5e15-4ae7-80cb-68bdd077aea2',
-  tenantId:     '1979066b-105d-423c-9941-42fcd5ac0752',
-  siteHostname: 'kellyspropertyservices.sharepoint.com',
-  sitePath:     '/sites/KPSAppSuite',
-  listProjects: 'Projects',
-  listEstimates: 'Estimates',
-  listCostBaselines: 'CostBaselines',
-  listCostEntries: 'CostEntries',
+const SEED_LEADS = [{"t":"Country Hills Condos","s":"Pressure Washing","pm":"MY","st":"Sent","p":"watch","c":"2026-07-01","ty":"Pressure Washing","n":"Sent 9/14"},{"t":"Toll House Condos","s":"Decks","pm":"AR","st":"Assigned","p":"progress","c":"2026-09-23","ty":"Deck rebuild/replace","n":""},{"t":"Concord Commons Condo","s":"Deck Repairs","pm":"AR","st":"Assigned","p":"progress","c":"2026-09-21","ty":"See BT for details and pics","n":""},{"t":"Maranatha Christian Church -Revitalization Project","s":"","pm":"TL","st":"Assigned","p":"progress","c":"2026-09-21","ty":"Carpentry, Windows, Doors, Flooring, Interior Painting","n":""},{"t":"The Arbors Condominiums","s":"Chimney Caps","pm":"AR","st":"Assigned","p":"progress","c":"2026-09-18","ty":"Inspection of 44 roof chimney caps to determine whether sealant is needed and to apply sealant where necessary.","n":""},{"t":"Kathleen Cibotti","s":"Sliding Doors Replacementt","pm":"SR","st":"Won","p":"watch","c":"2026-07-16","ty":"Windows","n":"Accepted"},{"t":"Dave McCay","s":"Carpentry/Ext. Painting","pm":"JW","st":"Assigned","p":"progress","c":"2026-09-17","ty":"Misc. rot repair and painting the exterior of the house on all sides but the garage face.","n":""},{"t":"Applebriar Apartments","s":"Roof Access Hatch-Bldg. #2","pm":"SR","st":"Sent","p":"watch","c":"2026-07-20","ty":"Other - see notes","n":"SENT 8/4-No reply since . 9/18-SR left VMM"},{"t":"Johnie Tran","s":"Door","pm":"SR","st":"Won","p":"watch","c":"2026-07-23","ty":"Windows","n":"Accepted and Deposit paid"},{"t":"Karate and Rush Cycle Stores","s":"Exterior Paint","pm":"MY","st":"Sent","p":"progress","c":"2026-07-21","ty":"Exterior Paint","n":"Sending 9/15"},{"t":"Fox Run Condo-","s":"Exterior Railing Repair","pm":"WL","st":"Assigned","p":"progress","c":"2026-09-09","ty":"Exterior Railing Repair","n":""},{"t":"Wisteria Point Condo","s":"Deck Membrane and Garage Remediation","pm":"AR","st":"Pass","p":"progress","c":"2026-09-09","ty":"Deck Membrane and Garage Remediation","n":"PASS"},{"t":"Beacon Park Condos","s":"Exterior Paint","pm":"MY","st":"Sent","p":"progress","c":"2026-07-27","ty":"Exterior Paint","n":"Sent 9/14"},{"t":"Shekinah French Seventh Day Adventist Church Ceiling /Exterior)","s":"","pm":"MY","st":"Estimating","p":"progress","c":"2026-07-27","ty":"insulate and repair /paint interior ceiling exterior work as well","n":"9/14-Working on estimate"},{"t":"Justin Levine","s":"Windows","pm":"SR","st":"Won","p":"watch","c":"2026-07-23","ty":"Windows","n":"Acccepted. . 8/11 Deposit paid."},{"t":"Edwin Lucero","s":"Siding","pm":"SR","st":"Assigned","p":"progress","c":"2026-07-31","ty":"Siding","n":"No response as of 9/18. SR spoke with Edwin on 9/22"},{"t":"John Penzone(Roof) Moved to Spring of 2027","s":"","pm":"SR","st":"Assigned","p":"watch","c":"2026-08-03","ty":"Roof","n":"No Action Needed"},{"t":"Franklin Crossing Condos","s":"Interior Paint-Hallways","pm":"BJK","st":"Assigned","p":"progress","c":"2026-08-26","ty":"Interior Paint","n":"Interior Paint-Hallways"},{"t":"Heritage Hall Condominium","s":"Roof Inspection","pm":"AR","st":"Won","p":"progress","c":"2026-08-24","ty":"Roof Inspection-2 Units for Insurance","n":"9/11 Accepted. Waiting on deposit check"},{"t":"John Hulton","s":"Misc. Carpentry-See Notes","pm":"AR","st":"Sent","p":"progress","c":"2026-08-24","ty":"Exterior carpentry","n":"8/24-AR sent estimate to client"},{"t":"Lori Sue","s":"Slider Replacement","pm":"TL","st":"Sent","p":"progress","c":"2026-08-24","ty":"Windows","n":"9/10 Estimate sent"},{"t":"77 Codding Road (Red Mill Village)","s":"Deck Repair","pm":"AR","st":"Won","p":"watch","c":"2026-08-21","ty":"","n":"Won. 8/28"},{"t":"Dan Marzelli","s":"Ice Dam and Roof Leaks","pm":"SR","st":"Won","p":"watch","c":"2026-08-04","ty":"Ice Dam and Roof Leaks","n":"Won"},{"t":"Matthew Middleton","s":"Exterior Projects","pm":"SR","st":"Won","p":"watch","c":"2026-08-04","ty":"Exterior Projects. See BT notes","n":"Won 9/20"},{"t":"Maureen Devaney","s":"Windows","pm":"SR","st":"Won","p":"progress","c":"2026-08-10","ty":"Replace 3 Windows","n":"9/14-Won. Check in mail."},{"t":"Riverbank Lofts","s":"Small Masonry Repair","pm":"MY","st":"Won","p":"watch","c":"2026-07-28","ty":"Masonry","n":"Won"},{"t":"Concord Green","s":"Roofing Phase 4","pm":"AR","st":"Assigned","p":"progress","c":"2026-08-13","ty":"Phae 4 roofing. Estimate rest of property","n":"Reviewing with client on 9.15"},{"t":"Wayside Condominium","s":"Carpentry","pm":"SR","st":"Assigned","p":"progress","c":"2026-08-13","ty":"Roofing","n":"Ashley will be presenting our bid as the most attractive to the board on 9/23"},{"t":"Village Crossing Conds","s":"Powerwashing","pm":"MY","st":"Sent","p":"progress","c":"2026-07-28","ty":"Porch carpentry, powerwash, and roofing","n":"Sent"},{"t":"Frank Marchica","s":"Exterior Paint/Carpentry","pm":"MY","st":"Won","p":"watch","c":"2026-07-30","ty":"Exterior /Carpentry","n":"Won"},{"t":"64 Pecker Street","s":"Roof/Decks","pm":"AR","st":"Pass","p":"progress","c":"2026-08-11","ty":"Roof/Decks","n":"PASS"},{"t":"School Street Condos","s":"Interior Paint","pm":"MY","st":"Pass","p":"progress","c":"2026-08-11","ty":"Interior Paint","n":"PASS"},{"t":"Curtis Square Condo-45 E. Curtis Ave.","s":"","pm":"MY","st":"Sent","p":"progress","c":"2026-08-03","ty":"Exterior paint /Masonry","n":"Visited/Sent"},{"t":"Village Crossing Conds","s":"Doors","pm":"MY","st":"Sent","p":"progress","c":"2026-08-04","ty":"Doors","n":"Sent"},{"t":"Northfield Commons (Siding Replacement)-PASS","s":"","pm":"AR","st":"Pass","p":"progress","c":"2026-08-11","ty":"Siding Replacement","n":""},{"t":"Sean Singer","s":"Carpentry/Ext. Paint","pm":"JW","st":"Assigned","p":"progress","c":"2026-08-11","ty":"Light posts, railings, etc.","n":""},{"t":"Westwood Glen Condos","s":"Decks","pm":"SR","st":"Lost","p":"watch","c":"2026-08-11","ty":"Potential decks","n":"8/14 SR left VMM re:unit #'s for estimating.No reply."},{"t":"74 School Street","s":"Exterior Paint","pm":"MY","st":"Sent","p":"progress","c":"2026-08-05","ty":"Exterior Paint","n":"Sent 9/14"},{"t":"Mike Barns","s":"Windows and Carpentry","pm":"SR","st":"Won","p":"watch","c":"2026-08-17","ty":"Windows and Carpentry","n":"9/14 Won"},{"t":"Eagles Landing Condos","s":"Vinyl Siding","pm":"AR","st":"Sent","p":"progress","c":"2026-08-07","ty":"Vinyl Siding","n":"Sent 8/24. Need follow up."},{"t":"Arbors Condominiums","s":"Footings T&M","pm":"WL","st":"Assigned","p":"progress","c":"2026-08-07","ty":"Footings T&M","n":""},{"t":"Adams Farm","s":"Deck Replacement","pm":"AR","st":"Assigned","p":"progress","c":"2026-08-06","ty":"Deck Replacement","n":"WINTER -BUDGETARY"},{"t":"Adams Farm","s":"T&M Deck Replacement","pm":"AR","st":"Assigned","p":"progress","c":"2026-08-06","ty":"T &M Deck Replacement","n":"WINTER -BUDGETARY"},{"t":"Evergreen Meadows Condos","s":"Masonry/Pavers","pm":"MY","st":"Pass","p":"progress","c":"2026-08-06","ty":"Masonry/Pavers","n":"PASS"},{"t":"Tenney Mountain","s":"T&M Fall 2026","pm":"WL","st":"Sent","p":"progress","c":"2026-08-06","ty":"T&M","n":"Sent 8/07"},{"t":"Brian Spadafora","s":"Exterior Paint","pm":"MY","st":"Sent","p":"progress","c":"2026-08-10","ty":"Exterior paint","n":"Sent 9/14"},{"t":"Sherman Woods (collars reattached to the Chimney Caps","s":"","pm":"WL","st":"Pass","p":"progress","c":"2026-08-05","ty":"Chimney cap collars","n":"PASS"},{"t":"Adam Farm Unit 42","s":"Roof Leaks","pm":"AR","st":"Sent","p":"progress","c":"2026-08-04","ty":"Roof","n":"Sent 9/11"},{"t":"Windsor Townhouse Condo","s":"Decks","pm":"AR","st":"Sent","p":"progress","c":"2026-08-04","ty":"Deck repair or replacement","n":"Sent 9/11"},{"t":"Windsor Townhouse Condo","s":"Roof","pm":"AR","st":"Sent","p":"progress","c":"2026-08-04","ty":"Roof","n":"Sent 8/07"},{"t":"1 Vernon Street","s":"Interior Paint","pm":"MY","st":"Sent","p":"progress","c":"2026-08-11","ty":"Interior Paint","n":"Sent 9/14"},{"t":"Andrew Roome","s":"Roof","pm":"SR","st":"Sent","p":"progress","c":"2026-08-17","ty":"See BT Notes","n":"8/31 Sent proposal to client. 9/14-sent follow up. Client still comparing prices."},{"t":"Sein Siao","s":"Exterior Painting","pm":"SR","st":"Sent","p":"progress","c":"2026-08-18","ty":"Exterior paint","n":"Sent 9/14. Sein said he was reviewing w/ his wife on 9/21."},{"t":"Village Crossing Condos","s":"Exterior/Exterior Paint","pm":"MY","st":"Sent","p":"progress","c":"2026-08-11","ty":"Exterior/Exterior Paint","n":"Sent 9/14"},{"t":"New Hope Church","s":"Roof","pm":"AR","st":"Sent","p":"progress","c":"2026-08-03","ty":"Roof","n":"Sent 8/07"},{"t":"Carol (Entry Doors (3) Replacement)","s":"","pm":"SR","st":"Sent","p":"progress","c":"2026-08-27","ty":"Doors","n":"Sent 9/17"},{"t":"Suzanne Logcher","s":"Windows","pm":"SR","st":"Lost","p":"watch","c":"2026-08-03","ty":"3 Season porch inserts","n":"8/12 Sent over proposal. Sr will follow up by 8/28. 8/31-Client selling condo."},{"t":"Carol (Sign post(2) replacement)","s":"","pm":"SR","st":"Sent","p":"progress","c":"2026-08-28","ty":"Carpentry","n":"Sent 9/17"},{"t":"47-51 Dorchester Street","s":"Deck Sealing Project","pm":"MY","st":"Sent","p":"progress","c":"2026-08-11","ty":"Deck Sealing","n":"Sent 9/14"},{"t":"Smithcrest Condos","s":"Storm and Garage Doors","pm":"AR","st":"Estimating","p":"progress","c":"2026-07-29","ty":"Storm Doors/Garage Doors","n":"In process / Visited"},{"t":"Linda Spellman (Mahoney Farms)","s":"Interior Paint/Carpentry","pm":"MY","st":"Sent","p":"progress","c":"2026-08-12","ty":"Interior Paint/Carpentry","n":"Sent 9/14"},{"t":"Clearview Terrace","s":"Exterior Pressure Washing-2027","pm":"MY","st":"Sent","p":"progress","c":"2026-08-14","ty":"Exterior Pressure Washing-2027","n":"Sent 9/14"},{"t":"Village Crossing Condos","s":"Decks/Roofing","pm":"WL","st":"Sent","p":"progress","c":"2026-07-28","ty":"Roof","n":"All sent 8/07"},{"t":"Lexington Place Condos","s":"Ceiling Repair /Painting","pm":"MY","st":"Sent","p":"progress","c":"2026-09-01","ty":"Ceiling Repair /Painting","n":"Repair/paint this 3rd floor ceiling near elevator. Sent 9/14"},{"t":"Ryan Estates Condos","s":"Powerwashing and Gutters","pm":"MY","st":"Estimating","p":"progress","c":"2026-09-02","ty":"Powerwashing and Gutters","n":"9/14 In progress"},{"t":"Arbor Glenn","s":"Steps/Landing","pm":"WL","st":"Sent","p":"watch","c":"2026-07-27","ty":"","n":"SENT 7/29"},{"t":"Lisa and Steve Billington","s":"Roof","pm":"SR","st":"Lost","p":"watch","c":"2026-07-27","ty":"Roof","n":"Met 8/7-Verbal acceptance.8/10 Lisa asked to quote skylights."},{"t":"Russel Haims","s":"Decks","pm":"SR","st":"Assigned","p":"progress","c":"2026-08-29","ty":"Deck Refacing","n":"9/18 SR told client we are wrapping up final items. SR will send by 9/19"},{"t":"Ellen Killeen","s":"Windows","pm":"SR","st":"Sent","p":"progress","c":"2026-09-14","ty":"Replace (2) windows at her condo","n":"Sent Emily draft 9/15."},{"t":"Fox Run Condo-","s":"Laundry Room Rebuild / Hallway Leak Repair","pm":"MY","st":"Estimating","p":"progress","c":"2026-09-09","ty":"Laundry room rebuild with carpentry. Hallway leak repairs.","n":"9/14 In progress"},{"t":"Ron Hazelwood","s":"Windows","pm":"SR","st":"Visited","p":"progress","c":"2026-09-17","ty":"","n":"SR site visit and measurements 9/22"},{"t":"Applebriar Apartments","s":"Entry Door-Bldg. #1","pm":"","st":"Pass","p":"watch","c":"2026-07-20","ty":"Door","n":""},{"t":"River Oaks Condos","s":"Front Step Replacement","pm":"WL","st":"Sent","p":"progress","c":"2026-07-17","ty":"Front Steps","n":"Sent 8/07"},{"t":"Peter Whitney","s":"Windows","pm":"SR","st":"Assigned","p":"progress","c":"2026-09-18","ty":"Replace windows on 3 season porch at Huckins Farm","n":""},{"t":"Coolidge Village Condominium Association","s":"Roofs","pm":"WL","st":"Sent","p":"watch","c":"2026-07-16","ty":"Roof","n":"WL sent 8/10"},{"t":"Marty Czekalski","s":"Interior Paint","pm":"JW","st":"Won","p":"watch","c":"2026-07-15","ty":"Interior Paint","n":"Accepted"},{"t":"Keefe Hall Condominiums","s":"Siding and Gutters","pm":"WL","st":"Sent","p":"watch","c":"2026-07-15","ty":"Siding & Gutter Replacement","n":"Sent"},{"t":"The Gables Condominiums","s":"Front Porches","pm":"WL","st":"Sent","p":"watch","c":"2026-07-13","ty":"Front Porches","n":"Sent"},{"t":"Paula & Patrick Moran","s":"Gutters and Carpentry","pm":"SR","st":"Lost","p":"watch","c":"2026-07-10","ty":"Gutters","n":"LOST"},{"t":"Colonial Drive Condominiums","s":"Roof","pm":"WL","st":"Sent","p":"watch","c":"2026-07-10","ty":"Roof","n":""},{"t":"Edgewood Condo","s":"Decks","pm":"WL","st":"Sent","p":"watch","c":"2026-07-10","ty":"Decks","n":""},{"t":"Vanessa Mitsialis","s":"Carpentry/Interior Paint","pm":"MY/SR","st":"Sent","p":"watch","c":"2026-07-06","ty":"Other - see notes","n":"Sent"},{"t":"Harvard Ridge","s":"Window Test Investigation","pm":"WL","st":"Assigned","p":"watch","c":"2026-07-06","ty":"Other - see notes","n":""},{"t":"Raymond Surette","s":"Deck Investigation","pm":"AR","st":"Assigned","p":"urgent","c":"2026-07-02","ty":"Decks","n":""},{"t":"Rob Barnes","s":"Decks","pm":"SR","st":"Lost","p":"watch","c":"2026-07-01","ty":"Decks","n":"No reply since initial conact on 8/5. SR called on 8/11 an left VMM."},{"t":"Country Hills Condos","s":"Decks","pm":"WL","st":"Visited","p":"progress","c":"2026-07-01","ty":"Decks","n":""},{"t":"Roper Estates Condos","s":"Exterior Paint","pm":"MY","st":"Assigned","p":"progress","c":"2026-09-23","ty":"Exterior paint-36 Units","n":""},{"t":"Stephanie Williams","s":"Front Porch","pm":"SR","st":"Lost","p":"watch","c":"2026-06-29","ty":"Roof and Decks","n":""}];
+
+/* ============================================================
+   PROGRAM LINKS — edit these four blocks if a URL is wrong.
+   "live" = the address people use.  "repo" = GitHub source.
+   Add a new program by copying one block.
+   ============================================================ */
+const PROGRAMS = [
+  { name:"Roofing Estimator", icon:"roof", status:"live", group:"estimating",
+    desc:"Four-step wizard for roofing estimates, priced from the shared catalog, with PDF output.",
+    live:"https://mgardnerkps.github.io/kps-roofing-estimator/",
+    repo:"https://github.com/mgardnerKPS/kps-roofing-estimator" },
+  { name:"Deck Estimator", icon:"deck", status:"live", group:"estimating",
+    desc:"Deck takeoff with AWC DCA6 code checks — joists, beams, footings — and a PO material list.",
+    live:"https://mgardnerkps.github.io/kps-deck-estimator/",
+    repo:"https://github.com/mgardnerKPS/kps-deck-estimator" },
+  { name:"Siding Estimator",  icon:"deck", status:"planned", group:"estimating",
+    desc:"Not built yet. Will read the same price list under its own Module value." },
+  { name:"Window Estimator",  icon:"grid", status:"planned", group:"estimating",
+    desc:"Not built yet. Will read the same price list under its own Module value." },
+  { name:"Porch Estimator",   icon:"roof", status:"planned", group:"estimating",
+    desc:"Not built yet. Will read the same price list under its own Module value." },
+
+  { name:"Field Inspection", icon:"clip", status:"live", group:"projects",
+    desc:"Mobile inspection forms across five types, with photos filed to SharePoint by Project ID.",
+    live:"https://mgardnerkps.github.io/kpsinspectionprogram/",
+    repo:"https://github.com/mgardnerKPS/kpsinspectionprogram" },
+  { name:"Subcontractor Agreements", icon:"clip", status:"planned", group:"projects",
+    desc:"Agreements, COI and licence uploads, lien releases and payment tracking. Spec'd, not built." },
+  { name:"Job Costing", icon:"grid", status:"planned", group:"projects",
+    desc:"Material and labour costs against a locked budget baseline. Spec'd, not built." },
+  { name:"Change Orders", icon:"clip", status:"planned", group:"projects",
+    desc:"Scope changes priced and tracked against the original estimate. Spec'd, not built." },
+  { name:"Crew Scheduling", icon:"grid", status:"planned", group:"projects",
+    desc:"Who is on which job, which week. Spec'd, not built." },
+  { name:"PM Scorecard", icon:"grid", status:"planned", group:"projects", mgr:true,
+    desc:"Setup, timeliness and cost performance blended into one score per PM. Managers only." }
+];
+/* ============================================================
+   WHO IS WHO.  "manager" sees the PM scorecard, the activity
+   feed, the notes on a lead, and the Source links.  Everyone
+   else sees the plain leads list.
+   Add Stan Park here if he should see the scorecard too.
+   ============================================================ */
+const AUTH = {
+  clientId: 'cb076a13-5e15-4ae7-80cb-68bdd077aea2', // shared "KPS App Suite" registration
+  tenantId: '1979066b-105d-423c-9941-42fcd5ac0752', // Kelly's Property Services tenant
+  scopes:   ['Sites.ReadWrite.All']                 // read the price list, write the shared pipeline
 };
-const GRAPH_SCOPES = ['Sites.ReadWrite.All'];
+/* Managers see the PM scorecard, the activity log, notes on a lead and the
+   Source links. Matched on the signed-in Microsoft account, lower-cased.
+   Add Stan Park here if he should see the scorecard too. */
+const MANAGERS = [
+  'mike.gardner@kellyspropertyservices.com',
+  'will.lacas@kellyspropertyservices.com',
+  'bryan.kelly@kellyspropertyservices.com',
+  'kristen.clark@kellyspropertyservices.com',
+  'stan.park@kellyspropertyservices.com'
+];
+/* Maps a Microsoft account to the initials used in the leads report. Someone
+   signing in who isn't listed still gets in — they just aren't tied to a PM. */
+const ROSTER = [
+  { id:"MG",  name:"Mike Gardner",  email:"mike.gardner@kellyspropertyservices.com"  },
+  { id:"WL",  name:"Will Lacas",    email:"will.lacas@kellyspropertyservices.com"    },
+  { id:"MY",  name:"Mike Young",    email:"mike.young@kellyspropertyservices.com"    },
+  { id:"AR",  name:"Alex Rose",     email:"alex.rose@kellyspropertyservices.com"     },
+  { id:"SR",  name:"Scott Redfern", email:"scott.redfern@kellyspropertyservices.com" },
+  { id:"TL",  name:"Thiago Layber", email:"thiago.layber@kellyspropertyservices.com" },
+  { id:"JW",  name:"Josh West",     email:"josh.west@kellyspropertyservices.com"     },
+  { id:"BJK", name:"Bryan Kelly",   email:"bryan.kelly@kellyspropertyservices.com"   },
+  { id:"KC",  name:"Kristen Clark", email:"kristen.clark@kellyspropertyservices.com" },
+  { id:"SP",  name:"Stan Park",     email:"stan.park@kellyspropertyservices.com"     }
+];
 
-const STAGES = ['Intake','Estimating','Bidding','Won','Lost','Costing Active','Complete','Archived'];
-const TRADES = ['Roofing','Decks','Siding','Windows','Porches'];
+const ICONS = {
+  grid:'<path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/>',
+  roof:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  deck:'<path d="M3 8h18M3 13h18M3 18h18"/><path d="M7 4v16M17 4v16"/>',
+  clip:'<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 3h6v3H9z"/><path d="M9.5 11h5M9.5 15h5"/>'
+};
+const STAGES = ["Assigned","Visited","Estimating","Sent","Won","Lost","Pass"];
+const PRIOS = {
+  urgent:  {label:"Needs immediate response", short:"Urgent",     css:"urgent",   pdf:[251,232,232]},
+  progress:{label:"In progress — prioritize", short:"In progress",css:"progress", pdf:[253,243,218]},
+  watch:   {label:"No action — follow up may be needed", short:"Follow up", css:"watch", pdf:[228,245,228]},
+  none:    {label:"Unset", short:"Unset", css:"none", pdf:[255,255,255]}
+};
+const TODAY = new Date();
 
-// ── MSAL / GRAPH PLUMBING — same pattern as the Roofing Estimator's KPS
-// Pricing Sync, so anyone already signed into that app is silently signed in
-// here too (same client, same cached account). ──────────────────────────────
-let kpsMsal = null;
-let kpsMsalReady = Promise.resolve();
+let leads = [], sortKey = "age", sortDir = -1, prFilter = "", selected = null;
+
+/* ---------- storage (survives reloads; per browser) ---------- */
+const LS = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+function keyOf(l){ return (l.t+"|"+(l.s||"")).toLowerCase(); }
+
+function load(){
+  const saved = LS.get("kps.leads", null);
+  leads = (saved && saved.length ? saved : SEED_LEADS).map(normalize);
+  const over = LS.get("kps.prio", {});
+  leads.forEach(l=>{ if(over[keyOf(l)]) l.p = over[keyOf(l)]; });
+}
+function normalize(l){
+  const o = Object.assign({}, l);
+  o.t = o.t || "Untitled";
+  o.pm = (o.pm||"").trim();
+  o.st = STAGES.includes(o.st) ? o.st : "Assigned";
+  o.p = PRIOS[o.p] ? o.p : "none";
+  o.age = o.c ? Math.max(0, Math.round((TODAY - new Date(o.c+"T00:00:00")) / 86400000)) : null;
+  return o;
+}
+const isOpen = l => !["Won","Lost","Pass"].includes(l.st);
+
+/* ---------- theme ---------- */
+function toggleTheme(){
+  const cur = document.documentElement.getAttribute("data-theme");
+  const dark = cur ? cur==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.setAttribute("data-theme", dark?"light":"dark");
+  LS.set("kps.theme", dark?"light":"dark");
+}
+(function(){ const t=LS.get("kps.theme",null); if(t) document.documentElement.setAttribute("data-theme",t); })();
+
+/* ---------- nav ---------- */
+function go(v){
+  const map = { pipeline:"viewPipeline", estimating:"viewEstimating",
+                projects:"viewProjects", general:"viewGeneral" };
+  const nav = { pipeline:"navPipeline", estimating:"navEstimating",
+                projects:"navProjects", general:"navGen" };
+  if(!map[v]) v = "pipeline";
+  if(v==="general" && !signedIn()) v = "pipeline";
+  Object.entries(map).forEach(([k,id])=>document.getElementById(id).classList.toggle("hide", k!==v));
+  Object.entries(nav).forEach(([k,id])=>document.getElementById(id).setAttribute("aria-current", k===v?"page":"false"));
+  if(v==="general")    renderActivity();
+  if(v==="projects")   renderProjects();
+  if(v==="estimating") renderPriceCard();
+  location.hash = v;
+  scrollTo(0,0);
+}
+
+/* ---------- who is signed in ----------
+   Identity comes from the Microsoft account, through the same MSAL setup the
+   estimators use. The token cache lives in localStorage, so signing in once on
+   a device keeps you signed in there until you sign out or Azure expires the
+   session. All four KPS apps are served from one origin, so that cache is
+   shared: sign in here and the estimators pick up live pricing with no second
+   prompt. */
+let ME = null, msalApp = null;
+let msalReady = Promise.resolve(false);
+
+/* On file:// or localhost there is no registered redirect URI, so Microsoft
+   sign-in cannot run. Preview mode lets the page be opened from a download to
+   look at; it is never offered on the real hosted site. */
+const IS_PREVIEW = location.protocol === "file:" ||
+                   ["localhost","127.0.0.1",""].includes(location.hostname);
+
 if (window.msal) {
-  try {
-    kpsMsal = new msal.PublicClientApplication({
+  try{
+    msalApp = new msal.PublicClientApplication({
       auth: {
-        clientId: KPS_CONFIG.clientId,
-        authority: 'https://login.microsoftonline.com/' + KPS_CONFIG.tenantId,
-        redirectUri: window.location.href.split('#')[0].split('?')[0],
+        clientId: AUTH.clientId,
+        authority: "https://login.microsoftonline.com/" + AUTH.tenantId,
+        redirectUri: location.href.split("#")[0].split("?")[0]
       },
-      cache: { cacheLocation: 'localStorage' },
+      cache: { cacheLocation: "localStorage" }
     });
-    kpsMsalReady = kpsMsal.initialize().catch(e => { console.error('MSAL initialize failed', e); kpsMsal = null; });
-  } catch (e) { console.error('MSAL init failed', e); kpsMsal = null; }
+    msalReady = msalApp.initialize().then(()=>true).catch(e=>{ console.error("MSAL init failed", e); msalApp=null; return false; });
+  }catch(e){ console.error("MSAL setup failed", e); msalApp = null; }
 }
 
-function setOdStatus(html, warn) {
-  const t = document.getElementById('odText');
-  if (t) { t.innerHTML = html; t.classList.toggle('warn', !!warn); }
+function accountToMe(acc){
+  const email = (acc.username||"").toLowerCase();
+  const r = ROSTER.find(x=>x.email && x.email.toLowerCase()===email);
+  return {
+    id: r ? r.id : (acc.name||email).split(/[\s.@]/).filter(Boolean).map(w=>w[0]).join("").slice(0,3).toUpperCase(),
+    name: acc.name || email,
+    email,
+    manager: MANAGERS.includes(email),
+    ms: true
+  };
 }
-
-async function getGraphToken() {
-  await kpsMsalReady;
-  if (!kpsMsal) throw new Error('MSAL not initialized');
-  let account = kpsMsal.getActiveAccount() || kpsMsal.getAllAccounts()[0];
-  if (!account) {
-    const resp = await kpsMsal.loginPopup({ scopes: GRAPH_SCOPES });
-    kpsMsal.setActiveAccount(resp.account);
-    return resp.accessToken;
-  }
-  try {
-    const res = await kpsMsal.acquireTokenSilent({ scopes: GRAPH_SCOPES, account });
-    return res.accessToken;
-  } catch (e) {
-    const res = await kpsMsal.acquireTokenPopup({ scopes: GRAPH_SCOPES, account });
-    return res.accessToken;
-  }
+function me(){ return ME; }
+function isManager(){ return !!(ME && ME.manager); }
+function signedIn(){ return !!ME; }
+function initials(id){ return (id||"?").slice(0,3); }
+function nameOf(id){
+  const r = ROSTER.find(x=>x.id===id); if(r) return r.name;
+  const l = LS.get("kps.names",{}); return l[id] || id || "Unknown";
 }
+function rememberName(m){ const l = LS.get("kps.names",{}); l[m.id] = m.name; LS.set("kps.names", l); }
 
-async function graphFetch(url, token, opts = {}) {
-  const res = await fetch(url, { ...opts, headers: { ...(opts.headers || {}), Authorization: 'Bearer ' + token, ...(opts.body ? {'Content-Type':'application/json'} : {}) } });
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error('Graph ' + res.status + ': ' + text.slice(0, 300));
-  }
-  if (res.status === 204) return null;
-  return res.json();
+/* Restore an existing session without prompting. */
+async function restoreSession(){
+  if(!(await msalReady) || !msalApp) return false;
+  const acc = msalApp.getActiveAccount() || msalApp.getAllAccounts()[0];
+  if(!acc) return false;
+  msalApp.setActiveAccount(acc);
+  ME = accountToMe(acc); rememberName(ME);
+  return true;
 }
-
-let SITE_ID = null, DRIVE_ID = null, ROOT_ID = null;
-async function getSuiteSite(token) {
-  if (SITE_ID) return { siteId: SITE_ID, driveId: DRIVE_ID, rootId: ROOT_ID };
-  const site = await graphFetch(`https://graph.microsoft.com/v1.0/sites/${KPS_CONFIG.siteHostname}:${KPS_CONFIG.sitePath}`, token);
-  const root = await graphFetch(`https://graph.microsoft.com/v1.0/sites/${site.id}/drive/root?$select=id,parentReference`, token);
-  SITE_ID = site.id; DRIVE_ID = root.parentReference.driveId; ROOT_ID = root.id;
-  return { siteId: SITE_ID, driveId: DRIVE_ID, rootId: ROOT_ID };
-}
-
-async function ensureFolder(token, driveId, parentId, name) {
-  const clean = (name || 'Untitled').replace(/[\\/:*?"<>|]/g, '-').trim() || 'Untitled';
-  const list = await graphFetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${parentId}/children?$select=id,name,folder`, token);
-  const existing = (list.value || []).find(it => it.folder && it.name.toLowerCase() === clean.toLowerCase());
-  if (existing) return existing.id;
-  try {
-    const created = await graphFetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${parentId}/children`, token, {
-      method: 'POST',
-      body: JSON.stringify({ name: clean, folder: {}, '@microsoft.graph.conflictBehavior': 'fail' })
-    });
-    return created.id;
-  } catch (e) {
-    const retryList = await graphFetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${parentId}/children?$select=id,name,folder`, token);
-    const found = (retryList.value || []).find(it => it.folder && it.name.toLowerCase() === clean.toLowerCase());
-    if (found) return found.id;
-    throw e;
+async function signIn(){
+  if(IS_PREVIEW && !msalApp){ openPreviewPicker(); return; }
+  if(!(await msalReady) || !msalApp){ toast("Microsoft sign-in unavailable here"); return; }
+  try{
+    const res = await msalApp.loginPopup({ scopes: AUTH.scopes });
+    msalApp.setActiveAccount(res.account);
+    ME = accountToMe(res.account); rememberName(ME);
+    applyRole(); fillSelects(); render(); renderPrograms(); renderActivity();
+    toast("Signed in as "+ME.name);
+    spPull();
+  }catch(e){
+    console.error(e);
+    toast(e && /user_cancelled/i.test(e.errorCode||"") ? "Sign-in cancelled" : "Sign-in failed");
   }
 }
-async function ensurePath(token, driveId, rootId, segments) {
-  let parentId = rootId;
-  for (const seg of segments) parentId = await ensureFolder(token, driveId, parentId, seg);
-  return parentId;
-}
-async function uploadFile(token, driveId, parentId, filename, blob) {
-  const clean = filename.replace(/[\\/:*?"<>|]/g, '-');
-  return graphFetch(`https://graph.microsoft.com/v1.0/drives/${driveId}/items/${parentId}:/${encodeURIComponent(clean)}:/content`,
-    token, { method: 'PUT', headers: { 'Content-Type': blob.type || 'application/octet-stream' }, body: blob });
+async function signOut(){
+  ME = null; syncState = { on:false, busy:false, last:null, err:null, logDenied:false }; etags = {}; spSite = null;
+  if(msalApp){ try{ await msalApp.logoutPopup(); }catch(e){ console.error(e); } }
+  applyRole(); render(); renderPrograms(); go("pipeline");
+  toast("Signed out");
 }
 
-// ── SharePoint LIST access — Lists are the actual "database" here, separate
-// from the document library used for folders/PDFs above. Every list is
-// looked up by display name once and cached by ID. ─────────────────────────
-const LIST_ID_CACHE = {};
-async function getListId(token, siteId, displayName) {
-  if (LIST_ID_CACHE[displayName]) return LIST_ID_CACHE[displayName];
-  const res = await graphFetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/lists?$filter=displayName eq '${displayName}'&$select=id,displayName`, token);
-  const list = (res.value || [])[0];
-  if (!list) throw new Error(`SharePoint list "${displayName}" not found on the KPS App Suite site — has it been created yet?`);
-  LIST_ID_CACHE[displayName] = list.id;
-  return list.id;
+/* Preview-only role switch, for looking at the page from a downloaded copy. */
+function openPreviewPicker(){
+  document.getElementById("idPick").innerHTML = ROSTER.map(r=>`
+    <button onclick="setPreview('${r.id}')">
+      <span class="av">${initials(r.id)}</span>
+      <span>${esc(r.name)}</span>
+      ${MANAGERS.includes((r.email||"").toLowerCase())?'<span class="r">manager</span>':''}
+    </button>`).join("");
+  document.getElementById("idModal").classList.remove("hide");
+}
+function setPreview(id){
+  const r = ROSTER.find(x=>x.id===id); if(!r) return;
+  ME = { id:r.id, name:r.name, email:r.email||"", manager:MANAGERS.includes((r.email||"").toLowerCase()), ms:false };
+  rememberName(ME);
+  document.getElementById("idModal").classList.add("hide");
+  applyRole(); fillSelects(); render(); renderPrograms(); renderActivity();
+  toast("Preview as "+r.name);
 }
 
-// Pages through every item in a list, expanding fields. Small lists (low
-// hundreds of rows) — a single unpaginated fetch would work today, but this
-// follows @odata.nextLink so it keeps working as the list grows.
-async function listAllItems(token, siteId, listId) {
-  let url = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items?$expand=fields&$top=200`;
-  const out = [];
-  while (url) {
-    const page = await graphFetch(url, token);
-    out.push(...(page.value || []));
-    url = page['@odata.nextLink'] || null;
-  }
-  return out;
+/* "Mike G" rather than "Mike" when more than one Mike is on the roster. */
+function shortName(full){
+  const parts = (full||"").trim().split(/\s+/);
+  const first = parts[0] || "";
+  const clash = ROSTER.filter(r=>r.name.split(/\s+/)[0].toLowerCase()===first.toLowerCase()).length > 1;
+  return (clash && parts[1]) ? `${first} ${parts[1][0]}` : first;
+}
+function renderWho(){
+  const btn = document.getElementById("whoBtn");
+  btn.innerHTML = ME
+    ? `<span class="av">${initials(ME.id)}</span><span>${esc(shortName(ME.name))}</span>`
+    : `<span class="av">?</span><span>Sign in</span>`;
+  btn.onclick = ME ? openAccount : signIn;
+  btn.title = ME ? (ME.email || ME.name) : "Sign in with your Microsoft account";
+}
+function openAccount(){
+  document.getElementById("idPick").innerHTML = `
+    <div style="padding:2px 0 14px">
+      <div style="font-weight:700">${esc(ME.name)}</div>
+      <div class="hint">${esc(ME.email||"no address on this account")}</div>
+      <div class="hint" style="margin-top:6px">${ME.manager?"Manager — sees the scorecard, activity log and notes.":"Project manager view."}</div>
+      ${ME.ms?"":`<div class="pend" style="margin-top:10px">Preview mode — not a real sign-in.</div>`}
+    </div>
+    <button onclick="signOut();document.getElementById('idModal').classList.add('hide')">
+      <span class="av">→</span><span>Sign out</span></button>`;
+  document.getElementById("idModal").classList.remove("hide");
 }
 
-async function createListItem(token, siteId, listId, fields) {
-  return graphFetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items`, token, {
-    method: 'POST', body: JSON.stringify({ fields })
-  });
-}
-async function updateListItemFields(token, siteId, listId, itemId, fields) {
-  return graphFetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items/${itemId}/fields`, token, {
-    method: 'PATCH', body: JSON.stringify(fields)
-  });
+function applyRole(){
+  renderWho();
+  const mg = isManager();
+  document.getElementById("navGen").classList.toggle("hide", !signedIn());
+  document.querySelectorAll("[data-mgr]").forEach(el=>el.classList.toggle("hide", !mg));
+  document.getElementById("signedOut").classList.toggle("hide", signedIn());
 }
 
-// ══════════════════════════════════════════════════════════════════════════
-// APP STATE
-// ══════════════════════════════════════════════════════════════════════════
-let PROJECTS = [];   // [{id (SP item id), fields: {...}}]
-let ESTIMATES = [];  // [{id, fields: {...}}]
-let COST_BASELINES = []; // [{id, fields: {ProjectID,Status,BudgetTotal,FileURLs}}]
-let COST_ENTRIES = [];   // [{id, fields: {ProjectID,BaselineID,Building,Task,Description,Amount,EntryDate,SourceFile,FileURL,FileName}}]
-let costingReady = false; // false until CostBaselines/CostEntries lists are found on the site
-let costBuildingChart = null, costTaskChart = null; // Chart.js instances, destroyed/recreated on each drill-in render
-let LAST_COSTING_CHART_DATA = null; // {budget, actual} stashed by renderCostingSection for the chart pass right after
-let currentView = 'board';
-let signedIn = false;
-
-async function connectKPS() {
-  setOdStatus('Signing in…');
-  try {
-    const token = await getGraphToken();
-    signedIn = true;
-    document.getElementById('btnNewProject').disabled = false;
-    document.getElementById('odAction').textContent = 'Refresh';
-    document.getElementById('odAction').onclick = loadAll;
-    await loadAll();
-  } catch (err) {
-    console.error('KPS sign-in failed', err);
-    setOdStatus('Sign-in failed — <strong>' + (err.message||err) + '</strong>', true);
-  }
+/* ---------- change log ----------
+   One entry per edit or note. Lives in this browser only until the
+   app writes to the shared SharePoint list. */
+function logAdd(entry){
+  const log = LS.get("kps.log", []);
+  const m = me();
+  log.push(Object.assign({ ts:new Date().toISOString(), who:(m?m.id:"?") }, entry));
+  LS.set("kps.log", log.slice(-4000));
+  renderActivity();
 }
-
-async function loadAll() {
-  setOdStatus('Loading projects…');
-  try {
-    const token = await getGraphToken();
-    const { siteId } = await getSuiteSite(token);
-    const [projListId, estListId] = await Promise.all([
-      getListId(token, siteId, KPS_CONFIG.listProjects),
-      getListId(token, siteId, KPS_CONFIG.listEstimates),
-    ]);
-    const [projItems, estItems] = await Promise.all([
-      listAllItems(token, siteId, projListId),
-      listAllItems(token, siteId, estListId),
-    ]);
-    PROJECTS = projItems;
-    ESTIMATES = estItems;
-
-    // Costing lists are newer and may not exist on every site yet — load them
-    // separately so a missing CostBaselines/CostEntries list doesn't break the
-    // rest of the dashboard. costingReady stays false until both are found.
-    try {
-      const [baseListId, entryListId] = await Promise.all([
-        getListId(token, siteId, KPS_CONFIG.listCostBaselines),
-        getListId(token, siteId, KPS_CONFIG.listCostEntries),
-      ]);
-      const [baseItems, entryItems] = await Promise.all([
-        listAllItems(token, siteId, baseListId),
-        listAllItems(token, siteId, entryListId),
-      ]);
-      COST_BASELINES = baseItems;
-      COST_ENTRIES = entryItems;
-      costingReady = true;
-    } catch (err) {
-      console.warn('Costing lists not available yet:', err.message || err);
-      COST_BASELINES = []; COST_ENTRIES = []; costingReady = false;
-    }
-
-    const stamp = new Date().toLocaleString('en-US', { month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
-    setOdStatus(`Connected · <strong>${PROJECTS.length} projects</strong> · synced ${stamp}`);
-    document.getElementById('toolbar').style.display = 'flex';
-    renderAll();
-  } catch (err) {
-    console.error('Load failed', err);
-    setOdStatus('Load failed — <strong>' + (err.message||err) + '</strong>', true);
-    document.getElementById('root').innerHTML = `<div class="centered-msg">
-      Couldn't load the Projects/Estimates lists.<br/>${(err.message||err)}<br/>
-      <span style="font-size:12px">If these lists don't exist on the KPS App Suite site yet, they need to be created first — see the setup guide.</span>
-    </div>`;
-  }
+function logEdit(l, field, from, to, comment){
+  logAdd({ key:keyOf(l), title:l.t, scope:l.s||"", f:field, a:from, b:to, c:comment||"" });
 }
+function clearLog(){
+  if(!confirm("Delete the whole activity log? This cannot be undone.")) return;
+  LS.set("kps.log", []); renderActivity(); toast("Log cleared");
+}
+function logFor(l){ const k = keyOf(l); return LS.get("kps.log", []).filter(e=>e.key===k).reverse(); }
 
-function projectIdOf(fields) { return fields.Title || ''; }
-
-function estimatesFor(projectId) {
-  return ESTIMATES.filter(e => (e.fields.ProjectID || '') === projectId);
-}
-
-function daysSince(dateStr) {
-  if (!dateStr) return null;
-  const ms = Date.now() - new Date(dateStr).getTime();
-  return Math.floor(ms / 86400000);
-}
-
-function projectSellTotal(projectId) {
-  return estimatesFor(projectId).reduce((s,e)=> s + (parseFloat(e.fields.SellPrice)||0), 0);
-}
-
-function projectTrades(projectId) {
-  const fromEstimates = estimatesFor(projectId).map(e=>e.fields.Trade).filter(Boolean);
-  const stated = (PROJECTS.find(p=>projectIdOf(p.fields)===projectId)?.fields.TradesInvolved||'')
-    .split(',').map(s=>s.trim()).filter(Boolean);
-  return Array.from(new Set([...stated, ...fromEstimates]));
-}
-
-function fmtMoney(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
-
-// ══════════════════════════════════════════════════════════════════════════
-// COSTING — budget baseline (locked "final" cost sheet) + logged cost entries
-// tracked against it, per project.
-// ══════════════════════════════════════════════════════════════════════════
-function activeBaselineFor(projectId) {
-  return COST_BASELINES.find(b => b.fields.ProjectID === projectId && b.fields.Status === 'Active') || null;
-}
-function entriesForBaseline(baselineId) {
-  return COST_ENTRIES.filter(e => String(e.fields.BaselineID) === String(baselineId));
-}
-// Buckets ACTUAL entries by Building (blank Building = General Overhead,
-// tracked separately), and within each building by Task.
-function groupEntriesByBuilding(entries) {
-  const buildings = {};
-  let overheadTotal = 0;
-  entries.forEach(e => {
-    const amt = parseFloat(e.fields.Amount) || 0;
-    const bldg = (e.fields.Building || '').trim();
-    if (!bldg) { overheadTotal += amt; return; }
-    const task = (e.fields.Task || '').trim() || '(no task)';
-    if (!buildings[bldg]) buildings[bldg] = { total: 0, tasks: {} };
-    buildings[bldg].total += amt;
-    buildings[bldg].tasks[task] = (buildings[bldg].tasks[task] || 0) + amt;
-  });
-  return { buildings, overheadTotal };
-}
-// Same shape, but for the BUDGET side — parsed from the baseline's
-// BudgetBreakdown JSON (Building/Task/Amount rows extracted from the
-// estimator PDF, or entered/edited manually before locking).
-function budgetBreakdownFor(baseline) {
-  const out = { buildings: {}, overheadTotal: 0 };
-  let rows = [];
-  try { rows = JSON.parse(baseline.fields.BudgetBreakdown || '[]'); } catch(e) { rows = []; }
-  rows.forEach(r => {
-    const amt = parseFloat(r.amount) || 0;
-    const bldg = (r.building || '').trim();
-    if (!bldg) { out.overheadTotal += amt; return; }
-    const task = (r.task || '').trim() || '(no task)';
-    if (!out.buildings[bldg]) out.buildings[bldg] = { total: 0, tasks: {} };
-    out.buildings[bldg].total += amt;
-    out.buildings[bldg].tasks[task] = (out.buildings[bldg].tasks[task] || 0) + amt;
-  });
-  return out;
-}
-function fmtDelta(n) {
-  const cls = n < 0 ? 'delta-neg' : 'delta-pos';
-  return `<span class="${cls}">(${n>=0?'+':''}${fmtMoney(n)})</span>`;
-}
-// Merges budget + actual building/task maps into one HTML block with a
-// budget/actual/delta line per building and per task within it.
-function renderBuildingTaskTable(budget, actual) {
-  const buildingKeys = Array.from(new Set([...Object.keys(budget.buildings), ...Object.keys(actual.buildings)])).sort();
-  let html = '';
-  buildingKeys.forEach(bldg => {
-    const bB = budget.buildings[bldg] || { total: 0, tasks: {} };
-    const aB = actual.buildings[bldg] || { total: 0, tasks: {} };
-    const delta = bB.total - aB.total;
-    html += `<div class="cat-block">
-      <div class="cat-hdr"><span>${bldg.replace(/</g,'&lt;')}</span><span class="nums">${fmtMoney(aB.total)} of ${fmtMoney(bB.total)} ${fmtDelta(delta)}</span></div>`;
-    const taskKeys = Array.from(new Set([...Object.keys(bB.tasks), ...Object.keys(aB.tasks)])).sort();
-    taskKeys.forEach(task => {
-      const bAmt = bB.tasks[task] || 0, aAmt = aB.tasks[task] || 0, d = bAmt - aAmt;
-      html += `<div class="cat-hdr" style="padding-left:10px;font-weight:500"><span>${task==='(no task)'?'—':task.replace(/</g,'&lt;')}</span><span class="nums">${fmtMoney(aAmt)} of ${fmtMoney(bAmt)} ${fmtDelta(d)}</span></div>`;
-    });
-    html += `</div>`;
-  });
-  if (budget.overheadTotal > 0 || actual.overheadTotal > 0) {
-    const oDelta = budget.overheadTotal - actual.overheadTotal;
-    html += `<div class="cat-block"><div class="cat-hdr"><span>General Overhead</span><span class="nums">${fmtMoney(actual.overheadTotal)} of ${fmtMoney(budget.overheadTotal)} ${fmtDelta(oDelta)}</span></div></div>`;
-  }
-  return html;
-}
-function renderCostingCharts(budget, actual) {
-  if (typeof Chart === 'undefined') return; // Chart.js failed to load — charts just don't render
-  const buildingKeys = Array.from(new Set([...Object.keys(budget.buildings), ...Object.keys(actual.buildings)])).sort();
-  const taskBudget = {}, taskActual = {};
-  Object.values(budget.buildings).forEach(b => Object.entries(b.tasks).forEach(([t,v]) => taskBudget[t] = (taskBudget[t]||0) + v));
-  Object.values(actual.buildings).forEach(b => Object.entries(b.tasks).forEach(([t,v]) => taskActual[t] = (taskActual[t]||0) + v));
-  const taskKeys = Array.from(new Set([...Object.keys(taskBudget), ...Object.keys(taskActual)])).sort();
-
-  if (costBuildingChart) { costBuildingChart.destroy(); costBuildingChart = null; }
-  if (costTaskChart) { costTaskChart.destroy(); costTaskChart = null; }
-  const chartOpts = { responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{font:{size:10}}}}, scales:{ y:{beginAtZero:true, ticks:{font:{size:9}}}, x:{ticks:{font:{size:9}}} } };
-
-  const bCanvas = document.getElementById('costBuildingChart');
-  if (bCanvas && buildingKeys.length) {
-    costBuildingChart = new Chart(bCanvas, { type:'bar', data:{ labels: buildingKeys, datasets:[
-      { label:'Budget', data: buildingKeys.map(b=>(budget.buildings[b]||{total:0}).total), backgroundColor:'#d8d4cc' },
-      { label:'Actual', data: buildingKeys.map(b=>(actual.buildings[b]||{total:0}).total), backgroundColor:'#e97132' },
-    ]}, options: chartOpts });
-  }
-  const tCanvas = document.getElementById('costTaskChart');
-  if (tCanvas && taskKeys.length) {
-    costTaskChart = new Chart(tCanvas, { type:'bar', data:{ labels: taskKeys, datasets:[
-      { label:'Budget', data: taskKeys.map(t=>taskBudget[t]||0), backgroundColor:'#d8d4cc' },
-      { label:'Actual', data: taskKeys.map(t=>taskActual[t]||0), backgroundColor:'#e97132' },
-    ]}, options: chartOpts });
-  }
-}
-
-function matchesSearch(p, q) {
-  if (!q) return true;
-  const f = p.fields;
-  const hay = [projectIdOf(f), f.PropertyName, f.Address, f.ClientName, f.ClientEmail].join(' ').toLowerCase();
-  return hay.includes(q.toLowerCase());
-}
-
-function setView(v) {
-  currentView = v;
-  document.getElementById('viewBoardBtn').classList.toggle('on', v==='board');
-  document.getElementById('viewTableBtn').classList.toggle('on', v==='table');
-  renderAll();
-}
-
-function renderAll() {
-  const q = document.getElementById('searchInput')?.value || '';
-  const visible = PROJECTS.filter(p => matchesSearch(p, q));
-  document.getElementById('root').innerHTML = currentView === 'board' ? renderBoard(visible) : renderTable(visible);
-}
-
-function renderBoard(items) {
-  const byStage = {};
-  STAGES.forEach(s => byStage[s] = []);
-  items.forEach(p => {
-    const stage = STAGES.includes(p.fields.CurrentStage) ? p.fields.CurrentStage : 'Intake';
-    byStage[stage].push(p);
-  });
-  return `<div class="board">` + STAGES.map(stage => `
-    <div class="col">
-      <div class="col-hdr"><span>${stage}</span><span class="col-count">${byStage[stage].length}</span></div>
-      <div class="col-body">
-        ${byStage[stage].length ? byStage[stage].map(p=>cardHTML(p)).join('') : '<div class="empty-col">—</div>'}
+/* ---------- home ---------- */
+function progCard(p){
+  const showRepos = isManager();
+  const planned = p.status!=="live";
+  return `<div class="card prog ${planned?'planned':''}">
+    <div class="top">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${ICONS[p.icon]||ICONS.grid}</svg></span>
+      <div style="flex:1">
+        <h3>${esc(p.name)}</h3>
+        <p class="meta"><span class="tag ${planned?'soon':'live'}">${planned?'Planned':'Live'}</span>
+        ${p.mgr?'<span class="tag">Managers only</span>':''}</p>
       </div>
-    </div>`).join('') + `</div>`;
-}
-
-function cardHTML(p) {
-  const f = p.fields;
-  const pid = projectIdOf(f);
-  const trades = projectTrades(pid);
-  const days = daysSince(p.lastModifiedDateTime);
-  const stale = days !== null && days >= 10;
-  const total = projectSellTotal(pid);
-  return `<div class="pcard${stale?' stale':''}" onclick="openDrillin('${pid.replace(/'/g,"\\'")}')">
-    <div class="pcard-name">${(f.PropertyName||'(untitled)').replace(/</g,'&lt;')}</div>
-    <div class="pcard-id">${pid}</div>
-    <div class="pcard-chips">${trades.map(t=>`<span class="chip">${t}</span>`).join('') || '<span class="chip">no trade yet</span>'}</div>
-    <div class="pcard-foot">
-      <span class="${stale?'pcard-days stale':'pcard-days'}">${days===null?'—':days+'d since update'}</span>
-      ${total>0?`<span class="pcard-price">${fmtMoney(total)}</span>`:''}
+    </div>
+    <p>${esc(p.desc)}</p>
+    <div class="acts">
+      ${p.live?`<a class="btn primary" href="${p.live}" target="_blank" rel="noopener">Open</a>`
+             :`<button class="btn" disabled>Not built yet</button>`}
+      ${(showRepos && p.repo)?`<a class="btn" href="${p.repo}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.4 9.4 0 015 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .3.3.7 1 .7 2v3c0 .3.2.6.7.5A10 10 0 0012 2z"/></svg>
+        Source</a>`:``}
     </div>
   </div>`;
 }
-
-let sortField = null, sortDir = 1;
-function sortTable(field) {
-  if (sortField === field) sortDir *= -1; else { sortField = field; sortDir = 1; }
-  renderAll();
+function renderPrograms(){
+  const vis = p => !p.mgr || isManager();
+  document.getElementById("gridEstimating").innerHTML =
+    PROGRAMS.filter(p=>p.group==="estimating").filter(vis).map(progCard).join("");
+  document.getElementById("gridProjects").innerHTML =
+    PROGRAMS.filter(p=>p.group==="projects").filter(vis).map(progCard).join("");
+  document.getElementById("gridAll").innerHTML = PROGRAMS.filter(vis).map(progCard).join("");
+  renderPriceCard();
+  renderAccount();
+  const dn = document.getElementById("devNoteTxt");
+  if(dn) dn.textContent =
+    "Source links, the PM scorecard, the activity log and notes on a lead are shown to the accounts listed in MANAGERS at the top of this file. "+
+    "Everyone else signs in and gets the plain pipeline. Because the page runs in the browser, treat this as tidiness rather than security "+
+    "until the data itself lives in SharePoint with its own permissions.";
 }
 
-function renderTable(items) {
-  let rows = items.slice();
-  if (sortField) {
-    rows.sort((a,b)=>{
-      const av = sortField==='sell' ? projectSellTotal(projectIdOf(a.fields)) : (a.fields[sortField]||'');
-      const bv = sortField==='sell' ? projectSellTotal(projectIdOf(b.fields)) : (b.fields[sortField]||'');
-      return (av > bv ? 1 : av < bv ? -1 : 0) * sortDir;
-    });
-  }
-  return `<div class="table-wrap"><table>
-    <thead><tr>
-      <th onclick="sortTable('PropertyName')">Property</th>
-      <th onclick="sortTable('Title')">Project ID</th>
-      <th onclick="sortTable('CurrentStage')">Stage</th>
-      <th>Trades</th>
-      <th onclick="sortTable('sell')">Sell Price</th>
-      <th>Client</th>
-      <th onclick="sortTable('Source')">Source</th>
-    </tr></thead>
-    <tbody>
-      ${rows.map(p=>{
-        const f = p.fields; const pid = projectIdOf(f);
-        return `<tr class="rowclick" onclick="openDrillin('${pid.replace(/'/g,"\\'")}')">
-          <td>${(f.PropertyName||'').replace(/</g,'&lt;')}</td>
-          <td style="font-family:ui-monospace,monospace;font-size:11px">${pid}</td>
-          <td><span class="stage-pill">${f.CurrentStage||'Intake'}</span></td>
-          <td>${projectTrades(pid).join(', ')||'—'}</td>
-          <td>${projectSellTotal(pid)>0?fmtMoney(projectSellTotal(pid)):'—'}</td>
-          <td>${(f.ClientName||'').replace(/</g,'&lt;')}</td>
-          <td>${f.Source||'—'}</td>
-        </tr>`;
-      }).join('')}
-    </tbody>
-  </table></div>`;
-}
-
-function renderCostingSection(projectId) {
-  LAST_COSTING_CHART_DATA = null;
-  if (!costingReady) {
-    return `<div class="no-baseline">Costing isn't set up on the KPS App Suite site yet — the CostBaselines and CostEntries lists need to be created first (see setup notes).</div>`;
-  }
-  const baseline = activeBaselineFor(projectId);
-  if (!baseline) {
-    return `<div class="no-baseline">No budget baseline set for this project yet.</div>
-      <div class="costing-actions">
-        <button class="btn-small" onclick="openBaselineModal('${projectId.replace(/'/g,"\\'")}')">Set Budget Baseline</button>
-        <button class="btn-small secondary" onclick="exportProjectToExcel('${projectId.replace(/'/g,"\\'")}')">Export to Excel</button>
-      </div>`;
-  }
-  const bf = baseline.fields;
-  const budgetTotal = parseFloat(bf.BudgetTotal) || 0;
-  const entries = entriesForBaseline(baseline.id).sort((a,b)=> (b.fields.EntryDate||'').localeCompare(a.fields.EntryDate||''));
-  const actualTotal = entries.reduce((s,e)=> s + (parseFloat(e.fields.Amount)||0), 0);
-  const overTotal = actualTotal > budgetTotal;
-  const pct = budgetTotal > 0 ? Math.min(100, Math.round((actualTotal/budgetTotal)*100)) : (actualTotal>0?100:0);
-
-  const actual = groupEntriesByBuilding(entries);
-  const budget = budgetBreakdownFor(baseline);
-  const breakdownHtml = renderBuildingTaskTable(budget, actual);
-  const hasBreakdown = Object.keys(budget.buildings).length || Object.keys(actual.buildings).length || budget.overheadTotal || actual.overheadTotal;
-  if (hasBreakdown) LAST_COSTING_CHART_DATA = { budget, actual };
-
-  let filesHtml = '';
-  try {
-    const files = JSON.parse(bf.FileURLs || '[]');
-    if (files.length) filesHtml = files.map(f => `<a class="baseline-file" href="${f.url}" target="_blank">${(f.name||'file').replace(/</g,'&lt;')} →</a>`).join('<br/>');
-  } catch(e) { /* ignore malformed FileURLs */ }
-
-  const priorTotal = parseFloat(bf.PriorBudgetTotal);
-  const rebaselineNote = !isNaN(priorTotal) ? `<div class="rebaseline-note">Re-baselined from ${fmtMoney(priorTotal)} → ${fmtMoney(budgetTotal)} ${fmtDelta(budgetTotal-priorTotal)}</div>` : '';
-
-  return `
-    ${rebaselineNote}
-    <div class="cost-summary">
-      <div class="cost-stat"><div class="cost-stat-label">Budget</div><div class="cost-stat-val">${fmtMoney(budgetTotal)}</div></div>
-      <div class="cost-stat"><div class="cost-stat-label">Actual</div><div class="cost-stat-val${overTotal?' over':''}">${fmtMoney(actualTotal)}</div></div>
-      <div class="cost-stat"><div class="cost-stat-label">Remaining</div><div class="cost-stat-val${overTotal?' over':''}">${fmtMoney(budgetTotal-actualTotal)}</div></div>
-    </div>
-    <div class="budget-bar" style="margin-bottom:12px"><div class="budget-bar-fill${overTotal?' over':''}" style="width:${pct}%"></div></div>
-    ${filesHtml ? `<div style="margin-bottom:10px">${filesHtml}</div>` : ''}
-    ${hasBreakdown ? `<div class="charts-row">
-      <div class="chart-box"><div class="chart-box-title">By Building</div><canvas id="costBuildingChart"></canvas></div>
-      <div class="chart-box"><div class="chart-box-title">By Task</div><canvas id="costTaskChart"></canvas></div>
-    </div>` : ''}
-    ${breakdownHtml ? `<div class="panel-section-title" style="margin-top:4px">By Building / Task (Actual of Budget)</div>${breakdownHtml}` : ''}
-    <div class="panel-section-title" style="margin-top:14px">Cost Entries (${entries.length})</div>
-    ${entries.length ? entries.map(e => {
-      const ef = e.fields;
-      const tag = ef.Building ? `${ef.Building}${ef.Task?' · '+ef.Task:''}` : 'General Overhead';
-      return `<div class="entry-row">
-        <div>
-          <div class="entry-cat">${tag.replace(/</g,'&lt;')}</div>
-          <div class="entry-desc">${(ef.Description||'').replace(/</g,'&lt;')}${ef.EntryDate?` · ${ef.EntryDate}`:''}</div>
-          ${ef.FileURL?`<a class="entry-file" href="${ef.FileURL}" target="_blank">${(ef.FileName||'attachment').replace(/</g,'&lt;')}</a>`:''}
-        </div>
-        <div class="entry-amt">${fmtMoney(parseFloat(ef.Amount)||0)}</div>
-      </div>`;
-    }).join('') : '<div style="font-size:12px;color:#aaa">No costs logged yet.</div>'}
-    <div class="costing-actions">
-      <button class="btn-small" onclick="openCostEntryModal('${projectId.replace(/'/g,"\\'")}', '${baseline.id}')">Log a Cost</button>
-      <button class="btn-small" onclick="openImportModal('${projectId.replace(/'/g,"\\'")}', '${baseline.id}')">Import Costs (Excel)</button>
-      <button class="btn-small" onclick="openPdfImportModal('${projectId.replace(/'/g,"\\'")}', '${baseline.id}')">Import Costs (PDF)</button>
-      <button class="btn-small secondary" onclick="openBaselineModal('${projectId.replace(/'/g,"\\'")}')">Re-baseline</button>
-      <button class="btn-small secondary" onclick="exportProjectToExcel('${projectId.replace(/'/g,"\\'")}')">Export to Excel</button>
-    </div>
-  `;
-}
-
-// ══════════════════════════════════════════════════════════════════════════
-// DRILL-IN
-// ══════════════════════════════════════════════════════════════════════════
-function openDrillin(projectId) {
-  const p = PROJECTS.find(pr => projectIdOf(pr.fields) === projectId);
-  if (!p) return;
-  const f = p.fields;
-  const ests = estimatesFor(projectId);
-  document.getElementById('drillinContent').innerHTML = `
-    <div class="modal-top">
+/* ---------- shared price list ---------- */
+let priceInfo = LS.get("kps.priceinfo", null);
+function renderPriceCard(){
+  const el = document.getElementById("priceCard"); if(!el) return;
+  const i = priceInfo;
+  el.innerHTML = `
+    <div class="pc-head">
       <div>
-        <div class="panel-title">${(f.PropertyName||'(untitled)').replace(/</g,'&lt;')}</div>
-        <div class="panel-id">${projectId}</div>
+        <h3>Shared price list</h3>
+        <p>Every estimator reads <code>Estimator-Pricing.xlsx</code> from the KPS App Suite site — one catalog, one place to change a price.</p>
       </div>
-      <button class="x-btn" onclick="closeDrillin()">&times;</button>
+      ${signedIn()?`<button class="btn" onclick="checkPricing()">Check now</button>`:``}
     </div>
-    <div class="panel-section">
-      <div class="panel-section-title">Project</div>
-      <div style="font-size:13px;color:#555;line-height:1.7">
-        ${f.Address?`${f.Address}<br/>`:''}
-        ${f.ClientName?`${f.ClientName}`:''} ${f.ClientPhone?` · ${f.ClientPhone}`:''}${f.ClientEmail?` · ${f.ClientEmail}`:''}<br/>
-        <span class="stage-select">Stage:
-          <select onchange="changeStage('${projectId.replace(/'/g,"\\'")}', this.value)">
-            ${STAGES.map(s=>`<option value="${s}" ${s===(f.CurrentStage||'Intake')?'selected':''}>${s}</option>`).join('')}
-          </select>
-        </span>
-      </div>
-      ${f.Notes?`<div style="font-size:12px;color:#888;margin-top:8px;white-space:pre-wrap">${f.Notes.replace(/</g,'&lt;')}</div>`:''}
-    </div>
-    <div class="panel-section">
-      <div class="panel-section-title">Estimates (${ests.length})</div>
-      ${ests.length ? ests.map(e=>{
-        const ef = e.fields;
-        return `<div class="est-row">
-          <div>
-            <div class="est-trade">${ef.Trade||'—'}</div>
-            <div class="est-status">${ef.InternalStatus||'—'} · ${ef.BidStatus||'—'}</div>
-          </div>
-          <div class="est-price">${ef.SellPrice?fmtMoney(parseFloat(ef.SellPrice)):'—'}</div>
-        </div>`;
-      }).join('') : '<div style="font-size:12px;color:#aaa">No estimate started yet.</div>'}
-    </div>
-    <div class="panel-section">
-      <div class="panel-section-title">Costing</div>
-      ${renderCostingSection(projectId)}
-    </div>
-    <div class="panel-section">
-      <div class="panel-section-title">Project Folder</div>
-      <div class="link-list">
-        <a href="https://${KPS_CONFIG.siteHostname}${KPS_CONFIG.sitePath}/Shared%20Documents/Projects/${encodeURIComponent(projectId)}" target="_blank">Open Projects/${projectId} in SharePoint →</a>
-      </div>
-    </div>
-  `;
-  if (LAST_COSTING_CHART_DATA) renderCostingCharts(LAST_COSTING_CHART_DATA.budget, LAST_COSTING_CHART_DATA.actual);
-  document.getElementById('drillinModal').classList.add('show');
+    ${!signedIn()
+      ? `<div class="pend">Sign in to see when the price list was last changed. Until an estimator is signed in it quietly falls back to its built-in prices.</div>`
+      : i
+        ? `<div class="pc-rows">
+             <div class="frow"><span class="k">Last changed</span><span class="v">${esc(i.when)}</span></div>
+             <div class="frow"><span class="k">Changed by</span><span class="v">${esc(i.who)}</span></div>
+             <div class="frow"><span class="k">File</span><span class="v">${esc(i.name)}</span></div>
+           </div>`
+        : `<p class="hint">Press <b>Check now</b> to read the file's details from SharePoint.</p>`}`;
 }
-function closeDrillin(){ document.getElementById('drillinModal').classList.remove('show'); }
-
-async function changeStage(projectId, newStage) {
-  const p = PROJECTS.find(pr => projectIdOf(pr.fields) === projectId);
-  if (!p) return;
-  try {
-    const token = await getGraphToken();
-    const { siteId } = await getSuiteSite(token);
-    const listId = await getListId(token, siteId, KPS_CONFIG.listProjects);
-    await updateListItemFields(token, siteId, listId, p.id, { CurrentStage: newStage });
-    p.fields.CurrentStage = newStage;
-    renderAll();
-  } catch (err) {
-    alert('Could not update stage: ' + (err.message||err));
-  }
+async function checkPricing(){
+  if(!msalApp){ toast("Needs the hosted site to reach SharePoint"); return; }
+  try{
+    const acc = msalApp.getActiveAccount() || msalApp.getAllAccounts()[0];
+    const t = await msalApp.acquireTokenSilent({ scopes: AUTH.scopes, account: acc })
+                 .catch(()=>msalApp.acquireTokenPopup({ scopes: AUTH.scopes, account: acc }));
+    const h = { Authorization: "Bearer " + t.accessToken };
+    const site = await (await fetch("https://graph.microsoft.com/v1.0/sites/kellyspropertyservices.sharepoint.com:/sites/KPSAppSuite", {headers:h})).json();
+    const path = "/Estimating/Database/Estimator-Pricing.xlsx".split("/").map(encodeURIComponent).join("/");
+    const item = await (await fetch(`https://graph.microsoft.com/v1.0/sites/${site.id}/drive/root:${path}`, {headers:h})).json();
+    if(item.error) throw new Error(item.error.message);
+    priceInfo = {
+      name: item.name,
+      when: new Date(item.lastModifiedDateTime).toLocaleString("en-US",{dateStyle:"medium", timeStyle:"short"}),
+      who:  (item.lastModifiedBy && item.lastModifiedBy.user && item.lastModifiedBy.user.displayName) || "unknown"
+    };
+    LS.set("kps.priceinfo", priceInfo);
+    renderPriceCard(); toast("Price list checked");
+  }catch(e){ console.error(e); toast("Couldn't reach the price list"); }
 }
 
-// ══════════════════════════════════════════════════════════════════════════
-// NEW PROJECT
-// ══════════════════════════════════════════════════════════════════════════
-let projectIdDirty = false;
-function slugifyProjectName(str){
-  const clean = (str||'').replace(/[^a-zA-Z0-9]+/g,'');
-  return clean.substring(0,30) || '';
+/* ---------- account ---------- */
+function renderAccount(){
+  const el = document.getElementById("acctCard"); if(!el) return;
+  el.innerHTML = signedIn()
+    ? `<div class="pc-head">
+         <div>
+           <h3>${esc(ME.name)}</h3>
+           <p>${esc(ME.email||"no address on this account")} · ${ME.manager?"Manager":"Project manager"}${ME.ms?"":" · preview only"}</p>
+         </div>
+         <button class="btn" onclick="signOut()">Sign out</button>
+       </div>
+       <p class="hint" style="margin:12px 0 0">You'll stay signed in on this device until you sign out. The estimators share this sign-in, so they pick up live prices without asking again.</p>`
+    : `<div class="pc-head">
+         <div><h3>Not signed in</h3><p>Sign in with the Microsoft account you use for KPS email.</p></div>
+         <button class="btn primary" onclick="signIn()">Sign in with Microsoft</button>
+       </div>`;
 }
-function suggestProjectId(){
-  if (projectIdDirty) return;
-  const slug = slugifyProjectName(document.getElementById('npProperty').value);
-  document.getElementById('npProjectId').value = nextProjectId(slug);
-}
-// Finds the next unused sequence number for this property/year against
-// whatever's already loaded in PROJECTS, so re-bidding the same property
-// later this year doesn't collide with an existing Project ID.
-function nextProjectId(slug){
-  if (!slug) return '';
+
+/* ---------- projects (won work) ---------- */
+function renderProjects(){
+  const body = document.getElementById("projBody"); if(!body) return;
+  const won = leads.filter(l=>l.st==="Won")
+                   .sort((a,b)=> (a.c||"") < (b.c||"") ? 1 : -1);
   const year = new Date().getFullYear();
-  const prefix = `${slug}-${year}-`;
-  const used = PROJECTS.map(p => projectIdOf(p.fields)).filter(id => id.startsWith(prefix));
-  let n = 1;
-  while (used.includes(prefix + String(n).padStart(3,'0'))) n++;
-  return prefix + String(n).padStart(3,'0');
+  body.innerHTML = won.map((l)=>{
+    const i = leads.indexOf(l);
+    const slug = l.t.replace(/[^A-Za-z0-9]+/g,"").slice(0,18) || "Project";
+    const seq = String(won.indexOf(l)+1).padStart(3,"0");
+    return `<tr class="p-${l.p}" onclick="openDrawer(${i})">
+      <td class="pcell"><span class="pflag ${l.p}"></span></td>
+      <td class="prop">${esc(l.t)}${l.s?`<span class="scope">${esc(l.s)}</span>`:""}</td>
+      <td>${l.pm?`<span class="pm">${esc(l.pm)}</span>`:`<span style="color:var(--muted)">—</span>`}</td>
+      <td style="color:var(--ink-2)"><code>${esc(slug)}-${year}-${seq}</code></td>
+      <td class="num" style="color:var(--ink-2)">${fmtDate(l.c)}</td>
+      <td class="num">${l.age===null?"—":l.age}</td>
+      <td class="notes">${esc(l.n||"—")}</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("projEmpty").classList.toggle("hide", won.length>0);
+  document.getElementById("projSub").textContent =
+    `${won.length} won job${won.length===1?"":"s"} · Project IDs are suggestions until the Projects list exists in SharePoint`;
+  const val = won.reduce((n,l)=>n+1,0);
+  const t = [
+    {lab:"Won jobs", val:won.length, note:"across all trades"},
+    {lab:"This month", val:won.filter(l=>l.c && new Date(l.c).getMonth()===new Date().getMonth() && new Date(l.c).getFullYear()===year).length, note:"by lead created date"},
+    {lab:"Trades involved", val:new Set(won.map(l=>l.ty).filter(Boolean)).size, note:"distinct project types"},
+    {lab:"PMs with work", val:new Set(won.map(l=>l.pm).filter(Boolean)).size, note:"holding a won job"}
+  ];
+  document.getElementById("projTiles").innerHTML = t.map(x=>
+    `<div class="card tile"><div class="lab">${x.lab}</div><div class="val">${x.val}</div><div class="note">${x.note}</div></div>`).join("");
 }
-document.addEventListener('input', (e) => {
-  if (e.target && e.target.id === 'npProjectId') projectIdDirty = true;
+
+/* ---------- helpers ---------- */
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function fmtDate(iso){
+  if(!iso) return "—";
+  const d = new Date(iso+"T00:00:00");
+  return (d.getMonth()+1)+"/"+d.getDate()+"/"+String(d.getFullYear()).slice(2);
+}
+function ageCls(a){ return a===null?"":(a>=60?"age-old":(a>=30?"age-mid":"")); }
+function toast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("on");
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("on"),2200);
+}
+
+/* ---------- filtering & sorting ---------- */
+function visible(){
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const pm = document.getElementById("fPM").value;
+  const st = document.getElementById("fStage").value;
+  const ty = document.getElementById("fType").value;
+  return leads.filter(l=>{
+    if(pm==="__open" ? !isOpen(l) : (pm && l.pm!==pm)) return false;
+    if(st && l.st!==st) return false;
+    if(ty && l.ty!==ty) return false;
+    if(prFilter && l.p!==prFilter) return false;
+    if(q){
+      const hay = (l.t+" "+(l.s||"")+" "+(l.pm||"")+" "+(l.n||"")+" "+(l.ty||"")+" "+l.st).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  }).sort(cmp);
+}
+function cmp(a,b){
+  const k = sortKey;
+  let x, y;
+  if(k==="property"){ x=a.t.toLowerCase(); y=b.t.toLowerCase(); }
+  else if(k==="age"){ x=a.age===null?-1:a.age; y=b.age===null?-1:b.age; }
+  else if(k==="created"){ x=a.c||""; y=b.c||""; }
+  else if(k==="stage"){ x=STAGES.indexOf(a.st); y=STAGES.indexOf(b.st); }
+  else if(k==="pm"){ x=(a.pm||"zzz").toLowerCase(); y=(b.pm||"zzz").toLowerCase(); }
+  else { x=(a[{type:"ty"}[k]||k]||"").toLowerCase(); y=(b[{type:"ty"}[k]||k]||"").toLowerCase(); }
+  if(x<y) return -sortDir;
+  if(x>y) return sortDir;
+  return a.t.localeCompare(b.t);
+}
+function sortBy(k){
+  if(sortKey===k) sortDir = -sortDir;
+  else { sortKey = k; sortDir = (k==="age"||k==="created") ? -1 : 1; }
+  render();
+}
+
+/* ---------- render ---------- */
+function fillSelects(){
+  const pmSel = document.getElementById("fPM");
+  const pms = [...new Set(leads.map(l=>l.pm).filter(Boolean))].sort();
+  pmSel.innerHTML = `<option value="">All PMs</option><option value="__open">Open leads only</option>`
+    + pms.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join("");
+  document.getElementById("fStage").innerHTML = `<option value="">All stages</option>`
+    + STAGES.filter(s=>leads.some(l=>l.st===s)).map(s=>`<option value="${s}">${s}</option>`).join("");
+  const tys = [...new Set(leads.map(l=>l.ty).filter(Boolean))].sort();
+  document.getElementById("fType").innerHTML = `<option value="">All project types</option>`
+    + tys.map(t=>`<option value="${esc(t)}">${esc(t.length>42?t.slice(0,40)+"…":t)}</option>`).join("");
+}
+function renderChips(){
+  const counts = {}; leads.forEach(l=>counts[l.p]=(counts[l.p]||0)+1);
+  document.getElementById("prChips").innerHTML =
+    `<button class="chip" aria-pressed="${prFilter===""}" onclick="setPr('')">All <span class="n">${leads.length}</span></button>` +
+    ["urgent","progress","watch","none"].filter(k=>counts[k]).map(k=>
+      `<button class="chip" aria-pressed="${prFilter===k}" onclick="setPr('${k}')">
+        <i class="dot" style="background:var(--${k==='none'?'muted':k})"></i>${PRIOS[k].label} <span class="n">${counts[k]}</span></button>`).join("");
+}
+function setPr(k){ prFilter = (prFilter===k?"":k); render(); }
+
+function renderTiles(rows){
+  const sel = document.getElementById("fPM").value;
+  const pmView = isManager() && sel && sel!=="__open";
+  const set = pmView ? leads.filter(l=>l.pm===sel) : leads;
+
+  const open = set.filter(isOpen);
+  const sent = set.filter(l=>l.st==="Sent");
+  const won  = set.filter(l=>l.st==="Won");
+  const ages = open.map(l=>l.age).filter(a=>a!==null);
+  const avg  = ages.length ? Math.round(ages.reduce((a,b)=>a+b,0)/ages.length) : 0;
+  const attn = open.filter(l=>l.p==="urgent" || (l.age!==null && l.age>=45)).length;
+  const closed = won.length + set.filter(l=>["Lost","Pass"].includes(l.st)).length;
+  const winPct = closed ? Math.round(won.length/closed*100) : 0;
+
+  const bar = document.getElementById("mgrBar");
+  bar.classList.toggle("hide", !pmView);
+  if(pmView){
+    const oldest = open.reduce((m,l)=>(l.age||0)>(m?m.age||0:-1)?l:m, null);
+    const since = Date.now() - 7*86400000;
+    const edits = LS.get("kps.log",[]).filter(e=>new Date(e.ts).getTime()>=since
+                    && set.some(l=>keyOf(l)===e.key)).length;
+    bar.innerHTML = `<span class="pill">Manager view</span>
+      <span><b>${esc(nameOf(sel))}</b> — ${open.length} open, oldest ${oldest?oldest.age+" days ("+esc(oldest.t)+")":"none"},
+      ${edits} update${edits===1?"":"s"} logged this week</span>
+      <span class="note">Only managers see this strip</span>`;
+  }
+
+  const t = pmView ? [
+    {lab:"Open leads", val:open.length, note:`${set.length} total for ${esc(sel)}`},
+    {lab:"Awaiting reply", val:sent.length, note:"estimate sent, no answer yet"},
+    {lab:"Needs attention", val:attn, note:"urgent flag or 45+ days old", u:attn>0},
+    {lab:"Average age", val:avg+"d", note:`company average ${companyAvgAge()}d`},
+    {lab:"Win rate", val:winPct+"%", note:`${won.length} won of ${closed} decided`}
+  ] : [
+    {lab:"Open leads", val:open.length, note:`${set.length} total on file`},
+    {lab:"Awaiting reply", val:sent.length, note:"estimate sent, no answer yet"},
+    {lab:"Needs attention", val:attn, note:"urgent flag or 45+ days old", u:attn>0},
+    {lab:"Average age", val:avg+"d", note:"across open leads"},
+    {lab:"Win rate", val:winPct+"%", note:`${won.length} won of ${closed} decided`}
+  ];
+  document.getElementById("tiles").innerHTML = t.map(x=>
+    `<div class="card tile ${x.u?'u':''}"><div class="lab">${x.lab}</div><div class="val">${x.val}</div><div class="note">${x.note}</div></div>`).join("");
+}
+function companyAvgAge(){
+  const a = leads.filter(isOpen).map(l=>l.age).filter(x=>x!==null);
+  return a.length ? Math.round(a.reduce((x,y)=>x+y,0)/a.length) : 0;
+}
+
+function renderBars(){
+  const open = leads.filter(isOpen);
+  const by = {};
+  open.forEach(l=>{ const k=l.pm||"—"; (by[k]=by[k]||{urgent:0,progress:0,watch:0,none:0,tot:0}); by[k][l.p]++; by[k].tot++; });
+  const rows = Object.entries(by).sort((a,b)=>b[1].tot-a[1].tot);
+  const max = Math.max(1, ...rows.map(r=>r[1].tot));
+  document.getElementById("pmBars").innerHTML = rows.map(([pm,v])=>{
+    const w = (v.tot/max*100);
+    const seg = ["urgent","progress","watch","none"].filter(k=>v[k]).map(k=>
+      `<i style="flex:${v[k]};background:var(--${k==='none'?'muted':'fill-'+k})" title="${v[k]} ${PRIOS[k].short}"></i>`).join("");
+    return `<div class="barrow"><span class="who">${esc(pm)}</span>
+      <span class="bartrack" style="width:${w}%">${seg}</span>
+      <span class="tot">${v.tot}</span></div>`;
+  }).join("") || `<p class="cap">No open leads.</p>`;
+}
+
+function render(){
+  const rows = visible();
+  renderTiles(rows); renderBars(); renderChips(); renderProjects();
+  document.querySelectorAll("thead th.s").forEach(th=>{
+    if(th.dataset.k===sortKey){ th.setAttribute("aria-sort", sortDir>0?"ascending":"descending");
+      th.querySelector(".ar").textContent = sortDir>0?"▲":"▼"; }
+    else { th.removeAttribute("aria-sort"); th.querySelector(".ar").textContent=""; }
+  });
+  document.getElementById("tbody").innerHTML = rows.map((l,i)=>{
+    const idx = leads.indexOf(l);
+    return `<tr class="p-${l.p} ${selected===idx?'sel':''}" onclick="openDrawer(${idx})">
+      <td class="pcell"><span class="pflag ${l.p}" title="${PRIOS[l.p].label}"></span></td>
+      <td class="prop">${esc(l.t)}${l.s?`<span class="scope">${esc(l.s)}</span>`:""}</td>
+      <td>${l.pm?`<span class="pm">${esc(l.pm)}</span>`:`<span style="color:var(--muted)">—</span>`}</td>
+      <td><span class="badge ${l.st.toLowerCase()}">${l.st}</span></td>
+      <td style="color:var(--ink-2);max-width:190px">${esc(l.ty||"—")}</td>
+      <td class="num" style="color:var(--ink-2)">${fmtDate(l.c)}</td>
+      <td class="num ${ageCls(l.age)}">${l.age===null?"—":l.age+"d"}</td>
+      <td class="notes">${esc(l.n||"—")}</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("empty").classList.toggle("hide", rows.length>0);
+  document.getElementById("leadsSub").textContent =
+    `${rows.length} of ${leads.length} leads shown · click any row for detail · click a column heading to sort`;
+}
+/* ---------- drawer ---------- */
+function openDrawer(i){
+  if(!signedIn()){ signIn(); return; }
+  selected = i; const l = leads[i];
+  const mg = isManager();
+  const hist = logFor(l);
+  document.getElementById("dTitle").textContent = l.t;
+  document.getElementById("dScope").textContent = l.s || l.ty || "";
+  document.getElementById("dBody").innerHTML = `
+    <div class="editable">
+      <label for="eStage">Stage</label>
+      <select id="eStage" onchange="edit(${i},'st',this.value)">
+        ${STAGES.map(x=>`<option ${x===l.st?"selected":""}>${x}</option>`).join("")}
+      </select>
+    </div>
+    <div class="editable">
+      <label for="ePM">Project manager</label>
+      <select id="ePM" onchange="edit(${i},'pm',this.value)">
+        <option value="">Unassigned</option>
+        ${ROSTER.map(r=>`<option value="${r.id}" ${r.id===l.pm?"selected":""}>${esc(r.id)} — ${esc(r.name)}</option>`).join("")}
+        ${l.pm && !ROSTER.some(r=>r.id===l.pm) ? `<option value="${esc(l.pm)}" selected>${esc(l.pm)}</option>` : ""}
+      </select>
+    </div>
+    <div class="editable">
+      <label for="eType">Project type</label>
+      <input id="eType" value="${esc(l.ty||"")}" onchange="edit(${i},'ty',this.value)">
+    </div>
+    <div class="editable">
+      <label>Priority</label>
+      <div class="prset">
+        <button class="chip u" aria-pressed="${l.p==='urgent'}" onclick="edit(${i},'p','urgent')"><i class="dot" style="background:var(--urgent)"></i>Needs immediate response</button>
+        <button class="chip p" aria-pressed="${l.p==='progress'}" onclick="edit(${i},'p','progress')"><i class="dot" style="background:var(--progress)"></i>In progress</button>
+        <button class="chip w" aria-pressed="${l.p==='watch'}" onclick="edit(${i},'p','watch')"><i class="dot" style="background:var(--watch)"></i>Follow up may be needed</button>
+      </div>
+    </div>
+    <div class="frow"><span class="k">Created</span><span class="v">${fmtDate(l.c)}</span></div>
+    <div class="frow"><span class="k">Age</span><span class="v ${ageCls(l.age)}">${l.age===null?"—":l.age+" days"}</span></div>
+
+    <div class="dsec">
+      <h4>Note from the report</h4>
+      <div class="notebox">${esc(l.n||"No notes recorded.")}</div>
+    </div>
+
+    ${mg ? `
+    <div class="dsec cbox">
+      <h4>Add a note</h4>
+      <textarea id="eCmt" placeholder="What changed, what you told the client, what happens next…"></textarea>
+      <div class="row">
+        <button class="btn primary" onclick="addComment(${i})">Save note</button>
+        <span class="hint">Saved against ${esc(me().name)} with today's date.</span>
+      </div>
+    </div>
+
+    <div class="dsec hist">
+      <h4>History · ${hist.length} entr${hist.length===1?"y":"ies"}</h4>
+      ${hist.length ? hist.map(evHTML).join("") : `<p class="hint">Nothing recorded yet.</p>`}
+    </div>` : `
+    <div class="dsec">
+      <p class="hint">Notes and edit history are visible to managers.</p>
+    </div>`}`;
+  document.getElementById("drawer").classList.add("on");
+  document.getElementById("drawer").setAttribute("aria-hidden","false");
+  document.getElementById("scrim").classList.add("on");
+  render();
+}
+function closeDrawer(){
+  selected = null;
+  document.getElementById("drawer").classList.remove("on");
+  document.getElementById("drawer").setAttribute("aria-hidden","true");
+  document.getElementById("scrim").classList.remove("on");
+  render();
+}
+
+/* Every field change records who, what and when, then asks for the why. */
+const FIELDS = { st:"Stage", pm:"Project manager", ty:"Project type", p:"Priority" };
+function edit(i, field, val){
+  const l = leads[i];
+  if(field==="p" && l[field]===val) val = "none";       // clicking the active flag clears it
+  const from = l[field];
+  if(from === val){ openDrawer(i); return; }
+  l[field] = val;
+  LS.set("kps.leads", leads);
+  if(field==="p"){ const o = LS.get("kps.prio",{}); o[keyOf(l)] = val; LS.set("kps.prio", o); }
+  logEdit(l, field, label(field,from), label(field,val), "");
+  dirty.add(keyOf(l));
+  spPushSoon();
+  openDrawer(i);
+  if(isManager()){
+    const box = document.getElementById("eCmt");
+    if(box){ box.placeholder = `Why did ${FIELDS[field]} change to ${label(field,val)}? (optional)`; box.focus(); }
+  }
+  toast(FIELDS[field]+" updated");
+}
+function label(field, v){
+  if(field==="p") return (PRIOS[v]||PRIOS.none).short;
+  if(field==="pm") return v || "Unassigned";
+  return v || "—";
+}
+function addComment(i){
+  const box = document.getElementById("eCmt");
+  const txt = box.value.trim();
+  if(!txt){ toast("Type a note first"); box.focus(); return; }
+  const l = leads[i];
+  logAdd({ key:keyOf(l), title:l.t, scope:l.s||"", c:txt });
+  spPushSoon();
+  openDrawer(i);
+  toast("Note saved");
+}
+
+/* ---------- activity feed (managers only) ---------- */
+function evHTML(e){
+  const t = new Date(e.ts);
+  const when = t.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+  const change = e.f
+    ? `changed <b>${FIELDS[e.f]||e.f}</b> from <span class="fr">${esc(e.a)}</span> to <span class="to">${esc(e.b)}</span>`
+    : `added a note`;
+  return `<div class="ev">
+    <span class="av">${initials(e.who)}</span>
+    <div class="txt">
+      <div class="ln"><b>${esc(nameOf(e.who))}</b> ${change}</div>
+      ${e.c?`<div class="cmt">${esc(e.c)}</div>`:""}
+    </div>
+    <time>${when}</time>
+  </div>`;
+}
+function evHTMLwithLead(e){
+  const t = new Date(e.ts);
+  const when = t.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+  const change = e.f
+    ? `changed <b>${FIELDS[e.f]||e.f}</b> from <span class="fr">${esc(e.a)}</span> to <span class="to">${esc(e.b)}</span>`
+    : `added a note`;
+  return `<div class="ev">
+    <span class="av">${initials(e.who)}</span>
+    <div class="txt">
+      <div class="lead">${esc(e.title)}${e.scope?` <span style="font-weight:400;color:var(--muted)">· ${esc(e.scope)}</span>`:""}</div>
+      <div class="ln"><b>${esc(nameOf(e.who))}</b> ${change}</div>
+      ${e.c?`<div class="cmt">${esc(e.c)}</div>`:""}
+    </div>
+    <time>${when}</time>
+  </div>`;
+}
+function renderActivity(){
+  if(!isManager()) return;
+  const feed = document.getElementById("actFeed"); if(!feed) return;
+  const log = LS.get("kps.log", []);
+  const sel = document.getElementById("aWho");
+  const cur = sel.value;
+  const people = [...new Set(log.map(e=>e.who))];
+  sel.innerHTML = `<option value="">Everyone</option>` +
+    people.map(w=>`<option value="${esc(w)}" ${w===cur?"selected":""}>${esc(nameOf(w))}</option>`).join("");
+  const q = document.getElementById("aq").value.trim().toLowerCase();
+  const rows = log.filter(e=>{
+    if(cur && e.who!==cur) return false;
+    if(q){
+      const hay = `${e.title} ${e.scope||""} ${nameOf(e.who)} ${e.c||""} ${e.a||""} ${e.b||""}`.toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  }).sort((a,b)=> a.ts<b.ts?1:-1);
+
+  const days = {};
+  rows.forEach(e=>{ const d = new Date(e.ts).toDateString(); (days[d]=days[d]||[]).push(e); });
+  const today = new Date().toDateString();
+  const yday  = new Date(Date.now()-86400000).toDateString();
+
+  document.getElementById("actSub").textContent =
+    `${rows.length} update${rows.length===1?"":"s"} recorded · newest first · managers only`;
+  feed.innerHTML = Object.keys(days).length ? Object.entries(days).map(([d,evs])=>{
+    const dd = new Date(d);
+    const lab = d===today ? "Today" : d===yday ? "Yesterday"
+              : dd.toLocaleDateString("en-US",{weekday:"long", month:"long", day:"numeric"});
+    return `<div class="day">
+      <div class="dayhd"><h3>${lab}</h3><span>${evs.length} update${evs.length===1?"":"s"}</span></div>
+      <div class="card">${evs.map(evHTMLwithLead).join("")}</div>
+    </div>`;
+  }).join("") : `<div class="card"><div class="empty">Nothing recorded yet. Edits and notes made on a lead will show up here, grouped by day.</div></div>`;
+}
+
+addEventListener("keydown", e=>{
+  if(e.key!=="Escape") return;
+  const m = document.getElementById("idModal");
+  if(!m.classList.contains("hide")){ if(me()) m.classList.add("hide"); return; }
+  closeDrawer();
 });
 
-// Best-effort extraction from pasted email text — never trusted blindly,
-// just saves retyping when it works. Leaves fields alone if nothing found.
-function tryExtractFromPaste(){
-  const text = document.getElementById('npEmailPaste').value;
-  const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-  const phoneMatch = text.match(/(\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/);
-  if (emailMatch && !document.getElementById('npClientEmail').value) {
-    document.getElementById('npClientEmail').value = emailMatch[0];
-  }
-  if (phoneMatch && !document.getElementById('npClientPhone').value) {
-    document.getElementById('npClientPhone').value = phoneMatch[0];
-  }
-}
+/* ---------- PDF ---------- */
+function exportPDF(){
+  const rows = visible();
+  if(!rows.length){ toast("Nothing to export"); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:"landscape", unit:"pt", format:"letter"});
+  const W = doc.internal.pageSize.getWidth();
+  const stamp = TODAY.toLocaleDateString("en-US",{weekday:"long",month:"numeric",day:"numeric",year:"numeric"});
 
-function openNewProjectModal(){
-  ['npEmailPaste','npAddress','npClientName','npClientPhone','npClientEmail','npProjectId','npNotes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('npProperty').value = '';
-  document.getElementById('npFile').value = '';
-  document.getElementById('npStatus').textContent = '';
-  document.getElementById('npStatus').className = 'modal-status';
-  projectIdDirty = false;
-  document.getElementById('newProjectModal').classList.add('show');
-}
-function closeNewProjectModal(){ document.getElementById('newProjectModal').classList.remove('show'); }
+  doc.setFont("helvetica","bold"); doc.setFontSize(15); doc.setTextColor(28,92,171);
+  doc.text("Kelly's Property Services — Leads Report", 40, 40);
+  doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(110);
+  doc.text(`Generated ${stamp}  ·  ${rows.length} leads`, 40, 56);
 
-function setNpStatus(msg, cls){
-  const el = document.getElementById('npStatus');
-  el.textContent = msg; el.className = 'modal-status' + (cls?' '+cls:'');
-}
-
-async function saveNewProject(){
-  const property = document.getElementById('npProperty').value.trim();
-  if (!property) { setNpStatus('Property name is required.', 'err'); return; }
-  let projectId = document.getElementById('npProjectId').value.trim();
-  if (!projectId) projectId = nextProjectId(slugifyProjectName(property));
-  if (!projectId) { setNpStatus('Could not generate a Project ID — enter one manually.', 'err'); return; }
-  if (PROJECTS.some(p => projectIdOf(p.fields) === projectId)) {
-    setNpStatus(`Project ID "${projectId}" already exists — pick a different one.`, 'err'); return;
-  }
-
-  const btn = document.getElementById('npSaveBtn');
-  btn.disabled = true;
-  setNpStatus('Creating project…');
-  try {
-    const token = await getGraphToken();
-    const { siteId, driveId, rootId } = await getSuiteSite(token);
-
-    setNpStatus('Setting up the project folder…');
-    const folderId = await ensurePath(token, driveId, rootId, ['Projects', projectId, 'Intake']);
-
-    const emailText = document.getElementById('npEmailPaste').value.trim();
-    if (emailText) {
-      const blob = new Blob([emailText], { type: 'text/plain' });
-      await uploadFile(token, driveId, folderId, 'Client Email.txt', blob);
-    }
-    const fileInput = document.getElementById('npFile');
-    for (const file of fileInput.files) {
-      setNpStatus(`Uploading ${file.name}…`);
-      await uploadFile(token, driveId, folderId, file.name, file);
-    }
-
-    setNpStatus('Saving project record…');
-    const listId = await getListId(token, siteId, KPS_CONFIG.listProjects);
-    const fields = {
-      Title: projectId,
-      PropertyName: property,
-      Address: document.getElementById('npAddress').value.trim(),
-      ClientName: document.getElementById('npClientName').value.trim(),
-      ClientPhone: document.getElementById('npClientPhone').value.trim(),
-      ClientEmail: document.getElementById('npClientEmail').value.trim(),
-      Source: 'Manual',
-      CurrentStage: 'Intake',
-      Notes: document.getElementById('npNotes').value.trim(),
-    };
-    const created = await createListItem(token, siteId, listId, fields);
-    PROJECTS.push({ id: created.id, fields, lastModifiedDateTime: new Date().toISOString() });
-
-    setNpStatus('Created ' + projectId + '.', 'ok');
-    renderAll();
-    setTimeout(closeNewProjectModal, 700);
-  } catch (err) {
-    console.error('Create project failed', err);
-    setNpStatus('Failed: ' + (err.message||err), 'err');
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════
-// COSTING — set/re-baseline and log-a-cost modals
-// ══════════════════════════════════════════════════════════════════════════
-let blProjectId = null;
-let BL_BREAKDOWN_ROWS = []; // [{building,task,amount}] parsed from the estimator PDF (or edited manually)
-function openBaselineModal(projectId) {
-  blProjectId = projectId;
-  BL_BREAKDOWN_ROWS = [];
-  document.getElementById('blBudget').value = '';
-  document.getElementById('blPdfFile').value = '';
-  document.getElementById('blPdfStatus').textContent = '';
-  document.getElementById('blPdfStatus').className = 'pdf-extract-status';
-  document.getElementById('blBreakdownWrap').style.display = 'none';
-  document.getElementById('blFile').value = '';
-  document.getElementById('blStatus').textContent = '';
-  document.getElementById('blStatus').className = 'modal-status';
-  document.getElementById('baselineModal').classList.add('show');
-}
-function closeBaselineModal(){ document.getElementById('baselineModal').classList.remove('show'); }
-function setBlStatus(msg, cls){
-  const el = document.getElementById('blStatus');
-  el.textContent = msg; el.className = 'modal-status' + (cls?' '+cls:'');
-}
-function setBlPdfStatus(msg, cls){
-  const el = document.getElementById('blPdfStatus');
-  el.textContent = msg; el.className = 'pdf-extract-status' + (cls?' '+cls:'');
-}
-
-// ── Estimator PDF extraction ────────────────────────────────────────────────
-// Reads the Cost Sheet PDF text via pdf.js, reconstructs visual lines from
-// the positioned text items, then pattern-matches against KPS's own fixed
-// cost-sheet template (Building N / MATERIALS/LABOR/etc. section headers,
-// labeled subtotals, and the whole-job Total Cost line). Always shown as an
-// editable preview — never trusted blindly — since this is financial data.
-async function extractPdfLines(file) {
-  const buf = await file.arrayBuffer();
-  if (window.pdfjsLib && pdfjsLib.GlobalWorkerOptions && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-  }
-  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-  const lines = [];
-  for (let p = 1; p <= pdf.numPages; p++) {
-    const page = await pdf.getPage(p);
-    const content = await page.getTextContent();
-    const rows = {};
-    content.items.forEach(item => {
-      const y = Math.round(item.transform[5]);
-      (rows[y] = rows[y] || []).push({ x: item.transform[4], str: item.str });
-    });
-    Object.keys(rows).map(Number).sort((a,b)=>b-a).forEach(y => {
-      const line = rows[y].sort((a,b)=>a.x-b.x).map(it=>it.str).join(' ').replace(/\s+/g,' ').trim();
-      if (line) lines.push(line);
-    });
-  }
-  return lines;
-}
-
-function parseAmt(s){ return parseFloat(String(s).replace(/,/g,'')) || 0; }
-
-function parseCostSheetLines(lines) {
-  const catHeaderRe = /^(MATERIALS|FLAT ROOF\s*\/\s*EPDM|LABOR|GENERAL CONDITIONS|OPTIONAL UPGRADES)\s*[—-]\s*Building\s*(\d+)/i;
-  const skipRe = /subtotal|^tax\b|^item\b.*total|^description|pricing summary|soft costs|total materials|additional repairs|priced in the field/i;
-  let curBuilding = null, curCategory = null;
-  const catSums = {}, explicitSubtotals = {};
-  let overallTotal = 0, permitAmount = 0;
-
-  function normalizeCat(raw) {
-    const u = raw.toUpperCase();
-    if (u.startsWith('MATERIALS')) return 'Materials';
-    if (u.startsWith('FLAT ROOF')) return 'Flat Roof / EPDM';
-    if (u.startsWith('LABOR')) return 'Labor';
-    if (u.startsWith('GENERAL CONDITIONS')) return 'General Conditions';
-    if (u.startsWith('OPTIONAL UPGRADES')) return 'Optional Upgrades';
-    return raw;
-  }
-
-  lines.forEach(line => {
-    const catMatch = line.match(catHeaderRe);
-    if (catMatch) { curCategory = normalizeCat(catMatch[1]); curBuilding = `Building ${catMatch[2]}`; return; }
-    // Once we're past the per-building tables into whole-job summary
-    // sections, stop attributing numbers to whatever category came last —
-    // otherwise summary/total lines silently get counted as building costs.
-    if (/^(ADDITIONAL REPAIRS|SOFT COSTS SUMMARY|PRICING SUMMARY|TOTAL MATERIALS)/i.test(line)) { curCategory = null; return; }
-    if (/Building\s*\d+\s*Subtotal/i.test(line)) return; // informational only, not a task row
-    const matMatch = line.match(/^Material Subtotal\s*\$?([\d,]+)/i);
-    if (matMatch && curBuilding) { explicitSubtotals[`${curBuilding}|Materials`] = parseAmt(matMatch[1]); return; }
-    const flatMatch = line.match(/Flat Roof Material Subtotal\s*\$?([\d,]+)/i);
-    if (flatMatch && curBuilding) { explicitSubtotals[`${curBuilding}|Flat Roof / EPDM`] = parseAmt(flatMatch[1]); return; }
-    const totalCostMatch = line.match(/Total Cost \(hard costs? \+ soft costs?\)\s*\$?([\d,]+)/i);
-    if (totalCostMatch) { overallTotal = parseAmt(totalCostMatch[1]); return; }
-    const permitMatch = line.match(/^Permit\s*\(1\.5%\)\s*\$?([\d,]+)/i);
-    if (permitMatch) { permitAmount = parseAmt(permitMatch[1]); return; }
-    if (skipRe.test(line)) return;
-
-    const amtMatch = line.match(/\$([\d,]+(?:\.\d{2})?)\s*$/);
-    if (amtMatch && curBuilding && curCategory) {
-      const key = `${curBuilding}|${curCategory}`;
-      catSums[key] = (catSums[key] || 0) + parseAmt(amtMatch[1]);
-    }
-  });
-
-  const rows = [];
-  const keys = new Set([...Object.keys(catSums), ...Object.keys(explicitSubtotals)]);
-  keys.forEach(key => {
-    const [building, task] = key.split('|');
-    const amount = explicitSubtotals[key] !== undefined ? explicitSubtotals[key] : catSums[key];
-    if (amount) rows.push({ building, task, amount });
-  });
-  if (permitAmount) rows.push({ building: '', task: 'Permit', amount: permitAmount });
-  const rowSum = rows.reduce((s,r)=>s+r.amount, 0);
-  if (!overallTotal) overallTotal = rowSum;
-  // Reconcile any leftover (tax, rounding, anything not attributed to a
-  // task) into its own line so the breakdown always ties out to the total
-  // the estimator printed — never leaves money silently unaccounted for.
-  const residual = Math.round((overallTotal - rowSum) * 100) / 100;
-  if (Math.abs(residual) >= 1) rows.push({ building: '', task: 'Tax / Other', amount: residual });
-  return { rows, overallTotal };
-}
-
-async function handleBaselinePdf() {
-  const fileInput = document.getElementById('blPdfFile');
-  const file = fileInput.files[0];
-  if (!file) return;
-  if (typeof pdfjsLib === 'undefined') {
-    setBlPdfStatus('PDF parsing isn\'t available right now — enter the budget manually below and attach the PDF as a source file for reference.', 'err');
-    return;
-  }
-  setBlPdfStatus('Reading PDF…');
-  try {
-    const lines = await extractPdfLines(file);
-    const { rows, overallTotal } = parseCostSheetLines(lines);
-    if (!rows.length) {
-      setBlPdfStatus('Couldn\'t recognize this as a KPS estimator cost sheet — enter the budget manually below.', 'err');
-      return;
-    }
-    BL_BREAKDOWN_ROWS = rows;
-    document.getElementById('blBudget').value = overallTotal || rows.reduce((s,r)=>s+r.amount,0);
-    setBlPdfStatus(`Extracted ${rows.length} line(s) — review below before locking.`, 'ok');
-    renderBlBreakdown();
-  } catch (err) {
-    console.error('PDF extract failed', err);
-    setBlPdfStatus('Couldn\'t read that PDF — enter the budget manually below: ' + (err.message||err), 'err');
-  }
-}
-
-function renderBlBreakdown() {
-  const wrap = document.getElementById('blBreakdownWrap');
-  const el = document.getElementById('blBreakdown');
-  if (!BL_BREAKDOWN_ROWS.length) { wrap.style.display = 'none'; return; }
-  wrap.style.display = 'block';
-  el.innerHTML = BL_BREAKDOWN_ROWS.map((row, i) => `
-    <div class="bl-row">
-      <input value="${(row.building||'').replace(/"/g,'&quot;')}" placeholder="(General Overhead)" oninput="updateBlRow(${i},'building',this.value)"/>
-      <input value="${(row.task||'').replace(/"/g,'&quot;')}" placeholder="—" oninput="updateBlRow(${i},'task',this.value)"/>
-      <input type="number" step="0.01" value="${row.amount}" style="text-align:right" oninput="updateBlRow(${i},'amount',this.value)"/>
-    </div>`).join('');
-}
-function updateBlRow(i, field, value) {
-  BL_BREAKDOWN_ROWS[i][field] = field === 'amount' ? (parseFloat(value)||0) : value;
-  document.getElementById('blBudget').value = BL_BREAKDOWN_ROWS.reduce((s,r)=>s+r.amount,0);
-}
-
-async function saveBaseline() {
-  const projectId = blProjectId;
-  const total = parseFloat(document.getElementById('blBudget').value) || 0;
-  if (total <= 0) { setBlStatus('Enter the final budget amount.', 'err'); return; }
-
-  const btn = document.getElementById('blSaveBtn');
-  btn.disabled = true;
-  setBlStatus('Locking baseline…');
-  try {
-    const token = await getGraphToken();
-    const { siteId, driveId, rootId } = await getSuiteSite(token);
-    const baseListId = await getListId(token, siteId, KPS_CONFIG.listCostBaselines);
-
-    // Supersede any currently-active baseline for this project first, so
-    // there's only ever one Active baseline per project at a time. Its total
-    // becomes the "prior" figure for the delta shown on the new one.
-    const prior = activeBaselineFor(projectId);
-    const priorTotal = prior ? (parseFloat(prior.fields.BudgetTotal) || 0) : null;
-    if (prior) {
-      await updateListItemFields(token, siteId, baseListId, prior.id, { Status: 'Superseded' });
-      prior.fields.Status = 'Superseded';
-    }
-
-    const files = [];
-    const fileInput = document.getElementById('blFile');
-    const pdfInput = document.getElementById('blPdfFile');
-    const allFiles = [...(pdfInput.files.length ? [pdfInput.files[0]] : []), ...fileInput.files];
-    if (allFiles.length) {
-      const folderId = await ensurePath(token, driveId, rootId, ['Projects', projectId, 'Costing', 'Baselines']);
-      for (const file of allFiles) {
-        setBlStatus(`Uploading ${file.name}…`);
-        const uploaded = await uploadFile(token, driveId, folderId, file.name, file);
-        files.push({ name: file.name, url: uploaded && uploaded.webUrl ? uploaded.webUrl : '' });
-      }
-    }
-
-    setBlStatus('Saving baseline record…');
-    const fields = {
-      Title: `${projectId} Baseline ${new Date().toISOString().slice(0,10)}`,
-      ProjectID: projectId,
-      Status: 'Active',
-      BudgetTotal: total,
-      BudgetBreakdown: JSON.stringify(BL_BREAKDOWN_ROWS),
-      FileURLs: JSON.stringify(files),
-    };
-    if (priorTotal !== null) fields.PriorBudgetTotal = priorTotal;
-    const created = await createListItem(token, siteId, baseListId, fields);
-    COST_BASELINES.push({ id: created.id, fields, lastModifiedDateTime: new Date().toISOString() });
-
-    setBlStatus(priorTotal !== null ? `Baseline locked. Δ ${total-priorTotal>=0?'+':''}${fmtMoney(total-priorTotal)} vs prior.` : 'Baseline locked.', 'ok');
-    openDrillin(projectId);
-    setTimeout(closeBaselineModal, 800);
-  } catch (err) {
-    console.error('Save baseline failed', err);
-    setBlStatus('Failed: ' + (err.message||err), 'err');
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-let ceProjectId = null, ceBaselineId = null;
-function openCostEntryModal(projectId, baselineId) {
-  ceProjectId = projectId; ceBaselineId = baselineId;
-  document.getElementById('ceBuilding').value = '';
-  document.getElementById('ceTask').value = '';
-  document.getElementById('ceDescription').value = '';
-  document.getElementById('ceAmount').value = '';
-  document.getElementById('ceDate').value = new Date().toISOString().slice(0,10);
-  document.getElementById('ceFile').value = '';
-  document.getElementById('ceStatus').textContent = '';
-  document.getElementById('ceStatus').className = 'modal-status';
-  document.getElementById('costEntryModal').classList.add('show');
-}
-function closeCostEntryModal(){ document.getElementById('costEntryModal').classList.remove('show'); }
-function setCeStatus(msg, cls){
-  const el = document.getElementById('ceStatus');
-  el.textContent = msg; el.className = 'modal-status' + (cls?' '+cls:'');
-}
-
-async function saveCostEntry() {
-  const projectId = ceProjectId, baselineId = ceBaselineId;
-  const amount = parseFloat(document.getElementById('ceAmount').value) || 0;
-  const description = document.getElementById('ceDescription').value.trim();
-  if (amount <= 0) { setCeStatus('Enter an amount.', 'err'); return; }
-  if (!description) { setCeStatus('Enter a description.', 'err'); return; }
-
-  const btn = document.getElementById('ceSaveBtn');
-  btn.disabled = true;
-  setCeStatus('Saving…');
-  try {
-    const token = await getGraphToken();
-    const { siteId, driveId, rootId } = await getSuiteSite(token);
-    const entryListId = await getListId(token, siteId, KPS_CONFIG.listCostEntries);
-
-    let fileURL = '', fileName = '';
-    const fileInput = document.getElementById('ceFile');
-    if (fileInput.files[0]) {
-      const file = fileInput.files[0];
-      setCeStatus(`Uploading ${file.name}…`);
-      const folderId = await ensurePath(token, driveId, rootId, ['Projects', projectId, 'Costing', 'Entries']);
-      const uploaded = await uploadFile(token, driveId, folderId, file.name, file);
-      fileURL = uploaded && uploaded.webUrl ? uploaded.webUrl : '';
-      fileName = file.name;
-    }
-
-    const fields = {
-      Title: `${projectId} Cost ${new Date().toISOString().slice(0,10)}`,
-      ProjectID: projectId,
-      BaselineID: String(baselineId),
-      Building: document.getElementById('ceBuilding').value.trim(),
-      Task: document.getElementById('ceTask').value.trim(),
-      Description: description,
-      Amount: amount,
-      EntryDate: document.getElementById('ceDate').value,
-      SourceFile: 'Manual',
-      FileURL: fileURL,
-      FileName: fileName,
-    };
-    const created = await createListItem(token, siteId, entryListId, fields);
-    COST_ENTRIES.push({ id: created.id, fields, lastModifiedDateTime: new Date().toISOString() });
-
-    setCeStatus('Saved.', 'ok');
-    openDrillin(projectId);
-    setTimeout(closeCostEntryModal, 500);
-  } catch (err) {
-    console.error('Save cost entry failed', err);
-    setCeStatus('Failed: ' + (err.message||err), 'err');
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════
-// IMPORT COSTS FROM EXCEL — parses Building/Task/Description/Amount columns,
-// flags rows with no Building/Task as needing review (General Overhead
-// unless the user fills one in) before committing them as Cost Entries.
-// ══════════════════════════════════════════════════════════════════════════
-let imProjectId = null, imBaselineId = null, imSourceFile = null;
-let IMPORT_ROWS = []; // [{building,task,description,amount}]
-
-function openImportModal(projectId, baselineId) {
-  imProjectId = projectId; imBaselineId = baselineId; imSourceFile = null;
-  IMPORT_ROWS = [];
-  document.getElementById('imFile').value = '';
-  document.getElementById('imPreviewWrap').style.display = 'none';
-  document.getElementById('imSaveBtn').disabled = true;
-  document.getElementById('imStatus').textContent = '';
-  document.getElementById('imStatus').className = 'modal-status';
-  document.getElementById('importModal').classList.add('show');
-}
-function closeImportModal(){ document.getElementById('importModal').classList.remove('show'); }
-function setImStatus(msg, cls){
-  const el = document.getElementById('imStatus');
-  el.textContent = msg; el.className = 'modal-status' + (cls?' '+cls:'');
-}
-
-// Matches header text against known variants for each expected column.
-function findCol(headerRow, variants) {
-  for (let i = 0; i < headerRow.length; i++) {
-    const h = String(headerRow[i]||'').toLowerCase().trim();
-    if (variants.some(v => h.includes(v))) return i;
-  }
-  return -1;
-}
-
-function handleImportFile() {
-  const fileInput = document.getElementById('imFile');
-  const file = fileInput.files[0];
-  if (!file) return;
-  imSourceFile = file;
-  setImStatus('Reading file…');
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const wb = XLSX.read(e.target.result, { type: 'array' });
-      const sheet = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-      if (!rows.length) { setImStatus('File appears to be empty.', 'err'); return; }
-
-      const headerRow = rows[0];
-      const buildingCol = findCol(headerRow, ['building','bldg']);
-      const taskCol = findCol(headerRow, ['task']);
-      const descCol = findCol(headerRow, ['description','desc','item','notes']);
-      const amountCol = findCol(headerRow, ['amount','cost','total','price']);
-      if (descCol === -1 || amountCol === -1) {
-        setImStatus('Could not find Description/Amount columns — check the file has headers like Building, Task, Description, Amount.', 'err');
-        return;
-      }
-
-      IMPORT_ROWS = [];
-      for (let i = 1; i < rows.length; i++) {
-        const r = rows[i];
-        const amount = parseFloat(r[amountCol]) || 0;
-        const description = String(descCol>-1 ? r[descCol] : '').trim();
-        if (!amount && !description) continue; // skip blank rows
-        IMPORT_ROWS.push({
-          building: buildingCol>-1 ? String(r[buildingCol]||'').trim() : '',
-          task: taskCol>-1 ? String(r[taskCol]||'').trim() : '',
-          description,
-          amount,
-        });
-      }
-      if (!IMPORT_ROWS.length) { setImStatus('No usable rows found in the file.', 'err'); return; }
-      setImStatus('');
-      renderImportPreview();
-    } catch (err) {
-      console.error('Parse import file failed', err);
-      setImStatus('Could not read that file: ' + (err.message||err), 'err');
-    }
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-function renderImportPreview() {
-  const wrap = document.getElementById('imPreviewWrap');
-  const el = document.getElementById('imPreview');
-  wrap.style.display = 'block';
-  el.innerHTML = `<div class="import-hdr"><span>Building</span><span>Task</span><span>Description</span><span style="text-align:right">Amount</span></div>` +
-    IMPORT_ROWS.map((row, i) => {
-      const needsReview = !row.building && !row.task;
-      return `<div class="import-row${needsReview?' needs-review':''}">
-        <input value="${row.building.replace(/"/g,'&quot;')}" placeholder="—" oninput="updateImportRow(${i},'building',this.value)"/>
-        <input value="${row.task.replace(/"/g,'&quot;')}" placeholder="—" oninput="updateImportRow(${i},'task',this.value)"/>
-        <input value="${row.description.replace(/"/g,'&quot;')}" oninput="updateImportRow(${i},'description',this.value)"/>
-        <div class="import-amt">${fmtMoney(row.amount)}</div>
-        ${needsReview ? '<div class="import-flag">No building/task — will import as General Overhead unless you fill one in above</div>' : ''}
-      </div>`;
-    }).join('');
-  document.getElementById('imSaveBtn').disabled = false;
-}
-
-function updateImportRow(i, field, value) {
-  IMPORT_ROWS[i][field] = value;
-  // Only re-render if the needs-review flag would change, to avoid losing
-  // focus mid-type; a light debounce-free check is enough at this row count.
-  const needsReview = !IMPORT_ROWS[i].building && !IMPORT_ROWS[i].task;
-  const rowEl = document.getElementById('imPreview').children[i+1];
-  if (rowEl) rowEl.classList.toggle('needs-review', needsReview);
-}
-
-async function saveImport() {
-  const projectId = imProjectId, baselineId = imBaselineId;
-  if (!IMPORT_ROWS.length) return;
-  const btn = document.getElementById('imSaveBtn');
-  btn.disabled = true;
-  setImStatus('Importing…');
-  try {
-    const token = await getGraphToken();
-    const { siteId, driveId, rootId } = await getSuiteSite(token);
-    const entryListId = await getListId(token, siteId, KPS_CONFIG.listCostEntries);
-
-    let fileURL = '', fileName = '';
-    if (imSourceFile) {
-      setImStatus(`Uploading ${imSourceFile.name}…`);
-      const folderId = await ensurePath(token, driveId, rootId, ['Projects', projectId, 'Costing', 'Entries']);
-      const uploaded = await uploadFile(token, driveId, folderId, imSourceFile.name, imSourceFile);
-      fileURL = uploaded && uploaded.webUrl ? uploaded.webUrl : '';
-      fileName = imSourceFile.name;
-    }
-
-    const today = new Date().toISOString().slice(0,10);
-    for (let i = 0; i < IMPORT_ROWS.length; i++) {
-      const row = IMPORT_ROWS[i];
-      setImStatus(`Importing row ${i+1} of ${IMPORT_ROWS.length}…`);
-      const fields = {
-        Title: `${projectId} Cost ${today} #${i+1}`,
-        ProjectID: projectId,
-        BaselineID: String(baselineId),
-        Building: row.building,
-        Task: row.task,
-        Description: row.description,
-        Amount: row.amount,
-        EntryDate: today,
-        SourceFile: fileName || 'Import',
-        FileURL: fileURL,
-        FileName: fileName,
-      };
-      const created = await createListItem(token, siteId, entryListId, fields);
-      COST_ENTRIES.push({ id: created.id, fields, lastModifiedDateTime: new Date().toISOString() });
-    }
-
-    setImStatus(`Imported ${IMPORT_ROWS.length} cost entries.`, 'ok');
-    openDrillin(projectId);
-    setTimeout(closeImportModal, 700);
-  } catch (err) {
-    console.error('Import costs failed', err);
-    setImStatus('Failed: ' + (err.message||err), 'err');
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════
-// IMPORT COSTS FROM PDF — bulk-upload vendor invoices. Unlike the estimator's
-// own cost sheet, vendor invoices have no fixed template, so this only
-// best-effort-guesses the dollar amount (looking for "Total/Amount Due"
-// style lines, falling back to the largest $ figure on the page) and always
-// leaves Building/Task blank for the user to fill in per invoice — there's
-// no reliable way to infer that from an arbitrary vendor PDF.
-// ══════════════════════════════════════════════════════════════════════════
-let piProjectId = null, piBaselineId = null;
-let PDF_IMPORT_ROWS = []; // [{file, building, task, description, amount, confident, readError}]
-
-function openPdfImportModal(projectId, baselineId) {
-  piProjectId = projectId; piBaselineId = baselineId;
-  PDF_IMPORT_ROWS = [];
-  document.getElementById('piFiles').value = '';
-  document.getElementById('piPreviewWrap').style.display = 'none';
-  document.getElementById('piSaveBtn').disabled = true;
-  document.getElementById('piStatus').textContent = '';
-  document.getElementById('piStatus').className = 'pdf-extract-status';
-  document.getElementById('piSaveStatus').textContent = '';
-  document.getElementById('piSaveStatus').className = 'modal-status';
-  document.getElementById('pdfImportModal').classList.add('show');
-}
-function closePdfImportModal(){ document.getElementById('pdfImportModal').classList.remove('show'); }
-function setPiStatus(msg, cls){
-  const el = document.getElementById('piStatus');
-  el.textContent = msg; el.className = 'pdf-extract-status' + (cls?' '+cls:'');
-}
-
-function detectInvoiceAmount(lines) {
-  const labeled = /(?:grand total|amount due|balance due|total due|invoice total)\D{0,15}\$?\s*([\d,]+\.\d{2})/i;
-  for (const line of lines) {
-    const m = line.match(labeled);
-    if (m) return { amount: parseAmt(m[1]), confident: true };
-  }
-  // No confidently-labeled total found — fall back to the largest dollar
-  // figure anywhere on the page as a rough guess, flagged for the user.
-  let max = 0;
-  lines.forEach(line => {
-    (line.match(/\$\s*[\d,]+\.\d{2}/g) || []).forEach(m => {
-      const v = parseAmt(m.replace('$','').trim());
-      if (v > max) max = v;
-    });
-  });
-  return { amount: max, confident: false };
-}
-
-async function handlePdfImportFiles() {
-  const files = Array.from(document.getElementById('piFiles').files);
-  if (!files.length) return;
-  if (typeof pdfjsLib === 'undefined') {
-    setPiStatus('PDF reading isn\'t available right now — log these one at a time with Log a Cost instead.', 'err');
-    return;
-  }
-  PDF_IMPORT_ROWS = [];
-  setPiStatus(`Reading ${files.length} file(s)…`);
-  for (const file of files) {
-    try {
-      const lines = await extractPdfLines(file);
-      const { amount, confident } = detectInvoiceAmount(lines);
-      PDF_IMPORT_ROWS.push({ file, building: '', task: '', description: file.name.replace(/\.pdf$/i,''), amount, confident });
-    } catch (err) {
-      console.error('Read invoice failed', file.name, err);
-      PDF_IMPORT_ROWS.push({ file, building: '', task: '', description: file.name.replace(/\.pdf$/i,''), amount: 0, confident: false, readError: true });
-    }
-  }
-  setPiStatus('');
-  renderPiPreview();
-}
-
-function renderPiPreview() {
-  const wrap = document.getElementById('piPreviewWrap');
-  const el = document.getElementById('piPreview');
-  wrap.style.display = 'block';
-  el.innerHTML = PDF_IMPORT_ROWS.map((row, i) => {
-    const needsReview = !row.building && !row.task;
-    const flag = row.readError ? '<span class="low-confidence">Couldn\'t read this file — enter amount manually</span>'
-      : (!row.confident ? '<span class="low-confidence">Amount is a guess — double check it</span>' : '');
-    return `<div class="pdf-import-card${needsReview?' needs-review':''}">
-      <div class="pdf-import-fname"><span>${row.file.name.replace(/</g,'&lt;')}</span>${flag}</div>
-      <div class="pdf-import-grid">
-        <input value="${row.building.replace(/"/g,'&quot;')}" placeholder="Building" oninput="updatePiRow(${i},'building',this.value)"/>
-        <input value="${row.task.replace(/"/g,'&quot;')}" placeholder="Task" oninput="updatePiRow(${i},'task',this.value)"/>
-        <input value="${row.description.replace(/"/g,'&quot;')}" oninput="updatePiRow(${i},'description',this.value)"/>
-        <input type="number" step="0.01" value="${row.amount}" style="text-align:right" oninput="updatePiRow(${i},'amount',this.value)"/>
-      </div>
-      ${needsReview ? '<div class="import-flag">No building/task — will import as General Overhead unless you fill one in above</div>' : ''}
-    </div>`;
-  }).join('');
-  document.getElementById('piSaveBtn').disabled = false;
-}
-function updatePiRow(i, field, value) {
-  PDF_IMPORT_ROWS[i][field] = field === 'amount' ? (parseFloat(value)||0) : value;
-  const needsReview = !PDF_IMPORT_ROWS[i].building && !PDF_IMPORT_ROWS[i].task;
-  const cardEl = document.getElementById('piPreview').children[i];
-  if (cardEl) cardEl.classList.toggle('needs-review', needsReview);
-}
-
-async function savePdfImport() {
-  const projectId = piProjectId, baselineId = piBaselineId;
-  if (!PDF_IMPORT_ROWS.length) return;
-  const btn = document.getElementById('piSaveBtn');
-  btn.disabled = true;
-  const setStat = (msg, cls) => { const el = document.getElementById('piSaveStatus'); el.textContent = msg; el.className = 'modal-status' + (cls?' '+cls:''); };
-  setStat('Importing…');
-  try {
-    const token = await getGraphToken();
-    const { siteId, driveId, rootId } = await getSuiteSite(token);
-    const entryListId = await getListId(token, siteId, KPS_CONFIG.listCostEntries);
-    const folderId = await ensurePath(token, driveId, rootId, ['Projects', projectId, 'Costing', 'Entries']);
-    const today = new Date().toISOString().slice(0,10);
-    for (let i = 0; i < PDF_IMPORT_ROWS.length; i++) {
-      const row = PDF_IMPORT_ROWS[i];
-      setStat(`Importing ${i+1} of ${PDF_IMPORT_ROWS.length}: ${row.file.name}…`);
-      const uploaded = await uploadFile(token, driveId, folderId, row.file.name, row.file);
-      const fields = {
-        Title: `${projectId} Cost ${today} #${i+1}`,
-        ProjectID: projectId,
-        BaselineID: String(baselineId),
-        Building: row.building,
-        Task: row.task,
-        Description: row.description,
-        Amount: row.amount,
-        EntryDate: today,
-        SourceFile: row.file.name,
-        FileURL: uploaded && uploaded.webUrl ? uploaded.webUrl : '',
-        FileName: row.file.name,
-      };
-      const created = await createListItem(token, siteId, entryListId, fields);
-      COST_ENTRIES.push({ id: created.id, fields, lastModifiedDateTime: new Date().toISOString() });
-    }
-    setStat(`Imported ${PDF_IMPORT_ROWS.length} invoice(s).`, 'ok');
-    openDrillin(projectId);
-    setTimeout(closePdfImportModal, 700);
-  } catch (err) {
-    console.error('PDF import failed', err);
-    setStat('Failed: ' + (err.message||err), 'err');
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════
-// EXPORT TO EXCEL — per-project, full costing detail: a Summary sheet, a
-// Budget/Actual/Delta breakdown by Building & Task, and the full itemized
-// Cost Entries log. Built client-side with SheetJS; downloads directly,
-// no server round-trip. The SharePoint Lists remain the source of truth —
-// this is a formatted snapshot for offline review/sharing.
-// ══════════════════════════════════════════════════════════════════════════
-function styleHeaderRow(ws, numCols) {
-  for (let c = 0; c < numCols; c++) {
-    const addr = XLSX.utils.encode_cell({ r:0, c });
-    if (ws[addr]) ws[addr].s = { font:{ bold:true, color:{ rgb:'FFFFFF' } }, fill:{ fgColor:{ rgb:'1A1A2E' } } };
-  }
-}
-function styleTitleCell(ws, addr) {
-  if (ws[addr]) ws[addr].s = { font:{ bold:true, sz:14 } };
-}
-function applyCurrencyCols(ws, cols, startRow, endRow) {
-  cols.forEach(c => {
-    for (let r = startRow; r <= endRow; r++) {
-      const addr = XLSX.utils.encode_cell({ r, c });
-      if (ws[addr] && typeof ws[addr].v === 'number') ws[addr].z = '"$"#,##0.00';
-    }
-  });
-}
-function applyPercentCol(ws, col, startRow, endRow) {
-  for (let r = startRow; r <= endRow; r++) {
-    const addr = XLSX.utils.encode_cell({ r, c: col });
-    if (ws[addr] && typeof ws[addr].v === 'number') ws[addr].z = '0%';
-  }
-}
-// Finds label rows in a two-column "Summary" sheet (label in col A, value in
-// col B) and applies a number format to the value cell — used since that
-// sheet is laid out as key/value pairs rather than a flat table.
-function applyFormatToLabelRows(ws, labels, format) {
-  const range = XLSX.utils.decode_range(ws['!ref']);
-  for (let r = range.s.r; r <= range.e.r; r++) {
-    const cell = ws[XLSX.utils.encode_cell({ r, c:0 })];
-    if (cell && labels.includes(cell.v)) {
-      const valCell = ws[XLSX.utils.encode_cell({ r, c:1 })];
-      if (valCell && typeof valCell.v === 'number') valCell.z = format;
-    }
-  }
-}
-
-function exportProjectToExcel(projectId) {
-  if (typeof XLSX === 'undefined') { alert('Excel export isn\'t available right now — try again in a moment.'); return; }
-  try {
-    const p = PROJECTS.find(pr => projectIdOf(pr.fields) === projectId);
-    if (!p) return;
-    const f = p.fields;
-    const baseline = activeBaselineFor(projectId);
-    const wb = XLSX.utils.book_new();
-
-    // --- Summary ---
-    const summaryRows = [
-      ['KPS Project Costing Export'], [],
-      ['Property', f.PropertyName || ''],
-      ['Project ID', projectId],
-      ['Address', f.Address || ''],
-      ['Client', f.ClientName || ''],
-      ['Stage', f.CurrentStage || ''], [],
-    ];
-    let budgetTotal = 0, actualTotal = 0, entries = [];
-    if (baseline) {
-      budgetTotal = parseFloat(baseline.fields.BudgetTotal) || 0;
-      entries = entriesForBaseline(baseline.id);
-      actualTotal = entries.reduce((s,e)=> s + (parseFloat(e.fields.Amount)||0), 0);
-      summaryRows.push(['Budget Baseline', 'Active']);
-      summaryRows.push(['Budget Total', budgetTotal]);
-      summaryRows.push(['Actual Total', actualTotal]);
-      summaryRows.push(['Remaining', budgetTotal - actualTotal]);
-      summaryRows.push(['% of Budget Used', budgetTotal>0 ? (actualTotal/budgetTotal) : 0]);
-      const priorTotal = parseFloat(baseline.fields.PriorBudgetTotal);
-      if (!isNaN(priorTotal)) {
-        summaryRows.push(['Re-baselined From', priorTotal]);
-        summaryRows.push(['Budget Delta', budgetTotal - priorTotal]);
-      }
-      let files = [];
-      try { files = JSON.parse(baseline.fields.FileURLs || '[]'); } catch(e) {}
-      if (files.length) {
-        summaryRows.push([]); summaryRows.push(['Source Files']);
-        files.forEach(fl => summaryRows.push([fl.name||'', fl.url||'']));
-      }
-    } else {
-      summaryRows.push(['Budget Baseline', 'Not set']);
-    }
-    summaryRows.push([]);
-    summaryRows.push(['Exported', new Date().toLocaleString('en-US')]);
-    const wsSummary = XLSX.utils.aoa_to_sheet(summaryRows);
-    wsSummary['!cols'] = [{wch:22},{wch:34}];
-    styleTitleCell(wsSummary, 'A1');
-    applyFormatToLabelRows(wsSummary, ['Budget Total','Actual Total','Remaining','Re-baselined From','Budget Delta'], '"$"#,##0.00');
-    applyFormatToLabelRows(wsSummary, ['% of Budget Used'], '0%');
-    XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
-
-    // --- By Building & Task ---
-    const budget = baseline ? budgetBreakdownFor(baseline) : { buildings:{}, overheadTotal:0 };
-    const actual = groupEntriesByBuilding(entries);
-    const btRows = [['Building','Task','Budget','Actual','Delta','% Used']];
-    const buildingKeys = Array.from(new Set([...Object.keys(budget.buildings), ...Object.keys(actual.buildings)])).sort();
-    buildingKeys.forEach(bldg => {
-      const bB = budget.buildings[bldg] || { total:0, tasks:{} };
-      const aB = actual.buildings[bldg] || { total:0, tasks:{} };
-      const taskKeys = Array.from(new Set([...Object.keys(bB.tasks), ...Object.keys(aB.tasks)])).sort();
-      taskKeys.forEach(task => {
-        const b = bB.tasks[task] || 0, a = aB.tasks[task] || 0;
-        btRows.push([bldg, task==='(no task)'?'':task, b, a, b-a, b>0?(a/b):(a>0?1:0)]);
+  doc.autoTable({
+    startY: 70,
+    head: [["","Property / scope","PM","Stage","Project type","Created","Age","Notes"]],
+    body: rows.map(l=>[ "", l.t + (l.s?"\n"+l.s:""), l.pm||"—", l.st, l.ty||"—", fmtDate(l.c), l.age===null?"—":l.age+"d", l.n||"" ]),
+    styles:{ font:"helvetica", fontSize:7.5, cellPadding:4, overflow:"linebreak", lineColor:[225,224,217], lineWidth:.5, textColor:[40,40,40] },
+    headStyles:{ fillColor:[28,92,171], textColor:255, fontStyle:"bold", fontSize:7.5 },
+    columnStyles:{
+      0:{cellWidth:10}, 1:{cellWidth:148, fontStyle:"bold"}, 2:{cellWidth:34, halign:"center"},
+      3:{cellWidth:44}, 4:{cellWidth:104}, 5:{cellWidth:44, halign:"right"},
+      6:{cellWidth:28, halign:"right"}, 7:{cellWidth:"auto"}
+    },
+    margin:{ left:40, right:40, bottom:56 },
+    didParseCell: d=>{
+      if(d.section!=="body") return;
+      const l = rows[d.row.index];
+      d.cell.styles.fillColor = PRIOS[l.p].pdf;
+      if(d.column.index===0) d.cell.styles.fillColor = ({urgent:[208,59,59],progress:[250,178,25],watch:[12,163,12],none:[220,220,216]})[l.p];
+      if(d.column.index===6 && l.age!==null && l.age>=60){ d.cell.styles.textColor=[176,42,42]; d.cell.styles.fontStyle="bold"; }
+    },
+    didDrawPage: ()=>{
+      const H = doc.internal.pageSize.getHeight();
+      let x = 40; const y = H - 34;
+      doc.setFontSize(7.5); doc.setFont("helvetica","normal");
+      [["urgent","Needs immediate response / update"],["progress","In progress — prioritize"],["watch","No action — follow up may be needed"]]
+      .forEach(([k,lab])=>{
+        doc.setFillColor(...PRIOS[k].pdf); doc.setDrawColor(190);
+        doc.rect(x, y-7, 16, 9, "FD");
+        doc.setTextColor(70); doc.text(lab, x+21, y);
+        x += 21 + doc.getTextWidth(lab) + 20;
       });
-    });
-    if (budget.overheadTotal > 0 || actual.overheadTotal > 0) {
-      btRows.push(['General Overhead', '', budget.overheadTotal, actual.overheadTotal, budget.overheadTotal-actual.overheadTotal,
-        budget.overheadTotal>0 ? (actual.overheadTotal/budget.overheadTotal) : (actual.overheadTotal>0?1:0)]);
+      doc.setTextColor(150);
+      doc.text("Page "+doc.internal.getNumberOfPages(), W-40, y, {align:"right"});
     }
-    btRows.push(['TOTAL', '', budgetTotal, actualTotal, budgetTotal-actualTotal, budgetTotal>0?(actualTotal/budgetTotal):0]);
-    const wsBT = XLSX.utils.aoa_to_sheet(btRows);
-    wsBT['!cols'] = [{wch:18},{wch:22},{wch:14},{wch:14},{wch:14},{wch:10}];
-    styleHeaderRow(wsBT, 6);
-    applyCurrencyCols(wsBT, [2,3,4], 1, btRows.length-1);
-    applyPercentCol(wsBT, 5, 1, btRows.length-1);
-    XLSX.utils.book_append_sheet(wb, wsBT, 'By Building & Task');
-
-    // --- Cost Entries (full itemized log) ---
-    const ceRows = [['Date','Building','Task','Description','Amount','Source File']];
-    entries.slice().sort((a,b)=> (a.fields.EntryDate||'').localeCompare(b.fields.EntryDate||'')).forEach(e => {
-      const ef = e.fields;
-      ceRows.push([ef.EntryDate||'', ef.Building||'', ef.Task||'', ef.Description||'', parseFloat(ef.Amount)||0, ef.SourceFile||ef.FileName||'']);
-    });
-    const wsCE = XLSX.utils.aoa_to_sheet(ceRows);
-    wsCE['!cols'] = [{wch:12},{wch:16},{wch:18},{wch:38},{wch:12},{wch:26}];
-    styleHeaderRow(wsCE, 6);
-    applyCurrencyCols(wsCE, [4], 1, Math.max(1, ceRows.length-1));
-    XLSX.utils.book_append_sheet(wb, wsCE, 'Cost Entries');
-
-    XLSX.writeFile(wb, `${projectId} Costing Export ${new Date().toISOString().slice(0,10)}.xlsx`);
-  } catch (err) {
-    console.error('Excel export failed', err);
-    alert('Could not generate the Excel file: ' + (err.message||err));
-  }
+  });
+  doc.save(`KPS Leads Report ${TODAY.toISOString().slice(0,10)}.pdf`);
+  toast("PDF downloaded");
 }
 
-// On load: if already signed in from a previous visit (e.g. just used the
-// Roofing Estimator), connect silently — no popup.
-(async () => {
-  await kpsMsalReady;
-  if (!kpsMsal) return;
-  const account = kpsMsal.getAllAccounts()[0];
-  if (account) { kpsMsal.setActiveAccount(account); connectKPS(); }
+/* ---------- import the weekly Excel export ---------- */
+function deriveStage(status, notes){
+  const b = ((status||"")+" "+(notes||"")).toLowerCase();
+  if(/\bpass(ed)?\b/.test(b)) return "Pass";
+  if(/\blost\b/.test(b)) return "Lost";
+  if(/\bwon\b|accepted|deposit paid/.test(b)) return "Won";
+  if(/\bsent\b|sending/.test(b)) return "Sent";
+  if(/in progress|drafting|working on estimate|estimate compete|in process/.test(b)) return "Estimating";
+  if(/visit|met |meeting|measurements/.test(b)) return "Visited";
+  return "Assigned";
+}
+function importXlsx(input){
+  const f = input.files && input.files[0]; if(!f) return;
+  const fr = new FileReader();
+  fr.onload = e=>{
+    try{
+      const wb = XLSX.read(e.target.result, {type:"array", cellDates:true});
+      const ws = wb.Sheets[wb.SheetNames[wb.SheetNames.length-1]];
+      const aoa = XLSX.utils.sheet_to_json(ws, {header:1, raw:false, dateNF:"yyyy-mm-dd"});
+      const out = [];
+      for(let i=2;i<aoa.length;i++){
+        const r = aoa[i]||[]; const title = (r[2]||"").toString().trim();
+        if(!title) continue;
+        let pm = (r[1]||"").toString().trim();
+        let stage = null;
+        if(pm==="PASS"){ stage="Pass"; pm=""; } else if(pm==="LOST"){ stage="Lost"; pm=""; }
+        const status = (r[0]||"").toString().trim(), notes = (r[5]||"").toString().trim();
+        if(!pm){ const m = status.match(/^\s*([A-Z]{2,3})\b/); if(m && ["MY","SR","AR","WL","JW","TL","BJK"].includes(m[1])) pm = m[1]; }
+        let c = null; const raw = r[3];
+        if(raw){ const d = new Date(raw); if(!isNaN(d)) c = d.toISOString().slice(0,10); }
+        const m2 = title.match(/^(.*?)\s*\(([^)]*)\)\s*$/);
+        out.push({ t:(m2?m2[1]:title).trim().replace(/\s+/g," "), s:m2?m2[2].trim():"", pm,
+                   st: stage || deriveStage(status, notes), p:"none",
+                   c, ty:(r[6]||"").toString().trim().replace(/\s+/g," "), n:notes.replace(/\s+/g," ") });
+      }
+      if(!out.length){ toast("No leads found in that file"); return; }
+      /* Excel cell colors aren't readable here, so priority is carried over from
+         what's already on screen; a lead that wasn't on the list before starts
+         at "in progress" — set it in the row detail if it needs another flag. */
+      const over = LS.get("kps.prio",{});
+      const prev = {}; leads.forEach(l=>prev[keyOf(l)] = l.p);
+      leads = out.map(normalize);
+      let fresh = 0;
+      leads.forEach(l=>{
+        const k = keyOf(l);
+        if(over[k]) l.p = over[k];
+        else if(prev[k] && prev[k]!=="none") l.p = prev[k];
+        else { l.p = "progress"; fresh++; }
+      });
+      LS.set("kps.leads", leads);
+      fillSelects(); render(); renderPrograms();
+      logAdd({ key:"__import", title:"Weekly leads export", scope:"",
+               c:`Imported ${leads.length} leads from ${f.name}${fresh?` — ${fresh} new`:""}` });
+      leads.forEach(l=>dirty.add(keyOf(l)));
+      spPushSoon();
+      toast(`Imported ${leads.length} leads${fresh?` · ${fresh} new`:""}`);
+    }catch(err){ console.error(err); toast("Could not read that file"); }
+    input.value = "";
+  };
+  fr.readAsArrayBuffer(f);
+}
+
+
+/* ============================================================
+   SHARED STORAGE — SharePoint (KPS App Suite site)
+   Everything the team needs to see lives here, not in the
+   browser, so what Alex changes is what Mike sees.
+
+     Shared Documents/CRM-Pipeline/
+       leads.json          the working lead list
+       Open-Leads.csv      open leads only, refreshed on every save
+       Manager/
+         activity-log.json every edit and note
+
+   LOCK THE Manager FOLDER DOWN IN SHAREPOINT. Break permission
+   inheritance on it and grant only the managers. That is what
+   actually keeps the log private — this page runs in the
+   browser and cannot enforce it.
+   ============================================================ */
+const SP = {
+  host:   "kellyspropertyservices.sharepoint.com",
+  site:   "/sites/KPSAppSuite",
+  dir:    "/CRM-Pipeline",
+  mgrDir: "/CRM-Pipeline/Manager",
+  leads:  "leads.json",
+  log:    "activity-log.json",
+  csv:    "Open-Leads.csv"
+};
+const WRITE_SCOPES = ['Sites.ReadWrite.All'];
+
+let spSite = null;          // cached site id
+/* Leads this browser has changed since the last successful save. On a
+   conflict only these may overwrite what's on SharePoint — everything else
+   is taken from the server, so two people editing different leads at the
+   same time both keep their work. */
+let dirty = new Set();
+let etags  = {};            // path -> etag, for conflict detection
+let syncState = { on:false, busy:false, last:null, err:null, logDenied:false };
+
+async function spToken(){
+  if(!msalApp) throw new Error("not signed in");
+  const account = msalApp.getActiveAccount() || msalApp.getAllAccounts()[0];
+  if(!account) throw new Error("not signed in");
+  try{ return (await msalApp.acquireTokenSilent({ scopes: WRITE_SCOPES, account })).accessToken; }
+  catch(e){ return (await msalApp.acquireTokenPopup({ scopes: WRITE_SCOPES, account })).accessToken; }
+}
+async function spSiteId(tok){
+  if(spSite) return spSite;
+  const r = await fetch(`https://graph.microsoft.com/v1.0/sites/${SP.host}:${SP.site}`,
+                        { headers:{ Authorization:"Bearer "+tok } });
+  if(!r.ok) throw new Error("site lookup failed ("+r.status+")");
+  spSite = (await r.json()).id;
+  return spSite;
+}
+const spPath = p => p.split("/").filter(Boolean).map(encodeURIComponent).join("/");
+
+/* Returns {data, etag} — or null when the file isn't there yet.
+   Throws {denied:true} when SharePoint says this person may not read it. */
+async function spRead(dir, file){
+  const tok = await spToken(), id = await spSiteId(tok);
+  const url = `https://graph.microsoft.com/v1.0/sites/${id}/drive/root:/${spPath(dir+"/"+file)}`;
+  const meta = await fetch(url, { headers:{ Authorization:"Bearer "+tok } });
+  if(meta.status===404) return null;
+  if(meta.status===403){ const e = new Error("no access"); e.denied = true; throw e; }
+  if(!meta.ok) throw new Error("read failed ("+meta.status+")");
+  const m = await meta.json();
+  const body = await fetch(url+":/content", { headers:{ Authorization:"Bearer "+tok } });
+  if(!body.ok) throw new Error("download failed ("+body.status+")");
+  etags[dir+"/"+file] = m.eTag;
+  const txt = await body.text();
+  try{ return { data: JSON.parse(txt), etag:m.eTag }; }
+  catch(e){ return { data:null, etag:m.eTag, raw:txt }; }
+}
+
+/* PUT with If-Match so a stale write is rejected rather than silently
+   clobbering someone else's change. 412 => caller re-reads and retries. */
+async function spWrite(dir, file, content, type){
+  const tok = await spToken(), id = await spSiteId(tok);
+  const key = dir+"/"+file;
+  const headers = { Authorization:"Bearer "+tok, "Content-Type": type||"application/json" };
+  if(etags[key]) headers["If-Match"] = etags[key];
+  const r = await fetch(
+    `https://graph.microsoft.com/v1.0/sites/${id}/drive/root:/${spPath(key)}:/content`,
+    { method:"PUT", headers, body: content });
+  if(r.status===412){ const e = new Error("changed elsewhere"); e.conflict = true; throw e; }
+  if(r.status===403){ const e = new Error("no access"); e.denied = true; throw e; }
+  if(!r.ok) throw new Error("save failed ("+r.status+")");
+  const m = await r.json();
+  etags[key] = m.eTag;
+  return m;
+}
+
+/* ---- open-leads export, refreshed with every save ---- */
+function openLeadsCsv(){
+  const q = v => `"${String(v==null?"":v).replace(/"/g,'""')}"`;
+  const rows = leads.filter(isOpen).sort((a,b)=>(b.age||0)-(a.age||0));
+  const head = ["Priority","PM","Property","Scope","Stage","Project type","Created","Age (days)","Notes"];
+  return [head.map(q).join(",")].concat(rows.map(l=>[
+    PRIOS[l.p].short, l.pm||"", l.t, l.s||"", l.st, l.ty||"",
+    l.c||"", l.age===null?"":l.age, l.n||""
+  ].map(q).join(","))).join("\r\n");
+}
+
+/* ---- pull on sign-in ---- */
+async function spPull(){
+  if(!signedIn() || !msalApp) return;
+  syncState.busy = true; renderSync();
+  try{
+    const got = await spRead(SP.dir, SP.leads);
+    if(got && Array.isArray(got.data) && got.data.length){
+      leads = got.data.map(normalize);
+      LS.set("kps.leads", leads); dirty.clear();
+    }else if(!got){
+      await spWrite(SP.dir, SP.leads, JSON.stringify(leads, null, 1));   // first run: seed it
+    }
+    try{
+      const lg = await spRead(SP.mgrDir, SP.log);
+      if(lg && Array.isArray(lg.data)) LS.set("kps.log", lg.data);
+      syncState.logDenied = false;
+    }catch(e){ if(e.denied) syncState.logDenied = true; else throw e; }
+    syncState.on = true; syncState.err = null; syncState.last = new Date();
+  }catch(e){
+    console.error("SharePoint pull failed", e);
+    syncState.on = false; syncState.err = e.message || "sync failed";
+  }
+  syncState.busy = false;
+  fillSelects(); render(); renderProjects(); renderActivity(); renderSync();
+}
+
+/* ---- push, serialised and debounced so rapid edits don't pile up ---- */
+let pushTimer = null, pushing = Promise.resolve();
+function spPushSoon(){
+  if(!syncState.on) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(()=>{ pushing = pushing.then(spPushNow).catch(e=>console.error(e)); }, 700);
+}
+async function spPushNow(){
+  if(!signedIn() || !syncState.on) return;
+  syncState.busy = true; renderSync();
+  try{
+    for(let attempt=0; attempt<2; attempt++){
+      try{
+        await spWrite(SP.dir, SP.leads, JSON.stringify(leads, null, 1));
+        break;
+      }catch(e){
+        if(e.conflict && attempt===0){
+          const fresh = await spRead(SP.dir, SP.leads);      // someone else saved first
+          if(fresh && Array.isArray(fresh.data)){
+            const mine = {}; leads.forEach(l=>mine[keyOf(l)] = l);
+            // server wins, except for the leads this browser actually edited
+            const merged = fresh.data.map(normalize)
+                                     .map(l => dirty.has(keyOf(l)) && mine[keyOf(l)] ? mine[keyOf(l)] : l);
+            dirty.forEach(k=>{ if(mine[k] && !merged.some(m=>keyOf(m)===k)) merged.push(mine[k]); });
+            leads = merged; LS.set("kps.leads", leads);
+            fillSelects(); render(); renderProjects();
+          }
+          continue;
+        }
+        throw e;
+      }
+    }
+    dirty.clear();
+    await spWrite(SP.dir, SP.csv, openLeadsCsv(), "text/csv");
+    if(!syncState.logDenied){
+      try{
+        const fresh = await spRead(SP.mgrDir, SP.log);        // log is append-only: merge, never replace
+        const mine = LS.get("kps.log", []);
+        const seen = new Set(), all = [];
+        (fresh && Array.isArray(fresh.data) ? fresh.data : []).concat(mine).forEach(e=>{
+          const k = e.ts+"|"+e.who+"|"+(e.key||"")+"|"+(e.f||"")+"|"+(e.c||"");
+          if(!seen.has(k)){ seen.add(k); all.push(e); }
+        });
+        all.sort((a,b)=> a.ts<b.ts?-1:1);
+        LS.set("kps.log", all);
+        await spWrite(SP.mgrDir, SP.log, JSON.stringify(all, null, 1));
+        renderActivity();
+      }catch(e){ if(e.denied) syncState.logDenied = true; else throw e; }
+    }
+    syncState.err = null; syncState.last = new Date();
+  }catch(e){
+    console.error("SharePoint push failed", e);
+    syncState.err = e.message || "save failed";
+  }
+  syncState.busy = false; renderSync();
+}
+
+function renderSync(){
+  const el = document.getElementById("syncPill"); if(!el) return;
+  if(!signedIn()){ el.className = "syncpill hide"; return; }
+  const s = syncState;
+  el.className = "syncpill " + (s.err ? "bad" : s.busy ? "busy" : s.on ? "ok" : "off");
+  el.textContent = s.busy ? "Saving…"
+    : s.err ? "Not saved — " + s.err
+    : s.on  ? "Saved to SharePoint" + (s.last ? " · " + s.last.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}) : "")
+    : "Working offline";
+  el.title = s.on ? "Shared Documents/CRM-Pipeline on the KPS App Suite site"
+                  : "Changes are only in this browser until this reconnects";
+}
+
+/* ---------- boot ---------- */
+(async function(){
+  load(); fillSelects();
+  await restoreSession();              // silent — keeps you signed in on this device
+  applyRole(); renderPrograms(); render(); renderProjects(); renderSync();
+  if(signedIn()) spPull();
+  if(isManager()) renderActivity();
+  const h = (location.hash||"").slice(1);
+  go(["pipeline","estimating","projects","general"].includes(h) ? h : "pipeline");
+  if(IS_PREVIEW && !ME){
+    const so = document.getElementById("signedOut");
+    if(so) so.insertAdjacentHTML("beforeend",
+      `<button class="btn" onclick="openPreviewPicker()">Preview a role</button>`);
+  }
 })();
 </script>
 </body>
