@@ -669,7 +669,7 @@ function normalize(l){
   o.pm = (o.pm||"").trim();
   o.st = STAGES.includes(o.st) ? o.st : "Assigned";
   o.p = PRIOS[o.p] ? o.p : "none";
-  o.age = o.c ? Math.max(0, Math.round((TODAY - new Date(o.c+"T00:00:00")) / 86400000)) : null;
+  o.age = o.c ? Math.max(0, Math.floor((TODAY - new Date(o.c+"T00:00:00")) / 86400000)) : null;
   return o;
 }
 const isOpen = l => !["Won","Lost","Pass"].includes(l.st);
@@ -1567,8 +1567,11 @@ async function spPull(){
     try{
       const lg = await spRead(SP.mgrDir, SP.log);
       if(lg && Array.isArray(lg.data)) LS.set("kps.log", lg.data);
+      else if(!lg) await spWrite(SP.mgrDir, SP.log, JSON.stringify(LS.get("kps.log", []), null, 1));
       syncState.logDenied = false;
     }catch(e){ if(e.denied) syncState.logDenied = true; else throw e; }
+    try{ await spWrite(SP.dir, SP.csv, openLeadsCsv(), "text/csv"); }
+    catch(e){ console.error("open-leads export failed", e); }
     syncState.on = true; syncState.err = null; syncState.last = new Date();
   }catch(e){
     console.error("SharePoint pull failed", e);
