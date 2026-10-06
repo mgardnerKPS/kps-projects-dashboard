@@ -18,6 +18,7 @@
   --urgent:#d03b3b; --urgent-bg:#fbe8e8;
   --progress:#b67c00; --progress-bg:#fdf3da;
   --watch:#0ca30c; --watch-bg:#e4f5e4;
+  --pass:#5b6b7f; --pass-bg:#eceff4;
   --fill-urgent:#d03b3b; --fill-progress:#eda100; --fill-watch:#1baf7a;
   --shadow:0 1px 2px rgba(11,11,11,.05), 0 4px 16px rgba(11,11,11,.05);
   --r:12px;
@@ -32,6 +33,7 @@
     --urgent:#e66767; --urgent-bg:#3a1e1e;
     --progress:#fab219; --progress-bg:#3a2f12;
     --watch:#0ca30c; --watch-bg:#16301a;
+    --pass:#9fb0c4; --pass-bg:#242b35;
   --fill-urgent:#e66767; --fill-progress:#c98500; --fill-watch:#199e70;
     --fill-urgent:#e66767; --fill-progress:#c98500; --fill-watch:#199e70;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
@@ -46,6 +48,7 @@
   --urgent:#e66767; --urgent-bg:#3a1e1e;
   --progress:#fab219; --progress-bg:#3a2f12;
   --watch:#0ca30c; --watch-bg:#16301a;
+  --pass:#9fb0c4; --pass-bg:#242b35;
   --fill-urgent:#e66767; --fill-progress:#c98500; --fill-watch:#199e70;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
 }
@@ -213,7 +216,22 @@ tr.p-watch td:first-child{box-shadow:inset 3px 0 0 var(--watch)}
   white-space:nowrap;
 }
 .badge.won{background:var(--watch-bg);color:var(--watch);border-color:transparent}
-.badge.lost,.badge.pass{background:var(--urgent-bg);color:var(--urgent);border-color:transparent}
+.badge.lost{background:var(--urgent-bg);color:var(--urgent);border-color:transparent}
+.badge.pass,.badge.passed{background:var(--pass-bg);color:var(--pass);border-color:transparent}
+.badge.pending{background:var(--progress-bg);color:var(--progress);border-color:transparent}
+.seg{display:inline-flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:10px;border:1px solid var(--line);margin-bottom:14px}
+.seg button{appearance:none;border:0;background:transparent;color:var(--ink-2);font:inherit;font-weight:600;font-size:13px;padding:6px 14px;border-radius:7px;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.seg .n{opacity:.6;font-weight:500;margin-left:5px}
+.appr{border:1px solid var(--progress);background:var(--progress-bg);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+.appr h3{margin:0 0 2px;font-size:14px;color:var(--progress)}
+.appr .cap{margin:0 0 10px;font-size:12px;color:var(--ink-2)}
+.appr .item{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:9px 0;border-top:1px solid color-mix(in srgb,var(--progress) 28%,transparent)}
+.appr .item .who{flex:1;min-width:190px;font-size:13px}
+.appr .item .who b{display:block}
+.appr .item .rsn{color:var(--ink-2);font-size:12px}
+.pendbar{border:1px solid var(--progress);background:var(--progress-bg);border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:12.5px;color:var(--ink-2)}
+.pendbar b{color:var(--progress);display:block;margin-bottom:3px}
 .badge.sent{background:var(--brand-soft);color:var(--brand-ink);border-color:transparent}
 .age-old{color:var(--urgent);font-weight:700}
 .age-mid{color:var(--progress);font-weight:600}
@@ -491,9 +509,11 @@ td.num.over,.num.over{color:var(--urgent);font-weight:700}
       Sign in with Microsoft</button>
   </div>
   <div class="mgr hide" id="mgrBar"></div>
+  <div class="appr hide" id="apprBar"></div>
+  <div class="seg" id="pipeSeg"></div>
   <div class="tiles" id="tiles"></div>
 
-  <div class="card chartcard">
+  <div class="card chartcard" id="pmChart">
     <h3>Open leads by project manager</h3>
     <p class="cap">Excludes won, lost and passed. Segments show priority.</p>
     <div class="bars" id="pmBars"></div>
@@ -512,11 +532,11 @@ td.num.over,.num.over{color:var(--urgent);font-weight:700}
     <select id="fPM" onchange="render()" aria-label="Filter by project manager"></select>
     <select id="fStage" onchange="render()" aria-label="Filter by stage"></select>
     <select id="fType" onchange="render()" aria-label="Filter by project type"></select>
-    <button class="btn" onclick="exportPDF()">
+    <button class="btn" id="btnExport" onclick="exportPDF()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
       Export PDF
     </button>
-    <button class="btn" onclick="document.getElementById('xf').click()">
+    <button class="btn" id="btnImport" onclick="document.getElementById('xf').click()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"/><path d="M8 13l4-4 4 4"/><path d="M4 7V5a2 2 0 012-2h12a2 2 0 012 2v2"/></svg>
       Import weekly export
     </button>
@@ -525,7 +545,7 @@ td.num.over,.num.over{color:var(--urgent);font-weight:700}
 
   <div class="chips" id="prChips"></div>
 
-  <div class="tblwrap">
+  <div class="tblwrap" id="openWrap">
     <table id="tbl">
       <thead><tr>
         <th class="pcell" title="Priority"><span class="dot" style="background:var(--muted)"></span></th>
@@ -540,6 +560,18 @@ td.num.over,.num.over{color:var(--urgent);font-weight:700}
       <tbody id="tbody"></tbody>
     </table>
     <div class="empty hide" id="empty">No leads match those filters.</div>
+  </div>
+
+  <div class="tblwrap hide" id="closedWrap">
+    <table>
+      <thead><tr>
+        <th>Property / scope</th><th>PM</th><th>Outcome</th><th>Reason</th>
+        <th style="text-align:right">Closed</th><th>Approved by</th><th>Notes</th>
+        <th class="hide" id="closedHeadAct"></th>
+      </tr></thead>
+      <tbody id="closedBody"></tbody>
+    </table>
+    <div class="empty hide" id="closedEmpty">Nothing closed out yet. Leads arrive here once a manager approves a Lost or Pass.</div>
   </div>
 </section>
 
@@ -608,6 +640,10 @@ td.num.over,.num.over{color:var(--urgent);font-weight:700}
     <h2 id="idTitle">Account</h2>
     <div class="pick" id="idPick"></div>
   </div>
+</div>
+
+<div class="modal hide" id="closeModal" onclick="if(event.target===this)this.classList.add('hide')">
+  <div class="box wide" id="closeBody"></div>
 </div>
 
 <div class="modal hide" id="awardModal" onclick="if(event.target===this)this.classList.add('hide')">
@@ -857,6 +893,7 @@ async function signIn(){
 async function signOut(){
   ME = null; syncState = { on:false, busy:false, last:null, err:null, logDenied:false }; etags = {}; spSite = null;
   projects = []; orphanFolders = []; projEntries = {}; curPid = null;
+  lostLeads = []; pipeView = "open";
   if(msalApp){ try{ await msalApp.logoutPopup(); }catch(e){ console.error(e); } }
   applyRole(); render(); renderPrograms(); go("pipeline");
   toast("Signed out");
@@ -878,6 +915,7 @@ function setPreview(id){
   rememberName(ME);
   document.getElementById("idModal").classList.add("hide");
   loadProjects().catch(e=>console.error(e));
+  loadLost().catch(e=>console.error(e));
   applyRole(); fillSelects(); render(); renderPrograms(); renderActivity();
   toast("Preview as "+r.name);
 }
@@ -1181,6 +1219,9 @@ function renderBars(){
 }
 
 function render(){
+  renderPipeSeg();
+  renderCloseApprovals();
+  if(pipeView === "closed"){ renderClosed(); return; }
   const rows = visible();
   renderTiles(rows); renderBars(); renderChips(); renderProjects();
   document.querySelectorAll("thead th.s").forEach(th=>{
@@ -1194,7 +1235,9 @@ function render(){
       <td class="pcell"><span class="pflag ${l.p}" title="${PRIOS[l.p].label}"></span></td>
       <td class="prop">${esc(l.t)}${l.s?`<span class="scope">${esc(l.s)}</span>`:""}</td>
       <td>${l.pm?`<span class="pm">${esc(l.pm)}</span>`:`<span style="color:var(--muted)">—</span>`}</td>
-      <td><span class="badge ${l.st.toLowerCase()}">${l.st}</span></td>
+      <td>${isPending(l)
+        ? `<span class="badge pending" title="${esc(CLOSE_LABEL[l.close.outcome])} — waiting on a manager">${esc(CLOSE_LABEL[l.close.outcome])}?</span>`
+        : `<span class="badge ${l.st.toLowerCase()}">${l.st}</span>`}</td>
       <td style="color:var(--ink-2);max-width:190px">${esc(l.ty||"—")}</td>
       <td class="num" style="color:var(--ink-2)">${fmtDate(l.c)}</td>
       <td class="num ${ageCls(l.age)}">${l.age===null?"—":l.age+"d"}</td>
@@ -1214,9 +1257,18 @@ function openDrawer(i){
   document.getElementById("dTitle").textContent = l.t;
   document.getElementById("dScope").textContent = l.s || l.ty || "";
   document.getElementById("dBody").innerHTML = `
+    ${isPending(l) ? `<div class="pendbar">
+      <b>${esc(CLOSE_LABEL[l.close.outcome])} — waiting on a manager</b>
+      ${esc(l.close.reason)}${l.close.note?` · "${esc(l.close.note)}"`:""}<br>
+      Asked by ${esc(nameOf(l.close.by))}. It stays at ${esc(l.st)} until a manager decides.
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn sm" onclick="withdrawClose(${i})">Withdraw</button>
+        ${isManager()?`<button class="btn sm primary" onclick="approveClose('${esc(l.id)}')">Approve</button>
+        <button class="btn sm" onclick="declineClose('${esc(l.id)}')">Send back</button>`:""}
+      </div></div>` : ""}
     <div class="editable">
       <label for="eStage">Stage</label>
-      <select id="eStage" onchange="edit(${i},'st',this.value)">
+      <select id="eStage" ${isPending(l)?"disabled":""} onchange="edit(${i},'st',this.value)">
         ${STAGES.map(x=>`<option ${x===l.st?"selected":""}>${x}</option>`).join("")}
       </select>
     </div>
@@ -1287,6 +1339,13 @@ function edit(i, field, val){
   if(field==="p" && l[field]===val) val = "none";       // clicking the active flag clears it
   const from = l[field];
   if(from === val){ openDrawer(i); return; }
+  /* Closing a lead out is not an ordinary field change — it needs a reason
+     and, unless a manager is doing it, someone else's approval. */
+  if(field==="st" && (val==="Lost" || val==="Pass")){
+    openCloseForm(i, val);
+    const sel = byId("eStage"); if(sel) sel.value = from;   // not applied yet
+    return;
+  }
   l[field] = val;
   /* Remembered so the next weekly import doesn't undo it — the export is
      the list of leads, but a field changed here is the newer truth. */
@@ -1515,6 +1574,7 @@ function importRows(out, fileName){
             || tryFind(l=>(l.t||"").trim().toLowerCase()===t && (l.s||"").trim().toLowerCase()===s);
       };
       let fresh = 0, kept = 0, held = 0;
+      const prevStage = {}; leads.forEach(l=>{ if(l.id) prevStage[l.id] = l.st; });
       const next = out.map(row=>{
         const was = findMatch(row);
         const l = normalize(row);
@@ -1530,13 +1590,39 @@ function importRows(out, fileName){
       leads.forEach(l=>{ if(l.pid && !next.some(x=>x.id===l.id)){ next.push(l); held++; } });
       leads = next.map(normalize);
       ensureIds(leads);
+
+      /* The weekly export still lists leads that have already been closed out
+         — without this they would walk straight back into the pipeline and
+         undo the approval. */
+      let revived = 0;
+      leads = leads.filter(l=>{
+        const hit = lostLeads.find(r => r.id === l.id ||
+          ((r.t||"").trim().toLowerCase() === (l.t||"").trim().toLowerCase() &&
+           (r.s||"").trim().toLowerCase() === (l.s||"").trim().toLowerCase()));
+        if(hit) revived++;
+        return !hit;
+      });
+
+      /* A row the export marks LOST or PASS is the PM saying so in their own
+         report — treat it as a request, not a decision, so it still gets a
+         manager's eye. Anything already closed was filtered out above. */
+      let raised = 0;
+      leads.forEach(l=>{
+        if(isPending(l)) return;
+        if(l.st !== "Lost" && l.st !== "Pass") return;
+        const prev = prevStage[l.id];
+        l.close = { outcome: l.st, reason: `Marked ${CLOSE_LABEL[l.st]} in the weekly export`,
+                    note: `From ${fileName}`, by: (ME?ME.id:"?"), at: nowISO(),
+                    stageBefore: (prev && prev !== "Lost" && prev !== "Pass") ? prev : "Sent" };
+        raised++;
+      });
       LS.set("kps.leads", leads);
       fillSelects(); render(); renderPrograms();
       logAdd({ key:"__import", title:"Weekly leads export", scope:"",
-               c:`Imported ${out.length} leads from ${fileName}${fresh?` — ${fresh} new`:""}${kept?`, kept ${kept} field${kept===1?"":"s"} edited here`:""}${held?`, held ${held} awarded job${held===1?"":"s"} not in the file`:""}` });
+               c:`Imported ${out.length} leads from ${fileName}${fresh?` — ${fresh} new`:""}${kept?`, kept ${kept} field${kept===1?"":"s"} edited here`:""}${held?`, held ${held} awarded job${held===1?"":"s"} not in the file`:""}${revived?`, skipped ${revived} already closed`:""}${raised?`, ${raised} marked lost/passed need approval`:""}` });
       leads.forEach(l=>dirty.add(lid(l)));
       spPushSoon();
-      toast(`Imported ${out.length} leads${fresh?` · ${fresh} new`:""}${held?` · ${held} awarded kept`:""}`);
+      toast(`Imported ${out.length} leads${fresh?` · ${fresh} new`:""}${revived?` · ${revived} closed skipped`:""}${raised?` · ${raised} need approval`:""}`);
 }
 
 
@@ -1563,7 +1649,8 @@ const SP = {
   mgrDir: "/CRM-Pipeline/Manager",
   leads:  "leads.json",
   log:    "activity-log.json",
-  csv:    "Open-Leads.csv"
+  csv:    "Open-Leads.csv",
+  lost:   "lost-leads.json"
 };
 const WRITE_SCOPES = ['Sites.ReadWrite.All'];
 
@@ -1667,6 +1754,8 @@ async function spPull(){
     console.error("SharePoint pull failed", e);
     syncState.on = false; syncState.err = e.message || "sync failed";
   }
+  try{ await loadLost(); }
+  catch(e){ console.error("lost-leads load failed", e); toast("Couldn't load the closed leads"); }
   try{ await loadProjects(); }
   catch(e){ console.error("project load failed", e); toast("Couldn't load the projects"); }
   syncState.busy = false;
@@ -2543,6 +2632,287 @@ async function coDelete(uidv){
   if(!confirm(`Delete draft ${coNum(co)}? Its number isn't reused.`)) return;
   try{ await mutateProject(curPid, q=>{ const c = q.cos.find(x=>x.uid===uidv); if(c){ c.del = true; c.upd = nowISO(); } }); renderProject(); }
   catch(e){ fail(e); }
+}
+
+/* ============================================================
+   CLOSING A LEAD OUT — Lost and Passed
+
+   A project manager cannot close a lead on their own. Picking Lost or
+   Pass records a request with a reason; a manager approves or declines
+   it. Only on approval does the lead leave the pipeline and land in
+
+     Shared Documents/CRM-Pipeline/lost-leads.json
+
+   which keeps both outcomes side by side, labelled and coloured apart:
+   Lost means the client went elsewhere, Passed means we chose not to
+   bid, and the reasons you'd record for each are different.
+
+   While a request is pending the lead stays exactly where it was — same
+   stage, same open counts — so nothing vanishes from anyone's list on
+   the strength of one person's click.
+   ============================================================ */
+const CLOSE_REASONS = {
+  Lost: ["Price", "Went with a competitor", "No response from client",
+         "Timing — deferred", "Scope changed", "Client cancelled the project",
+         "We withdrew", "Other"],
+  Pass: ["Outside our trades", "Job too small", "Too far / out of area",
+         "Schedule full", "Payment or credit risk", "Scope too unclear to price",
+         "Client relationship", "Other"]
+};
+const CLOSE_LABEL = { Lost: "Lost", Pass: "Passed" };
+const CLOSE_CLASS = { Lost: "lost", Pass: "passed" };
+
+let lostLeads = [];          // the closed database
+let pipeView  = "open";      // "open" | "closed"
+let closeIdx  = null;        // lead index awaiting the close-out form
+
+const isPending = l => !!(l && l.close && l.close.outcome);
+const closedById = id => lostLeads.find(x => x.id === id) || null;
+
+/* ---------- the closed database ---------- */
+function mergeLost(server, mine){
+  const m = new Map();
+  (server||[]).concat(mine||[]).forEach(x=>{
+    const o = m.get(x.id);
+    if(!o || (x.upd||"") >= (o.upd||"")) m.set(x.id, x);
+  });
+  return [...m.values()];
+}
+async function loadLost(){
+  if(localMode()){ lostLeads = LS.get("kps.lost", []); return; }
+  if(!spOn()) return;
+  const got = await spRead(SP.dir, SP.lost);
+  lostLeads = got && Array.isArray(got.data) ? got.data : [];
+  LS.set("kps.lost", lostLeads);
+}
+async function saveLost(arr){
+  LS.set("kps.lost", arr); lostLeads = arr;
+  if(localMode()) return;
+  if(!spOn()) throw new Error("SharePoint isn't connected right now");
+  const key = SP.dir + "/" + SP.lost;
+  for(let attempt=0; attempt<3; attempt++){
+    try{
+      if(!etags[key]){
+        const made = await spCreate(SP.dir, SP.lost, JSON.stringify(arr, null, 1));
+        if(made) return;
+        const f = await spRead(SP.dir, SP.lost);
+        arr = mergeLost(f && f.data, arr); lostLeads = arr; LS.set("kps.lost", arr);
+        continue;
+      }
+      await spWrite(SP.dir, SP.lost, JSON.stringify(arr, null, 1));
+      return;
+    }catch(e){
+      if(e.conflict){
+        const f = await spRead(SP.dir, SP.lost);
+        arr = mergeLost(f && f.data, arr); lostLeads = arr; LS.set("kps.lost", arr);
+        continue;
+      }
+      throw e;
+    }
+  }
+  throw new Error("Changed by someone else at the same moment — try again");
+}
+
+/* ---------- a PM asks for the lead to be closed ---------- */
+function openCloseForm(i, outcome){
+  const l = leads[i]; if(!l) return;
+  closeIdx = i;
+  const reasons = CLOSE_REASONS[outcome] || CLOSE_REASONS.Lost;
+  const mg = isManager();
+  byId("closeBody").innerHTML = `
+    <h2>Mark as ${esc(CLOSE_LABEL[outcome])}</h2>
+    <p>${esc(l.t)}${l.s?` — ${esc(l.s)}`:""}. ${mg
+      ? "You're a manager, so this is recorded and applied straight away."
+      : "A manager reviews this before the lead leaves the pipeline. Nothing changes until then."}</p>
+    <div class="fgrid" style="grid-template-columns:1fr">
+      <div><label for="clReason">${outcome==="Pass"?"Why are we passing?":"Why did we lose it?"}</label>
+        <select id="clReason">${reasons.map(r=>`<option>${esc(r)}</option>`).join("")}</select></div>
+      <div><label for="clNote">Anything worth recording (optional)</label>
+        <textarea id="clNote" rows="3" placeholder="${outcome==="Pass"
+          ? "e.g. two hours each way, not worth the drive"
+          : "e.g. came in 12% under us, client said price only"}"></textarea></div>
+    </div>
+    <div class="pend hide" id="clErr" style="margin-top:10px"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn" onclick="byId('closeModal').classList.add('hide')">Cancel</button>
+      <button class="btn primary" id="clGo" onclick="submitClose('${outcome}')">
+        ${mg ? `Mark ${esc(CLOSE_LABEL[outcome])}` : "Send for approval"}</button>
+    </div>`;
+  byId("closeModal").classList.remove("hide");
+}
+
+async function submitClose(outcome){
+  if(closeIdx === null) return;
+  const l = leads[closeIdx];
+  const err = byId("clErr"); err.classList.add("hide");
+  const btn = byId("clGo"); btn.disabled = true;
+  try{
+    const reason = byId("clReason").value;
+    const note = byId("clNote").value.trim();
+    l.close = { outcome, reason, note, by: ME.id, at: nowISO(), stageBefore: l.st };
+    LS.set("kps.leads", leads);
+    dirty.add(lid(l));
+    logAdd({ key:lid(l), id:l.id||"", title:l.t, scope:l.s||"",
+             c:`Asked to mark ${CLOSE_LABEL[outcome]} — ${reason}${note?": "+note:""}` });
+    // A manager closing a lead is the approver, so it applies at once.
+    if(isManager()) await applyClose(l, ME.id, true);
+    else spPushSoon();
+    byId("closeModal").classList.add("hide");
+    closeIdx = null;
+    toast(isManager() ? `Marked ${CLOSE_LABEL[outcome]}` : "Sent to a manager for approval");
+    render();
+  }catch(e){
+    console.error(e);
+    err.textContent = e.message || "Couldn't record that"; err.classList.remove("hide");
+  }
+  const b2 = byId("clGo"); if(b2) b2.disabled = false;
+}
+
+/* A PM can take back their own request while it is still pending. */
+async function withdrawClose(i){
+  const l = leads[i]; if(!isPending(l)) return;
+  if(!(isManager() || l.close.by === ME.id)){ toast("Only the person who raised it, or a manager, can withdraw it"); return; }
+  const was = CLOSE_LABEL[l.close.outcome];
+  delete l.close;
+  LS.set("kps.leads", leads); dirty.add(lid(l)); spPushSoon();
+  logAdd({ key:lid(l), id:l.id||"", title:l.t, scope:l.s||"", c:`Withdrew the request to mark ${was}` });
+  openDrawer(i); render();
+  toast("Request withdrawn");
+}
+
+/* ---------- a manager decides ---------- */
+const pendingCloses = () => leads.filter(isPending);
+
+async function applyClose(l, approverId, selfApproved){
+  const c = l.close;
+  const rec = {
+    id: l.id, t: l.t, s: l.s || "", pm: l.pm || "", ty: l.ty || "", c: l.c || "",
+    n: l.n || "", stageAtClose: c.stageBefore || l.st,
+    outcome: c.outcome, reason: c.reason, note: c.note || "",
+    requestedBy: c.by, requestedAt: c.at,
+    approvedBy: approverId, approvedAt: nowISO(), selfApproved: !!selfApproved,
+    upd: nowISO()
+  };
+  await saveLost(mergeLost(lostLeads, [rec]));
+  const ix = leads.indexOf(l);
+  if(ix >= 0) leads.splice(ix, 1);
+  LS.set("kps.leads", leads);
+  dirty.delete(lid(l));
+  logAdd({ key:lid(l), id:l.id||"", title:l.t, scope:l.s||"",
+           c:`${CLOSE_LABEL[c.outcome]}${selfApproved?" (self-approved)":" — approved"}: ${c.reason}` });
+  await spPushNow();
+}
+
+async function approveClose(leadId){
+  if(!isManager()){ toast("Only a manager can approve"); return; }
+  const l = leads.find(x=>x.id===leadId); if(!isPending(l)) return;
+  if(!confirm(`Approve marking "${l.t}" as ${CLOSE_LABEL[l.close.outcome]}?\n\nIt leaves the pipeline and goes to the lost-leads record.`)) return;
+  try{ await applyClose(l, ME.id, false); toast(`${CLOSE_LABEL[l.close.outcome]} approved`); render(); }
+  catch(e){ fail(e); }
+}
+
+async function declineClose(leadId){
+  if(!isManager()){ toast("Only a manager can decline"); return; }
+  const l = leads.find(x=>x.id===leadId); if(!isPending(l)) return;
+  const why = prompt(`Send "${l.t}" back to ${l.pm||"the PM"}. Why is it staying open?`, "");
+  if(why === null) return;
+  const was = CLOSE_LABEL[l.close.outcome];
+  // An import-raised request will have moved the stage to Lost/Pass; put it back.
+  if(l.close.stageBefore && l.close.stageBefore !== l.st) l.st = l.close.stageBefore;
+  delete l.close;
+  LS.set("kps.leads", leads); dirty.add(lid(l));
+  logAdd({ key:lid(l), id:l.id||"", title:l.t, scope:l.s||"",
+           c:`Declined the request to mark ${was}${why.trim()?": "+why.trim():""} — stays at ${l.st}` });
+  spPushSoon(); render();
+  toast("Sent back to the PM");
+}
+
+/* Managers can undo an approval that shouldn't have happened. */
+async function restoreClosed(id){
+  if(!isManager()){ toast("Only a manager can restore a closed lead"); return; }
+  const rec = closedById(id); if(!rec) return;
+  if(!confirm(`Put "${rec.t}" back in the pipeline at ${rec.stageAtClose||"Assigned"}?`)) return;
+  try{
+    const back = normalize({ id:rec.id, t:rec.t, s:rec.s, pm:rec.pm, ty:rec.ty, c:rec.c,
+                             n:rec.n, st:rec.stageAtClose || "Assigned", p:"progress" });
+    leads.push(back);
+    LS.set("kps.leads", leads); dirty.add(lid(back));
+    await saveLost(lostLeads.filter(x=>x.id!==id));
+    logAdd({ key:lid(back), id:back.id||"", title:back.t, scope:back.s||"",
+             c:`Restored from the lost-leads record (was ${CLOSE_LABEL[rec.outcome]||rec.outcome})` });
+    await spPushNow();
+    fillSelects(); render();
+    toast("Back in the pipeline");
+  }catch(e){ fail(e); }
+}
+
+/* ---------- manager approvals strip ---------- */
+function renderCloseApprovals(){
+  const el = byId("apprBar"); if(!el) return;
+  const pend = pendingCloses();
+  const show = isManager() && pend.length > 0 && pipeView === "open";
+  el.classList.toggle("hide", !show);
+  if(!show) return;
+  el.innerHTML = `<h3>${pend.length} lead${pend.length===1?"":"s"} waiting to be closed out</h3>
+    <p class="cap">A project manager asked to close these. They stay in the pipeline until you decide.</p>
+    ${pend.map(l=>`<div class="item">
+      <span class="who"><b>${esc(l.t)}${l.s?` · ${esc(l.s)}`:""}</b>
+        <span class="rsn">${esc(CLOSE_LABEL[l.close.outcome])} — ${esc(l.close.reason)}
+        · asked by ${esc(nameOf(l.close.by))}${l.close.note?` · "${esc(l.close.note)}"`:""}</span></span>
+      <span style="display:flex;gap:8px">
+        <button class="btn sm primary" onclick="approveClose('${esc(l.id)}')">Approve</button>
+        <button class="btn sm" onclick="declineClose('${esc(l.id)}')">Send back</button>
+      </span></div>`).join("")}`;
+}
+
+/* ---------- the closed view ---------- */
+function setPipeView(v){
+  pipeView = v;
+  byId("openWrap").classList.toggle("hide", v!=="open");
+  byId("closedWrap").classList.toggle("hide", v!=="closed");
+  ["tiles","pmChart","prChips","fStage","btnExport","btnImport"]
+    .forEach(id=>byId(id)?.classList.toggle("hide", v!=="open"));
+  render();
+}
+function renderPipeSeg(){
+  const el = byId("pipeSeg"); if(!el) return;
+  el.innerHTML =
+    `<button aria-pressed="${pipeView==="open"}" onclick="setPipeView('open')">Open pipeline<span class="n">${leads.length}</span></button>` +
+    `<button aria-pressed="${pipeView==="closed"}" onclick="setPipeView('closed')">Lost &amp; passed<span class="n">${lostLeads.length}</span></button>`;
+}
+function renderClosed(){
+  const body = byId("closedBody"); if(!body) return;
+  const q = (byId("q").value||"").trim().toLowerCase();
+  const pm = byId("fPM").value;
+  const ty = byId("fType").value;
+  const rows = lostLeads.filter(r=>{
+    if(pm && pm!=="__open" && r.pm!==pm) return false;
+    if(ty && r.ty!==ty) return false;
+    if(q){
+      const hay = `${r.t} ${r.s||""} ${r.pm||""} ${r.reason||""} ${r.note||""} ${r.ty||""}`.toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  }).sort((a,b)=> (a.approvedAt||"") < (b.approvedAt||"") ? 1 : -1);
+
+  const mg = isManager();
+  body.innerHTML = rows.map(r=>`<tr style="cursor:default">
+    <td class="prop">${esc(r.t)}${r.s?`<span class="scope">${esc(r.s)}</span>`:""}</td>
+    <td>${r.pm?`<span class="pm">${esc(r.pm)}</span>`:`<span style="color:var(--muted)">—</span>`}</td>
+    <td><span class="badge ${CLOSE_CLASS[r.outcome]||"lost"}">${esc(CLOSE_LABEL[r.outcome]||r.outcome)}</span></td>
+    <td>${esc(r.reason||"—")}</td>
+    <td class="num" style="color:var(--ink-2)">${r.approvedAt?fmtDate(r.approvedAt.slice(0,10)):"—"}</td>
+    <td style="color:var(--ink-2);font-size:12px">${r.approvedBy?esc(nameOf(r.approvedBy)):"—"}${r.selfApproved?" (self)":""}</td>
+    <td class="notes">${esc(r.note||"—")}</td>
+    ${mg?`<td><button class="btn sm" onclick="restoreClosed('${esc(r.id)}')">Restore</button></td>`:""}
+  </tr>`).join("");
+  byId("closedEmpty").classList.toggle("hide", rows.length>0);
+  byId("closedHeadAct").classList.toggle("hide", !mg);
+
+  const lost = lostLeads.filter(r=>r.outcome==="Lost").length;
+  const pass = lostLeads.filter(r=>r.outcome==="Pass").length;
+  byId("leadsSub").textContent =
+    `${rows.length} of ${lostLeads.length} closed leads shown · ${lost} lost · ${pass} passed`;
 }
 
 /* ---------- boot ---------- */
