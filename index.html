@@ -348,6 +348,42 @@ tr.p-watch td:first-child{box-shadow:inset 3px 0 0 var(--watch)}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--surface-2);padding:1px 5px;border-radius:5px;border:1px solid var(--line)}
 
 
+/* ---------- projects, costing, change orders ---------- */
+.btn.sm{padding:5px 10px;font-size:12px;border-radius:8px}
+.btn.danger{color:var(--urgent);border-color:color-mix(in srgb,var(--urgent) 40%,transparent)}
+.btn.danger:hover{background:var(--urgent-bg);border-color:var(--urgent)}
+.card.sec{padding:18px 20px;margin-bottom:16px}
+.card.sec h3{margin:0 0 3px;font-size:15px;letter-spacing:-.01em}
+.card.sec>.cap{margin:0 0 14px;font-size:12.5px;color:var(--muted)}
+.pjhead{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:10px;border:1px solid var(--line);margin:18px 0 18px;width:fit-content;max-width:100%;overflow:auto}
+.tabs button{appearance:none;border:0;background:transparent;color:var(--ink-2);font:inherit;font-weight:600;font-size:13px;padding:7px 15px;border-radius:7px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-current="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.fgrid label{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.fgrid input,.fgrid select,.fgrid textarea{
+  width:100%;padding:8px 11px;border-radius:9px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);font:inherit;font-size:13px;
+}
+.fgrid textarea{resize:vertical;min-height:62px}
+.fgrid input:focus,.fgrid select:focus,.fgrid textarea:focus{outline:2px solid var(--brand);outline-offset:-1px;border-color:var(--brand)}
+.fgrid input[disabled]{background:var(--surface-2);color:var(--muted)}
+.fgrid input[type=file]{padding:7px 10px;font-size:12px}
+table.mini{min-width:720px;font-size:12.5px}
+table.mini td,table.mini th{padding:8px 11px}
+td.num.over,.num.over{color:var(--urgent);font-weight:700}
+.meter{height:7px;border-radius:4px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.meter i{display:block;height:100%;border-radius:4px}
+.idprev{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding:11px 14px;border-radius:10px;
+  background:var(--brand-soft);border:1px solid var(--brand);color:var(--brand-ink);font-size:12px;font-weight:600;
+}
+.idprev code{font-size:13px;background:var(--surface);border-color:var(--line);color:var(--ink)}
+.blform{border:1px solid var(--brand);background:var(--brand-soft);border-radius:11px;padding:14px;margin-bottom:12px}
+.blform .fgrid input,.blform .fgrid select{background:var(--surface)}
+.cocard{padding:16px 18px;margin-bottom:12px}
+.modal .box.wide{max-width:640px}
+
 .syncpill{
   font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap;
   border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);flex:0 0 auto;
@@ -357,6 +393,32 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
 .syncpill.bad{background:var(--urgent-bg);color:var(--urgent);border-color:transparent}
 .syncpill.off{background:var(--progress-bg);color:var(--progress);border-color:transparent}
 
+/* On a phone the budget table stops being a table: each category becomes its
+   own block with the figures labelled, so Spent and Left stay on screen
+   instead of hiding off the right edge. */
+@media (max-width:760px){
+  .tblwrap.budget{overflow:visible;border:0;background:transparent}
+  .tblwrap.budget table.mini{min-width:0;width:100%;display:block}
+  .tblwrap.budget thead{display:none}
+  .tblwrap.budget tbody,.tblwrap.budget tr{display:block}
+  .tblwrap.budget tr{
+    border:1px solid var(--line);border-radius:11px;background:var(--surface);
+    padding:11px 13px;margin-bottom:9px;
+  }
+  .tblwrap.budget tr.tot{background:var(--surface-2);border-color:var(--ring);font-weight:700}
+  .tblwrap.budget td{display:flex;justify-content:space-between;gap:14px;align-items:baseline;border:0;padding:3px 0;text-align:right}
+  .tblwrap.budget td::before{
+    content:attr(data-label);color:var(--muted);font-weight:600;font-size:11.5px;
+    letter-spacing:.01em;text-align:left;flex:0 0 auto;
+  }
+  .tblwrap.budget td.cat{
+    display:block;font-weight:700;font-size:14px;text-align:left;
+    padding:0 0 7px;margin-bottom:6px;border-bottom:1px solid var(--line);
+  }
+  .tblwrap.budget td.cat::before{display:none}
+  .tblwrap.budget td[data-label="Used"]{display:block;text-align:left;padding-top:8px}
+  .tblwrap.budget td[data-label="Used"]::before{display:block;margin-bottom:5px}
+}
 @media (max-width:720px){
   h1{font-size:20px}
   .hero{padding:18px}
@@ -400,6 +462,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
       <button id="navPipeline"   role="tab" aria-current="page" onclick="go('pipeline')">Pipeline</button>
       <button id="navEstimating" role="tab" onclick="go('estimating')">Estimating</button>
       <button id="navProjects"   role="tab" onclick="go('projects')">Projects</button>
+      <button id="navProject"    role="tab" class="hide" onclick="go('project')">Project</button>
       <button id="navGen"        role="tab" class="hide" onclick="go('general')">General</button>
     </nav>
     <span class="syncpill hide" id="syncPill"></span>
@@ -493,18 +556,21 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
   <h1>Projects</h1>
   <p class="sub" id="projSub"></p>
   <div class="tiles" id="projTiles"></div>
+  <div id="awaitBox"></div>
   <div class="tblwrap" style="margin-bottom:26px">
     <table><thead><tr>
-      <th class="pcell"><span class="dot" style="background:var(--muted)"></span></th>
-      <th>Property / scope</th><th>PM</th><th>Suggested Project ID</th>
-      <th>Won</th><th style="text-align:right">Days</th><th>Latest note</th>
+      <th>Project ID</th><th>Property / scope</th><th>PM</th>
+      <th style="text-align:right">Awarded</th><th style="text-align:right">Contract</th><th>Change orders</th>
     </tr></thead><tbody id="projBody"></tbody></table>
-    <div class="empty hide" id="projEmpty">Nothing won yet. Leads move here when their stage is set to Won.</div>
+    <div class="empty hide" id="projEmpty">No projects yet. Mark a lead Won, then award it to create its Project ID.</div>
   </div>
   <h2 style="font-size:16px;letter-spacing:-.01em;margin:0 0 4px">Project management tools</h2>
   <p class="sub">Modules that hang off a project once it's won.</p>
   <div class="grid" id="gridProjects"></div>
 </section>
+
+<!-- ================= ONE PROJECT ================= -->
+<section id="viewProject" class="hide"><div id="pjRoot"></div></section>
 
 <!-- ================= GENERAL ================= -->
 <section id="viewGeneral" class="hide">
@@ -542,6 +608,10 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
     <h2 id="idTitle">Account</h2>
     <div class="pick" id="idPick"></div>
   </div>
+</div>
+
+<div class="modal hide" id="awardModal" onclick="if(event.target===this)this.classList.add('hide')">
+  <div class="box wide" id="awBody"></div>
 </div>
 
 <div class="scrim" id="scrim" onclick="closeDrawer()"></div>
@@ -655,13 +725,19 @@ const LS = {
   get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } },
   set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
 };
+/* keyOf is the old title+scope key — still read so history written before
+   leads had ids keeps showing. lid() is what everything writes now: an id
+   that survives a retitled property or a reworded scope. */
 function keyOf(l){ return (l.t+"|"+(l.s||"")).toLowerCase(); }
+function lid(l){ return l.id || keyOf(l); }
 
 function load(){
   const saved = LS.get("kps.leads", null);
   leads = (saved && saved.length ? saved : SEED_LEADS).map(normalize);
+  ensureIds(leads);
   const over = LS.get("kps.prio", {});
-  leads.forEach(l=>{ if(over[keyOf(l)]) l.p = over[keyOf(l)]; });
+  leads.forEach(l=>{ const o = over[lid(l)] || over[keyOf(l)]; if(o) l.p = o; });
+  LS.set("kps.leads", leads);
 }
 function normalize(l){
   const o = Object.assign({}, l);
@@ -686,17 +762,20 @@ function toggleTheme(){
 /* ---------- nav ---------- */
 function go(v){
   const map = { pipeline:"viewPipeline", estimating:"viewEstimating",
-                projects:"viewProjects", general:"viewGeneral" };
+                projects:"viewProjects", project:"viewProject", general:"viewGeneral" };
   const nav = { pipeline:"navPipeline", estimating:"navEstimating",
-                projects:"navProjects", general:"navGen" };
+                projects:"navProjects", project:"navProject", general:"navGen" };
   if(!map[v]) v = "pipeline";
   if(v==="general" && !signedIn()) v = "pipeline";
+  if(v==="project" && !(signedIn() && curPid && getProj(curPid))) v = "projects";
   Object.entries(map).forEach(([k,id])=>document.getElementById(id).classList.toggle("hide", k!==v));
   Object.entries(nav).forEach(([k,id])=>document.getElementById(id).setAttribute("aria-current", k===v?"page":"false"));
+  document.getElementById("navProject").classList.toggle("hide", v!=="project");
   if(v==="general")    renderActivity();
   if(v==="projects")   renderProjects();
+  if(v==="project")    renderProject();
   if(v==="estimating") renderPriceCard();
-  location.hash = v;
+  if(v!=="project") location.hash = v;
   scrollTo(0,0);
 }
 
@@ -777,6 +856,7 @@ async function signIn(){
 }
 async function signOut(){
   ME = null; syncState = { on:false, busy:false, last:null, err:null, logDenied:false }; etags = {}; spSite = null;
+  projects = []; orphanFolders = []; projEntries = {}; curPid = null;
   if(msalApp){ try{ await msalApp.logoutPopup(); }catch(e){ console.error(e); } }
   applyRole(); render(); renderPrograms(); go("pipeline");
   toast("Signed out");
@@ -797,6 +877,7 @@ function setPreview(id){
   ME = { id:r.id, name:r.name, email:r.email||"", manager:MANAGERS.includes((r.email||"").toLowerCase()), ms:false };
   rememberName(ME);
   document.getElementById("idModal").classList.add("hide");
+  loadProjects().catch(e=>console.error(e));
   applyRole(); fillSelects(); render(); renderPrograms(); renderActivity();
   toast("Preview as "+r.name);
 }
@@ -848,13 +929,19 @@ function logAdd(entry){
   renderActivity();
 }
 function logEdit(l, field, from, to, comment){
-  logAdd({ key:keyOf(l), title:l.t, scope:l.s||"", f:field, a:from, b:to, c:comment||"" });
+  logAdd({ key:lid(l), id:l.id||"", title:l.t, scope:l.s||"", f:field, a:from, b:to, c:comment||"" });
 }
 function clearLog(){
   if(!confirm("Delete the whole activity log? This cannot be undone.")) return;
   LS.set("kps.log", []); renderActivity(); toast("Log cleared");
 }
-function logFor(l){ const k = keyOf(l); return LS.get("kps.log", []).filter(e=>e.key===k).reverse(); }
+/* Matches both the id written now and the old title+scope key, so a lead's
+   history isn't lost when it's renamed or when it predates ids. */
+function logFor(l){
+  const k = keyOf(l), i = l.id;
+  return LS.get("kps.log", []).filter(e=> e.key===k || (i && (e.key===i || e.id===i))).reverse();
+}
+function logMatches(l, e){ return e.key===keyOf(l) || (l.id && (e.key===l.id || e.id===l.id)); }
 
 /* ---------- home ---------- */
 function progCard(p){
@@ -957,40 +1044,6 @@ function renderAccount(){
        </div>`;
 }
 
-/* ---------- projects (won work) ---------- */
-function renderProjects(){
-  const body = document.getElementById("projBody"); if(!body) return;
-  const won = leads.filter(l=>l.st==="Won")
-                   .sort((a,b)=> (a.c||"") < (b.c||"") ? 1 : -1);
-  const year = new Date().getFullYear();
-  body.innerHTML = won.map((l)=>{
-    const i = leads.indexOf(l);
-    const slug = l.t.replace(/[^A-Za-z0-9]+/g,"").slice(0,18) || "Project";
-    const seq = String(won.indexOf(l)+1).padStart(3,"0");
-    return `<tr class="p-${l.p}" onclick="openDrawer(${i})">
-      <td class="pcell"><span class="pflag ${l.p}"></span></td>
-      <td class="prop">${esc(l.t)}${l.s?`<span class="scope">${esc(l.s)}</span>`:""}</td>
-      <td>${l.pm?`<span class="pm">${esc(l.pm)}</span>`:`<span style="color:var(--muted)">—</span>`}</td>
-      <td style="color:var(--ink-2)"><code>${esc(slug)}-${year}-${seq}</code></td>
-      <td class="num" style="color:var(--ink-2)">${fmtDate(l.c)}</td>
-      <td class="num">${l.age===null?"—":l.age}</td>
-      <td class="notes">${esc(l.n||"—")}</td>
-    </tr>`;
-  }).join("");
-  document.getElementById("projEmpty").classList.toggle("hide", won.length>0);
-  document.getElementById("projSub").textContent =
-    `${won.length} won job${won.length===1?"":"s"} · Project IDs are suggestions until the Projects list exists in SharePoint`;
-  const val = won.reduce((n,l)=>n+1,0);
-  const t = [
-    {lab:"Won jobs", val:won.length, note:"across all trades"},
-    {lab:"This month", val:won.filter(l=>l.c && new Date(l.c).getMonth()===new Date().getMonth() && new Date(l.c).getFullYear()===year).length, note:"by lead created date"},
-    {lab:"Trades involved", val:new Set(won.map(l=>l.ty).filter(Boolean)).size, note:"distinct project types"},
-    {lab:"PMs with work", val:new Set(won.map(l=>l.pm).filter(Boolean)).size, note:"holding a won job"}
-  ];
-  document.getElementById("projTiles").innerHTML = t.map(x=>
-    `<div class="card tile"><div class="lab">${x.lab}</div><div class="val">${x.val}</div><div class="note">${x.note}</div></div>`).join("");
-}
-
 /* ---------- helpers ---------- */
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 function fmtDate(iso){
@@ -1083,7 +1136,7 @@ function renderTiles(rows){
     const oldest = open.reduce((m,l)=>(l.age||0)>(m?m.age||0:-1)?l:m, null);
     const since = Date.now() - 7*86400000;
     const edits = LS.get("kps.log",[]).filter(e=>new Date(e.ts).getTime()>=since
-                    && set.some(l=>keyOf(l)===e.key)).length;
+                    && set.some(l=>logMatches(l, e))).length;
     bar.innerHTML = `<span class="pill">Manager view</span>
       <span><b>${esc(nameOf(sel))}</b> — ${open.length} open, oldest ${oldest?oldest.age+" days ("+esc(oldest.t)+")":"none"},
       ${edits} update${edits===1?"":"s"} logged this week</span>
@@ -1187,8 +1240,10 @@ function openDrawer(i){
         <button class="chip w" aria-pressed="${l.p==='watch'}" onclick="edit(${i},'p','watch')"><i class="dot" style="background:var(--watch)"></i>Follow up may be needed</button>
       </div>
     </div>
+    ${projBlock(i, l)}
     <div class="frow"><span class="k">Created</span><span class="v">${fmtDate(l.c)}</span></div>
     <div class="frow"><span class="k">Age</span><span class="v ${ageCls(l.age)}">${l.age===null?"—":l.age+" days"}</span></div>
+    ${l.awarded?`<div class="frow"><span class="k">Awarded</span><span class="v">${fmtDate(l.awarded)}</span></div>`:""}
 
     <div class="dsec">
       <h4>Note from the report</h4>
@@ -1233,10 +1288,13 @@ function edit(i, field, val){
   const from = l[field];
   if(from === val){ openDrawer(i); return; }
   l[field] = val;
+  /* Remembered so the next weekly import doesn't undo it — the export is
+     the list of leads, but a field changed here is the newer truth. */
+  (l.edited = l.edited || {})[field] = true;
   LS.set("kps.leads", leads);
-  if(field==="p"){ const o = LS.get("kps.prio",{}); o[keyOf(l)] = val; LS.set("kps.prio", o); }
+  if(field==="p"){ const o = LS.get("kps.prio",{}); o[lid(l)] = val; LS.set("kps.prio", o); }
   logEdit(l, field, label(field,from), label(field,val), "");
-  dirty.add(keyOf(l));
+  dirty.add(lid(l));
   spPushSoon();
   openDrawer(i);
   if(isManager()){
@@ -1255,7 +1313,7 @@ function addComment(i){
   const txt = box.value.trim();
   if(!txt){ toast("Type a note first"); box.focus(); return; }
   const l = leads[i];
-  logAdd({ key:keyOf(l), title:l.t, scope:l.s||"", c:txt });
+  logAdd({ key:lid(l), id:l.id||"", title:l.t, scope:l.s||"", c:txt });
   spPushSoon();
   openDrawer(i);
   toast("Note saved");
@@ -1425,30 +1483,60 @@ function importXlsx(input){
                    c, ty:(r[6]||"").toString().trim().replace(/\s+/g," "), n:notes.replace(/\s+/g," ") });
       }
       if(!out.length){ toast("No leads found in that file"); return; }
-      /* Excel cell colors aren't readable here, so priority is carried over from
-         what's already on screen; a lead that wasn't on the list before starts
-         at "in progress" — set it in the row detail if it needs another flag. */
-      const over = LS.get("kps.prio",{});
-      const prev = {}; leads.forEach(l=>prev[keyOf(l)] = l.p);
-      leads = out.map(normalize);
-      let fresh = 0;
-      leads.forEach(l=>{
-        const k = keyOf(l);
-        if(over[k]) l.p = over[k];
-        else if(prev[k] && prev[k]!=="none") l.p = prev[k];
-        else { l.p = "progress"; fresh++; }
-      });
-      LS.set("kps.leads", leads);
-      fillSelects(); render(); renderPrograms();
-      logAdd({ key:"__import", title:"Weekly leads export", scope:"",
-               c:`Imported ${leads.length} leads from ${f.name}${fresh?` — ${fresh} new`:""}` });
-      leads.forEach(l=>dirty.add(keyOf(l)));
-      spPushSoon();
-      toast(`Imported ${leads.length} leads${fresh?` · ${fresh} new`:""}`);
+      importRows(out, f.name);
     }catch(err){ console.error(err); toast("Could not read that file"); }
     input.value = "";
   };
   fr.readAsArrayBuffer(f);
+}
+
+/* Merging the parsed rows into what's already here. Split out from reading the
+   file so it can be exercised on its own. */
+function importRows(out, fileName){
+      /* Match each imported row to a lead already here so nothing is duplicated
+         and nothing done in the dashboard is wiped: first on the id (which is
+         worked out from title + scope + created date, so an unchanged row lands
+         on itself), then on property + created date, then property + scope.
+         A matched lead keeps its id, its Project ID, and any field somebody
+         edited here; everything else comes from the export. A lead that has
+         been awarded is never dropped, even if it falls off the export. */
+      const over = LS.get("kps.prio",{});
+      const pool = leads.slice(), taken = new Set();
+      const findMatch = row => {
+        const tryFind = test => {
+          const hit = pool.find((l,ix)=>!taken.has(ix) && test(l));
+          if(hit){ taken.add(pool.indexOf(hit)); }
+          return hit;
+        };
+        const rid = "L-" + hashId((row.t||"")+"|"+(row.s||"")+"|"+(row.c||""));
+        const t = (row.t||"").trim().toLowerCase(), s = (row.s||"").trim().toLowerCase();
+        return tryFind(l=>l.id===rid)
+            || (row.c ? tryFind(l=>(l.t||"").trim().toLowerCase()===t && l.c===row.c) : null)
+            || tryFind(l=>(l.t||"").trim().toLowerCase()===t && (l.s||"").trim().toLowerCase()===s);
+      };
+      let fresh = 0, kept = 0, held = 0;
+      const next = out.map(row=>{
+        const was = findMatch(row);
+        const l = normalize(row);
+        if(!was){ l.p = over[lid(l)] || "progress"; if(!over[lid(l)]) fresh++; return l; }
+        l.id = was.id; l.pid = was.pid; l.awarded = was.awarded; l.awardedBy = was.awardedBy;
+        l.edited = was.edited; l.p = (was.p && was.p!=="none") ? was.p : (over[lid(was)] || "progress");
+        /* a field changed in the dashboard stays as it is here */
+        Object.keys(was.edited||{}).forEach(f=>{ if(f!=="p"){ l[f] = was[f]; kept++; } });
+        if(over[lid(l)]) l.p = over[lid(l)];
+        return l;
+      });
+      /* awarded jobs missing from this export are carried through untouched */
+      leads.forEach(l=>{ if(l.pid && !next.some(x=>x.id===l.id)){ next.push(l); held++; } });
+      leads = next.map(normalize);
+      ensureIds(leads);
+      LS.set("kps.leads", leads);
+      fillSelects(); render(); renderPrograms();
+      logAdd({ key:"__import", title:"Weekly leads export", scope:"",
+               c:`Imported ${out.length} leads from ${fileName}${fresh?` — ${fresh} new`:""}${kept?`, kept ${kept} field${kept===1?"":"s"} edited here`:""}${held?`, held ${held} awarded job${held===1?"":"s"} not in the file`:""}` });
+      leads.forEach(l=>dirty.add(lid(l)));
+      spPushSoon();
+      toast(`Imported ${out.length} leads${fresh?` · ${fresh} new`:""}${held?` · ${held} awarded kept`:""}`);
 }
 
 
@@ -1560,7 +1648,9 @@ async function spPull(){
     const got = await spRead(SP.dir, SP.leads);
     if(got && Array.isArray(got.data) && got.data.length){
       leads = got.data.map(normalize);
-      LS.set("kps.leads", leads); dirty.clear();
+      if(ensureIds(leads)) leads.forEach(l=>dirty.add(lid(l)));   // first pull after this version
+      LS.set("kps.leads", leads);
+      if(!dirty.size) dirty.clear();
     }else if(!got){
       await spWrite(SP.dir, SP.leads, JSON.stringify(leads, null, 1));   // first run: seed it
     }
@@ -1577,8 +1667,11 @@ async function spPull(){
     console.error("SharePoint pull failed", e);
     syncState.on = false; syncState.err = e.message || "sync failed";
   }
+  try{ await loadProjects(); }
+  catch(e){ console.error("project load failed", e); toast("Couldn't load the projects"); }
   syncState.busy = false;
   fillSelects(); render(); renderProjects(); renderActivity(); renderSync();
+  if(curPid && getProj(curPid)) renderProject();
 }
 
 /* ---- push, serialised and debounced so rapid edits don't pile up ---- */
@@ -1600,11 +1693,11 @@ async function spPushNow(){
         if(e.conflict && attempt===0){
           const fresh = await spRead(SP.dir, SP.leads);      // someone else saved first
           if(fresh && Array.isArray(fresh.data)){
-            const mine = {}; leads.forEach(l=>mine[keyOf(l)] = l);
+            const mine = {}; leads.forEach(l=>mine[lid(l)] = l);
             // server wins, except for the leads this browser actually edited
-            const merged = fresh.data.map(normalize)
-                                     .map(l => dirty.has(keyOf(l)) && mine[keyOf(l)] ? mine[keyOf(l)] : l);
-            dirty.forEach(k=>{ if(mine[k] && !merged.some(m=>keyOf(m)===k)) merged.push(mine[k]); });
+            const srv = fresh.data.map(normalize); ensureIds(srv);
+            const merged = srv.map(l => dirty.has(lid(l)) && mine[lid(l)] ? mine[lid(l)] : l);
+            dirty.forEach(k=>{ if(mine[k] && !merged.some(m=>lid(m)===k)) merged.push(mine[k]); });
             leads = merged; LS.set("kps.leads", leads);
             fillSelects(); render(); renderProjects();
           }
@@ -1651,6 +1744,807 @@ function renderSync(){
                   : "Changes are only in this browser until this reconnects";
 }
 
+/* ============================================================
+   PROJECTS — award a won job, then run it: costing + change orders
+
+   A project is two plain files on the KPS App Suite site, next to the
+   folders the estimators and the inspection app already write into:
+
+     Projects/{ProjectID}/project.json          the record: contract value,
+                                                budget baselines, change orders
+     Projects/{ProjectID}/Costing/entries.json  one record per cost, merged by id
+     Projects/{ProjectID}/{Estimating, Inspections, Subcontractors,
+                           Costing, ChangeOrders}/
+
+   The Project ID is PropertyName-Year-### . It is made ONCE, when a won job
+   is awarded, and stored on the lead. Nothing ever recalculates it.
+
+   When nobody is signed in with a real Microsoft account (a downloaded
+   preview), projects are kept in this browser only so the screens can be
+   tried out. On the hosted site they are always saved to SharePoint.
+   ============================================================ */
+const PROJ = { dir:"/Projects", file:"project.json", costDir:"Costing", entries:"entries.json" };
+const SUBFOLDERS = ["Estimating","Inspections","Subcontractors","Costing","ChangeOrders"];
+const CATS = ["Materials","Labor","Subcontractors","Equipment & dumpster","Permits & fees","Other"];
+const TRADES = ["Roofing","Decks","Siding","Windows","Porches","Carpentry","Painting","Masonry","Gutters","Other"];
+const CO_REASONS = ["Owner request","Hidden condition / rot","Code or permit requirement","Scope clarification","Other"];
+/* Costing is whole-module: whoever is listed here can see and edit all of it.
+   Same caveat as MANAGERS — this is tidiness in the browser, not security. */
+const COSTING_USERS = MANAGERS;
+
+let projects = [];           // project records
+let orphanFolders = [];      // folders under /Projects that have no project.json yet
+let projEntries = {};        // projectId -> cost entries
+let curPid = null, pjTab = "overview", coFormOpen = false, coEditing = null, pendingProject = null;
+let awardIdx = null, awardBusy = false, entryMeta = { cat:CATS[0], date:"" }, entryFilter = "";
+
+const byId = id => document.getElementById(id);
+const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
+const num = v => { const n = parseFloat(String(v==null?"":v).replace(/[$,\s]/g,"")); return isNaN(n) ? 0 : n; };
+const round2 = n => Math.round((+n||0)*100)/100;
+const money = n => (n<0?"-":"") + "$" + Math.abs(round2(n)).toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:2});
+const nowISO = () => new Date().toISOString();
+const todayStr = () => { const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+const localMode = () => !(ME && ME.ms);                   // preview: keep everything in this browser
+const spOn = () => !!(ME && ME.ms && syncState.on);
+const canCost = () => !!(ME && COSTING_USERS.includes((ME.email||"").toLowerCase()));
+const projPath = pid => PROJ.dir + "/" + pid;
+const getProj = pid => projects.find(p=>p.id===pid) || null;
+const leadFor = p => leads.find(l=>l.pid===p.id) || leads.find(l=>l.id && l.id===p.leadId) || null;
+
+/* ---------- stable lead ids ----------
+   Made from the lead's own title, scope and created date, so every browser
+   works out the same id for the same lead and nobody has to hand them out. */
+function hashId(s){
+  let h = 2166136261;
+  for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h>>>0).toString(36).padStart(7,"0").slice(-6);
+}
+function ensureIds(list){
+  const used = new Set(list.map(l=>l.id).filter(Boolean));
+  let changed = false;
+  list.forEach(l=>{
+    if(l.id) return;
+    const base = "L-" + hashId((l.t||"")+"|"+(l.s||"")+"|"+(l.c||""));
+    let id = base, n = 2;
+    while(used.has(id)) id = base + "-" + n++;
+    l.id = id; used.add(id); changed = true;
+  });
+  return changed;
+}
+
+/* ---------- SharePoint helpers (build on spRead / spWrite above) ---------- */
+async function spList(dir){
+  const tok = await spToken(), id = await spSiteId(tok);
+  const r = await fetch(`https://graph.microsoft.com/v1.0/sites/${id}/drive/root:/${spPath(dir)}:/children?$select=name,folder&$top=500`,
+                        { headers:{ Authorization:"Bearer "+tok } });
+  if(r.status===404) return [];
+  if(r.status===403){ const e = new Error("no access"); e.denied = true; throw e; }
+  if(!r.ok) throw new Error("list failed ("+r.status+")");
+  return (await r.json()).value || [];
+}
+/* Create a file only if it isn't there yet. Returns null when it already exists. */
+async function spCreate(dir, file, content, type){
+  const tok = await spToken(), id = await spSiteId(tok), key = dir+"/"+file;
+  const r = await fetch(`https://graph.microsoft.com/v1.0/sites/${id}/drive/root:/${spPath(key)}:/content?@microsoft.graph.conflictBehavior=fail`,
+    { method:"PUT", headers:{ Authorization:"Bearer "+tok, "Content-Type": type||"application/json" }, body:content });
+  if(r.status===409 || r.status===412) return null;
+  if(r.status===403){ const e = new Error("no access"); e.denied = true; throw e; }
+  if(!r.ok) throw new Error("create failed ("+r.status+")");
+  const m = await r.json(); etags[key] = m.eTag; return m;
+}
+async function spMkdir(parent, name){
+  const tok = await spToken(), id = await spSiteId(tok);
+  const r = await fetch(`https://graph.microsoft.com/v1.0/sites/${id}/drive/root:/${spPath(parent)}:/children`,
+    { method:"POST", headers:{ Authorization:"Bearer "+tok, "Content-Type":"application/json" },
+      body: JSON.stringify({ name, folder:{}, "@microsoft.graph.conflictBehavior":"fail" }) });
+  if(r.status===409) return;                 // already there — fine
+  if(!r.ok) throw new Error("folder failed ("+r.status+")");
+}
+async function spUploadFile(dir, name, file){
+  const tok = await spToken(), id = await spSiteId(tok);
+  const r = await fetch(`https://graph.microsoft.com/v1.0/sites/${id}/drive/root:/${spPath(dir+"/"+name)}:/content?@microsoft.graph.conflictBehavior=rename`,
+    { method:"PUT", headers:{ Authorization:"Bearer "+tok, "Content-Type": file.type||"application/octet-stream" }, body:file });
+  if(!r.ok) throw new Error("upload failed ("+r.status+")");
+  return r.json();
+}
+
+/* ---------- loading and saving ---------- */
+async function loadProjects(){
+  if(localMode()){ projects = LS.get("kps.projects", []); orphanFolders = []; return; }
+  if(!spOn()) return;
+  const folders = (await spList(PROJ.dir)).filter(x=>x.folder).map(x=>x.name);
+  const recs = [], orph = [];
+  await Promise.all(folders.map(async name=>{
+    try{
+      const got = await spRead(projPath(name), PROJ.file);
+      if(got && got.data && got.data.id) recs.push(got.data); else orph.push(name);
+    }catch(e){ if(e.denied) orph.push(name); else throw e; }
+  }));
+  projects = recs.sort((a,b)=> (b.created||"") < (a.created||"") ? -1 : 1);
+  orphanFolders = orph.sort();
+}
+function setProj(p){
+  const i = projects.findIndex(x=>x.id===p.id);
+  if(i>=0) projects[i] = p; else projects.unshift(p);
+}
+const newer = (a,b) => (a.upd||"") >= (b.upd||"") ? a : b;
+function mergeList(sv, mn){
+  const m = new Map();
+  (sv||[]).forEach(x=>m.set(x.uid, x));
+  (mn||[]).forEach(x=>{
+    const o = m.get(x.uid);
+    if(!o) m.set(x.uid, x);
+    else if(o.final && !x.final) { /* a locked baseline is never overwritten by an unlocked copy */ }
+    else if(x.final && !o.final) m.set(x.uid, x);
+    else m.set(x.uid, newer(o, x));
+  });
+  return [...m.values()];
+}
+/* Two people can create "the next number" at the same moment. Keep the earlier one, renumber the later. */
+function fixNums(list, field){
+  let max = 0; list.forEach(x=>{ max = Math.max(max, x[field]||0); });
+  const seen = new Set();
+  list.slice().sort((a,b)=> (a.created||"") < (b.created||"") ? -1 : 1).forEach(x=>{
+    if(seen.has(x[field])) x[field] = ++max;
+    seen.add(x[field]);
+  });
+  return list;
+}
+function mergeProject(server, mine){
+  const base = Object.assign({}, newer(server, mine));
+  base.baselines = fixNums(mergeList(server.baselines, mine.baselines), "v");
+  base.cos = fixNums(mergeList(server.cos, mine.cos), "n");
+  const act = base.baselines.filter(b=>b.status==="Active").sort((a,b)=>b.v-a.v);
+  act.slice(1).forEach(b=>{ b.status = "Superseded"; });        // never two live baselines
+  return base;
+}
+async function saveProject(p){
+  p.upd = nowISO();
+  if(localMode()){
+    const all = LS.get("kps.projects", []);
+    const i = all.findIndex(x=>x.id===p.id);
+    if(i>=0) all[i] = p; else all.push(p);
+    LS.set("kps.projects", all); setProj(p); return p;
+  }
+  if(!spOn()) throw new Error("SharePoint isn't connected right now");
+  for(let attempt=0; attempt<3; attempt++){
+    try{
+      await spWrite(projPath(p.id), PROJ.file, JSON.stringify(p, null, 1));
+      setProj(p); return p;
+    }catch(e){
+      if(e.conflict){
+        const fresh = await spRead(projPath(p.id), PROJ.file);
+        if(fresh && fresh.data){ p = mergeProject(fresh.data, p); p.upd = nowISO(); continue; }
+      }
+      throw e;
+    }
+  }
+  throw new Error("Changed by someone else at the same moment — try again");
+}
+async function mutateProject(pid, fn){
+  const cur = getProj(pid);
+  if(!cur) throw new Error("Project not found");
+  const copy = JSON.parse(JSON.stringify(cur));
+  copy.baselines = copy.baselines || []; copy.cos = copy.cos || [];
+  fn(copy);
+  return saveProject(copy);
+}
+function mergeEntries(sv, mn){
+  const m = new Map();
+  (sv||[]).concat(mn||[]).forEach(x=>{ const o = m.get(x.id); if(!o || (x.upd||"") >= (o.upd||"")) m.set(x.id, x); });
+  return [...m.values()];
+}
+async function loadEntries(pid){
+  if(localMode()){ projEntries[pid] = LS.get("kps.entries."+pid, []); return; }
+  if(!spOn()){ projEntries[pid] = projEntries[pid] || []; return; }
+  const got = await spRead(projPath(pid)+"/"+PROJ.costDir, PROJ.entries);
+  projEntries[pid] = got && Array.isArray(got.data) ? got.data : [];
+}
+async function saveEntries(pid, arr){
+  if(localMode()){ LS.set("kps.entries."+pid, arr); projEntries[pid] = arr; return; }
+  if(!spOn()) throw new Error("SharePoint isn't connected right now");
+  const dir = projPath(pid)+"/"+PROJ.costDir, key = dir+"/"+PROJ.entries;
+  for(let attempt=0; attempt<3; attempt++){
+    try{
+      if(!etags[key]){
+        const made = await spCreate(dir, PROJ.entries, JSON.stringify(arr, null, 1));
+        if(made){ projEntries[pid] = arr; return; }
+        const f = await spRead(dir, PROJ.entries); arr = mergeEntries(f && f.data, arr); continue;
+      }
+      await spWrite(dir, PROJ.entries, JSON.stringify(arr, null, 1));
+      projEntries[pid] = arr; return;
+    }catch(e){
+      if(e.conflict){ const f = await spRead(dir, PROJ.entries); arr = mergeEntries(f && f.data, arr); continue; }
+      throw e;
+    }
+  }
+  throw new Error("Changed by someone else at the same moment — try again");
+}
+
+function sysLog(p, text){
+  const l = leadFor(p);
+  logAdd({ key: l?keyOf(l):"__project", id: l?l.id:"", title: l?l.t:p.property, scope: l?(l.s||""):(p.scope||""), c:text, sys:true });
+}
+function fail(e){ console.error(e); toast(e && e.message ? e.message : "Something went wrong"); }
+
+/* ---------- Project IDs ---------- */
+function slugOf(name){
+  return String(name||"").replace(/[^A-Za-z0-9]+/g," ").trim().split(/\s+/).filter(Boolean)
+    .map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join("").slice(0,30) || "Project";
+}
+function usedIds(){
+  const s = new Set(projects.map(p=>p.id));
+  orphanFolders.forEach(n=>s.add(n));
+  leads.forEach(l=>{ if(l.pid) s.add(l.pid); });
+  return s;
+}
+function nextSeq(slug, year){
+  let n = 1;
+  const re = new RegExp("^"+slug+"-"+year+"-(\\d+)$", "i");
+  usedIds().forEach(id=>{ const m = id.match(re); if(m) n = Math.max(n, parseInt(m[1],10)+1); });
+  return n;
+}
+const makeId = (slug, year, seq) => `${slug}-${year}-${String(seq).padStart(3,"0")}`;
+
+/* ============================================================
+   AWARD — turns a won lead into a project
+   ============================================================ */
+function projBlock(i, l){
+  if(l.pid) return `<div class="editable"><label>Project</label>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <code>${esc(l.pid)}</code>
+      <button class="btn sm" onclick="closeDrawer();openProject('${esc(l.pid)}')">Open project</button>
+    </div></div>`;
+  if(l.st==="Lost" || l.st==="Pass") return "";
+  return `<div class="editable"><label>Project</label>
+    ${l.st==="Won" ? `<div class="pend" style="margin:0 0 8px">Won, but no Project ID yet. Award it to create the project folder and costing.</div>` : ""}
+    <button class="btn primary" onclick="openAward(${i})">Award job — create project</button>
+  </div>`;
+}
+async function openAward(i){
+  const l = leads[i];
+  if(!l) return;
+  if(l.pid){ toast("Already awarded as "+l.pid); return; }
+  if(!localMode() && !spOn()){ toast("Can't reach SharePoint right now — try again in a moment"); return; }
+  if(spOn()){ try{ await loadProjects(); }catch(e){ console.error(e); } }
+  awardIdx = i;
+  const year = (l.c && /^\d{4}/.test(l.c)) ? parseInt(l.c.slice(0,4),10) : new Date().getFullYear();
+  const linkable = orphanFolders.filter(n=>!leads.some(x=>x.pid===n));
+  const props = [...new Set(projects.map(p=>p.property).filter(Boolean))].sort();
+  byId("awBody").innerHTML = `
+    <h2>Award this job</h2>
+    <p>${esc(l.t)}${l.s?` — ${esc(l.s)}`:""}. This makes the Project ID and the project folder. The ID is permanent.</p>
+    ${localMode()?`<div class="pend" style="margin:0 0 12px">Preview mode: the project is kept in this browser only. On the hosted site it is saved to SharePoint.</div>`:""}
+    <div class="fgrid" style="grid-template-columns:1fr 110px">
+      <div><label for="awProp">Property name</label>
+        <input id="awProp" list="awPropList" value="${esc(l.t)}" oninput="awardPreview()" autocomplete="off">
+        <datalist id="awPropList">${props.map(x=>`<option value="${esc(x)}">`).join("")}</datalist></div>
+      <div><label for="awYear">RFP year</label>
+        <input id="awYear" inputmode="numeric" value="${year}" oninput="awardPreview()"></div>
+    </div>
+    ${linkable.length ? `<div class="fgrid" style="margin-top:10px"><div>
+      <label for="awExisting">This job already has a folder from an estimator or inspection?</label>
+      <select id="awExisting" onchange="awardPreview()"><option value="">No — make a new Project ID</option>
+        ${linkable.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("")}</select></div></div>`
+      : `<select id="awExisting" class="hide"><option value=""></option></select>`}
+    <div class="fgrid" style="margin-top:10px">
+      <div><label for="awScope">Scope</label><input id="awScope" value="${esc(l.s||l.ty||"")}"></div>
+      <div><label for="awPM">Project manager</label>
+        <select id="awPM"><option value="">Unassigned</option>
+          ${ROSTER.map(r=>`<option value="${r.id}" ${r.id===l.pm?"selected":""}>${esc(r.id)} — ${esc(r.name)}</option>`).join("")}
+        </select></div>
+      <div><label for="awValue">Contract value ($)</label><input id="awValue" inputmode="decimal" placeholder="optional now"></div>
+    </div>
+    <div class="idprev"><span>Project ID</span><code id="awId"></code></div>
+    <div class="pend hide" id="awErr" style="margin-top:10px"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn" onclick="byId('awardModal').classList.add('hide')">Cancel</button>
+      <button class="btn primary" id="awGo" onclick="confirmAward()">Award &amp; create project</button>
+    </div>`;
+  byId("awardModal").classList.remove("hide");
+  awardPreview();
+}
+function awardState(){
+  const ex = byId("awExisting").value;
+  if(ex){
+    const m = ex.match(/^(.*)-(\d{4})-(\d+)$/);
+    return { id:ex, link:true, slug:m?m[1]:ex, year:m?+m[2]:new Date().getFullYear(), seq:m?+m[3]:null };
+  }
+  const slug = slugOf(byId("awProp").value);
+  const year = parseInt(byId("awYear").value,10) || new Date().getFullYear();
+  const seq = nextSeq(slug, year);
+  return { id:makeId(slug, year, seq), link:false, slug, year, seq };
+}
+function awardPreview(){
+  const s = awardState();
+  byId("awId").textContent = s.id;
+  const linked = !!byId("awExisting").value;
+  byId("awProp").disabled = linked; byId("awYear").disabled = linked;
+}
+async function confirmAward(){
+  if(awardBusy || awardIdx===null) return;
+  const l = leads[awardIdx];
+  const err = byId("awErr"); err.classList.add("hide");
+  awardBusy = true; byId("awGo").disabled = true;
+  try{
+    const s = awardState();
+    const rec = { id:s.id, property: byId("awProp").value.trim() || l.t, scope: byId("awScope").value.trim(),
+                  year:s.year, seq:s.seq, leadId:l.id, pm: byId("awPM").value, sell: round2(num(byId("awValue").value)),
+                  created:nowISO(), createdBy: ME?ME.id:"?", upd:nowISO(), baselines:[], cos:[] };
+    if(s.link){ const lp = orphanFolders.includes(s.id); if(!lp) throw new Error(s.id+" isn't available to link"); }
+    if(localMode()){
+      const all = LS.get("kps.projects", []);
+      if(all.some(p=>p.id===rec.id)) throw new Error(rec.id+" already exists");
+      all.push(rec); LS.set("kps.projects", all); projects = all;
+    }else{
+      let made = null;
+      for(let tries=0; tries<8 && !made; tries++){
+        made = await spCreate(projPath(rec.id), PROJ.file, JSON.stringify(rec, null, 1));
+        if(!made){
+          if(s.link) throw new Error(rec.id+" already has a project record");
+          rec.seq++; rec.id = makeId(s.slug, s.year, rec.seq);        // someone took that number a moment ago
+        }
+      }
+      if(!made) throw new Error("Couldn't find a free Project ID — try again");
+      for(const f of SUBFOLDERS){ try{ await spMkdir(projPath(rec.id), f); }catch(e){ console.error(e); } }
+      setProj(rec);
+    }
+    const from = l.st;
+    l.pid = rec.id; l.st = "Won"; l.awarded = todayStr(); l.awardedBy = ME?ME.id:"?";
+    if(rec.pm) l.pm = rec.pm;
+    LS.set("kps.leads", leads);
+    if(from!=="Won") logEdit(l, "st", from, "Won", "");
+    dirty.add(lid(l)); spPushSoon();
+    sysLog(rec, "Awarded as project "+rec.id+(rec.sell?" — contract "+money(rec.sell):""));
+    byId("awardModal").classList.add("hide");
+    awardIdx = null;
+    closeDrawer();                 // awarded from a lead: don't leave the drawer over the project
+    toast("Project "+rec.id+" created");
+    render();
+    openProject(rec.id);
+  }catch(e){
+    console.error(e);
+    err.textContent = e.message || "Couldn't create the project"; err.classList.remove("hide");
+  }
+  awardBusy = false; const g = byId("awGo"); if(g) g.disabled = false;
+}
+
+/* ============================================================
+   PROJECTS LIST
+   ============================================================ */
+function renderProjects(){
+  const body = byId("projBody"); if(!body) return;
+  const list = projects.slice().sort((a,b)=> (b.created||"") < (a.created||"") ? -1 : 1);
+  const waiting = leads.filter(l=>l.st==="Won" && !l.pid).sort((a,b)=> (a.c||"") < (b.c||"") ? 1 : -1);
+  const mg = canCost();
+  body.innerHTML = list.map(p=>{
+    const l = leadFor(p), c = calcProject(p, []);
+    const pending = c.pendN;
+    return `<tr onclick="openProject('${esc(p.id)}')">
+      <td><code>${esc(p.id)}</code></td>
+      <td class="prop">${esc(p.property)}${p.scope?`<span class="scope">${esc(p.scope)}</span>`:""}</td>
+      <td>${(l&&l.pm)||p.pm?`<span class="pm">${esc((l&&l.pm)||p.pm)}</span>`:`<span style="color:var(--muted)">—</span>`}</td>
+      <td class="num" style="color:var(--ink-2)">${p.created?fmtDate(p.created.slice(0,10)):"—"}</td>
+      <td class="num">${mg ? money(c.revContract) : "—"}</td>
+      <td class="num">${c.apprN||pending ? `${c.apprN} approved${pending?` · ${pending} open`:""}` : "—"}</td>
+    </tr>`;
+  }).join("");
+  byId("projEmpty").classList.toggle("hide", list.length>0);
+  byId("projSub").textContent =
+    `${list.length} project${list.length===1?"":"s"} · ${waiting.length} won job${waiting.length===1?"":"s"} waiting for a Project ID`;
+
+  const box = byId("awaitBox");
+  box.innerHTML =
+    (localMode() && signedIn() ? `<div class="pend" style="margin:0 0 14px">Preview mode: projects here are kept in this browser only. On the hosted site they are saved to SharePoint.</div>` : "") +
+    (waiting.length ? `<div class="card sec">
+      <h3>Won — ready to award</h3>
+      <p class="cap">Awarding makes the permanent Project ID and the project folder, and opens costing and change orders.</p>
+      ${waiting.map(l=>{ const i = leads.indexOf(l); return `<div class="frow" style="align-items:center">
+          <span class="v" style="text-align:left"><b>${esc(l.t)}</b>${l.s?`<span style="color:var(--muted)"> · ${esc(l.s)}</span>`:""}</span>
+          <span style="display:flex;gap:10px;align-items:center">${l.pm?`<span class="pm">${esc(l.pm)}</span>`:""}
+          <button class="btn sm primary" onclick="openAward(${i})">Award</button></span></div>`; }).join("")}
+    </div>` : "") +
+    (orphanFolders.length && signedIn() ? `<p class="hint" style="margin:0 0 14px">${orphanFolders.length} folder${orphanFolders.length===1?"":"s"} under Projects ${orphanFolders.length===1?"has":"have"} no project record yet (${orphanFolders.map(esc).join(", ")}). Pick ${orphanFolders.length===1?"it":"them"} when you award the matching job so nothing is duplicated.</p>` : "");
+
+  const tot = list.reduce((s,p)=>s+calcProject(p,[]).revContract, 0);
+  const open = list.reduce((s,p)=>s+calcProject(p,[]).pendN, 0);
+  const t = [
+    {lab:"Projects", val:list.length, note:"awarded and running"},
+    {lab:"Ready to award", val:waiting.length, note:"won, no Project ID yet"},
+    {lab:"Open change orders", val:open, note:"draft or submitted"}
+  ];
+  if(mg) t.splice(2, 0, {lab:"Contract value", val:money(tot), note:"including approved change orders"});
+  byId("projTiles").innerHTML = t.map(x=>
+    `<div class="card tile"><div class="lab">${x.lab}</div><div class="val">${x.val}</div><div class="note">${x.note}</div></div>`).join("");
+}
+
+/* ============================================================
+   PROJECT WORKSPACE
+   ============================================================ */
+async function openProject(pid){
+  if(!getProj(pid)){ toast("Project not found"); return; }
+  curPid = pid; pjTab = "overview"; coFormOpen = false; coEditing = null; entryFilter = "";
+  go("project");
+  location.hash = "project=" + encodeURIComponent(pid);
+  try{ await loadEntries(pid); }catch(e){ console.error(e); toast("Couldn't load the cost entries"); }
+  renderProject();
+}
+function setTab(k){ pjTab = k; coFormOpen = false; coEditing = null; renderProject(); }
+
+function calcProject(p, ents){
+  ents = ents || [];
+  const ab = (p.baselines||[]).find(b=>b.status==="Active") || null;
+  const bud = {}, coC = {}, act = {}, rev = {};
+  CATS.forEach(c=>{ bud[c] = ab ? round2(ab.budget && ab.budget[c]) : 0; coC[c] = 0; act[c] = 0; });
+  let coSell = 0, pendSell = 0, pendCost = 0, pendN = 0, apprN = 0;
+  (p.cos||[]).filter(co=>!co.del).forEach(co=>{
+    const cost = CATS.reduce((s,c)=>s+num(co.cost&&co.cost[c]),0);
+    if(co.status==="Approved"){ apprN++; coSell += num(co.sell); CATS.forEach(c=>{ coC[c] += num(co.cost&&co.cost[c]); }); }
+    else if(co.status==="Draft" || co.status==="Submitted"){ pendN++; pendSell += num(co.sell); pendCost += cost; }
+  });
+  ents.forEach(e=>{ const k = CATS.includes(e.cat) ? e.cat : "Other"; act[k] += num(e.amount); });
+  let tb = 0, tc = 0, tr = 0, ta = 0;
+  CATS.forEach(c=>{ coC[c] = round2(coC[c]); rev[c] = round2(bud[c] + coC[c]); act[c] = round2(act[c]); tb += bud[c]; tc += coC[c]; tr += rev[c]; ta += act[c]; });
+  const base = ab ? num(ab.sell) : num(p.sell);
+  return { ab, bud, coC, rev, act, totBud:round2(tb), totCo:round2(tc), totRev:round2(tr), totAct:round2(ta),
+           contract:round2(base), coSell:round2(coSell), revContract:round2(base+coSell),
+           pendSell:round2(pendSell), pendCost:round2(pendCost), pendN, apprN };
+}
+const pjTile = (lab,val,note,cls) => `<div class="card tile ${cls||""}"><div class="lab">${lab}</div><div class="val">${val}</div><div class="note">${note||""}</div></div>`;
+
+function renderProject(){
+  const root = byId("pjRoot"); if(!root) return;
+  const p = getProj(curPid);
+  if(!p){ go("projects"); return; }
+  if(pjTab==="costing" && !canCost()) pjTab = "overview";
+  const tabs = [["overview","Overview"]].concat(canCost()?[["costing","Costing"]]:[]).concat([["cos","Change orders"]]);
+  const l = leadFor(p);
+  root.innerHTML = `
+    <button class="btn sm" onclick="go('projects')">← All projects</button>
+    <div class="pjhead">
+      <div style="flex:1;min-width:220px">
+        <h1 style="margin-top:12px">${esc(p.property)}</h1>
+        <p class="sub" style="margin:0"><code>${esc(p.id)}</code>${p.scope?` · ${esc(p.scope)}`:""}</p>
+      </div>
+      ${l?`<span class="badge won">${esc(l.st)}</span>`:""}
+    </div>
+    <div class="tabs" role="tablist">${tabs.map(([k,t])=>
+      `<button role="tab" aria-current="${pjTab===k}" onclick="setTab('${k}')">${t}</button>`).join("")}</div>
+    <div id="pjBody">${pjTab==="costing" ? costingTab(p) : pjTab==="cos" ? cosTab(p) : overviewTab(p, l)}</div>`;
+}
+
+function overviewTab(p, l){
+  const pm = (l&&l.pm) || p.pm;
+  const folderUrl = `https://${SP.host}${SP.site}/Shared%20Documents/Projects/${encodeURIComponent(p.id)}`;
+  const c = calcProject(p, []);
+  return `
+    <div class="card sec">
+      <div class="frow"><span class="k">Project ID</span><span class="v"><code>${esc(p.id)}</code>
+        <button class="btn sm" style="margin-left:8px" onclick="copyId('${esc(p.id)}')">Copy</button></span></div>
+      <div class="frow"><span class="k">Property</span><span class="v">${esc(p.property)}</span></div>
+      <div class="frow"><span class="k">Scope</span><span class="v">${esc(p.scope||"—")}</span></div>
+      <div class="frow"><span class="k">Project manager</span><span class="v">${pm?esc(nameOf(pm))+" ("+esc(pm)+")":"Unassigned"}</span></div>
+      <div class="frow"><span class="k">Awarded</span><span class="v">${p.created?fmtDate(p.created.slice(0,10)):"—"}${p.createdBy?` by ${esc(nameOf(p.createdBy))}`:""}</span></div>
+      ${l?`<div class="frow"><span class="k">From the pipeline</span><span class="v">${esc(l.t)}${l.s?` · ${esc(l.s)}`:""}</span></div>`:""}
+      ${canCost()?`<div class="frow"><span class="k">Contract value</span><span class="v">${c.revContract?money(c.revContract):"Not set yet"}${c.coSell?` <span class="hint">(incl. ${money(c.coSell)} approved change orders)</span>`:""}</span></div>`:""}
+      ${localMode()?"":`<div class="frow"><span class="k">SharePoint folder</span><span class="v"><a href="${folderUrl}" target="_blank" rel="noopener">Open Projects/${esc(p.id)}</a></span></div>`}
+    </div>
+    <div class="card sec">
+      <h3>Where this job's files go</h3>
+      <p class="cap">Type <b>${esc(p.id)}</b> into the Project ID field of an estimator or the inspection app and its files land in the matching folder.</p>
+      ${SUBFOLDERS.map(f=>`<div class="frow"><span class="k">${f}</span><span class="v" style="color:var(--ink-2)">${({
+        Estimating:"Cost sheets and proposals from the estimators",
+        Inspections:"Field inspection reports and photos",
+        Subcontractors:"Agreements, COI, W-9 and lien releases (coming)",
+        Costing:"Cost entries and budget baselines",
+        ChangeOrders:"Change order estimates and approvals"})[f]}</span></div>`).join("")}
+    </div>`;
+}
+function copyId(id){
+  const done = ()=>toast("Copied "+id);
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(id).then(done, ()=>toast(id));
+  else toast(id);
+}
+
+/* ---------- Costing tab ---------- */
+function costingTab(p){
+  if(!canCost()) return `<div class="card sec"><p class="cap">Costing is limited to managers.</p></div>`;
+  const ents = (projEntries[p.id]||[]).filter(e=>!e.del);
+  const c = calcProject(p, ents);
+  const left = round2(c.totRev - c.totAct);
+  const drafts = (p.baselines||[]).filter(b=>b.status==="Draft");
+  const supers = (p.baselines||[]).filter(b=>b.status==="Superseded").sort((a,b)=>b.v-a.v);
+  const noBase = !c.ab;
+  return `
+    ${noBase ? `<div class="pend" style="margin:0 0 14px">No locked budget yet. Spending is tracked either way, but "left" means nothing until a baseline is marked Final below.</div>` : ""}
+    <div class="tiles">
+      ${pjTile("Contract value", c.revContract?money(c.revContract):"—", c.coSell?`incl. ${money(c.coSell)} approved COs`:"sell price")}
+      ${pjTile("Budget", money(c.totRev), c.totCo?`${money(c.totBud)} + ${money(c.totCo)} approved COs`:(c.ab?`baseline v${c.ab.v}`:"not set"))}
+      ${pjTile("Spent so far", money(c.totAct), `${ents.length} entr${ents.length===1?"y":"ies"}`)}
+      ${pjTile(left<0?"Over budget by":"Left in budget", c.ab?money(Math.abs(left)):"—", c.ab?(left<0?"over the revised budget":"of the revised budget"):"set a baseline first", left<0&&c.ab?"u":"")}
+    </div>
+    ${c.pendN ? `<p class="hint" style="margin:-4px 0 14px">${c.pendN} change order${c.pendN===1?"":"s"} not yet approved (${money(c.pendSell)} to the client, ${money(c.pendCost)} cost). They don't change the budget until approved.</p>` : ""}
+
+    <div class="card sec">
+      <h3>Budget vs. actual</h3>
+      <div class="tblwrap budget" style="max-height:none;box-shadow:none"><table class="mini">
+        <thead><tr><th>Category</th><th style="text-align:right">Budget</th><th style="text-align:right">+ Approved COs</th><th style="text-align:right">Revised</th>
+          <th style="text-align:right">Spent</th><th style="text-align:right">Left</th><th style="min-width:130px">Used</th></tr></thead>
+        <tbody>${CATS.map(k=>meterRow(k, c.bud[k], c.coC[k], c.rev[k], c.act[k], c.ab)).join("")}
+        ${meterRow("Total", c.totBud, c.totCo, c.totRev, c.totAct, c.ab, true)}</tbody>
+      </table></div>
+    </div>
+
+    <div class="card sec">
+      <h3>Budget baseline</h3>
+      ${c.ab ? `<p class="cap">Locked baseline <b>v${c.ab.v}</b>${c.ab.label?` — ${esc(c.ab.label)}`:""} · final ${esc(c.ab.finalDate||"")}${c.ab.finalBy?` by ${esc(nameOf(c.ab.finalBy))}`:""}
+        · contract ${money(num(c.ab.sell))}${c.ab.file?` · ${c.ab.file.url?`<a href="${esc(c.ab.file.url)}" target="_blank" rel="noopener">${esc(c.ab.file.name)}</a>`:esc(c.ab.file.name)}`:""}</p>`
+        : `<p class="cap">Enter the cost-sheet totals by category and lock them as the budget. Once locked a baseline can't be edited — a later change is a new version, and the old one is kept.</p>`}
+      ${drafts.map(b=>baselineEditor(b)).join("")}
+      ${drafts.length ? "" : `<button class="btn ${noBase?"primary":""}" onclick="blNew()">${noBase?"Set budget baseline":"New baseline version"}</button>`}
+      ${supers.length ? `<div class="dsec"><h4>Earlier versions</h4>${supers.map(b=>
+        `<div class="frow"><span class="k">v${b.v}${b.label?` · ${esc(b.label)}`:""}</span><span class="v">${money(CATS.reduce((s,k)=>s+num(b.budget&&b.budget[k]),0))} · superseded</span></div>`).join("")}</div>` : ""}
+    </div>
+
+    <div class="card sec">
+      <h3>Cost entries</h3>
+      <p class="cap">Log every invoice, labor payment or other cost as it comes in. Tag it to a change order if it belongs to one.</p>
+      <div class="fgrid">
+        <div><label for="en_date">Date</label><input id="en_date" type="date" value="${esc(entryMeta.date||todayStr())}"></div>
+        <div><label for="en_cat">Category</label><select id="en_cat">${CATS.map(k=>`<option ${k===entryMeta.cat?"selected":""}>${esc(k)}</option>`).join("")}</select></div>
+        <div><label for="en_vendor">Vendor / person</label><input id="en_vendor" placeholder="Lansing, crew name…"></div>
+        <div><label for="en_desc">Description</label><input id="en_desc"></div>
+        <div><label for="en_ref">Invoice / ref #</label><input id="en_ref"></div>
+        <div><label for="en_co">Applies to</label><select id="en_co"><option value="">Base contract</option>
+          ${(p.cos||[]).filter(x=>!x.del&&x.status==="Approved").map(x=>`<option value="${esc(coNum(x))}">${esc(coNum(x))} — ${esc(x.title)}</option>`).join("")}</select></div>
+        <div><label for="en_amt">Amount ($)</label><input id="en_amt" inputmode="decimal" placeholder="credits as -50"></div>
+        <div style="align-self:end"><button class="btn primary" onclick="entryAdd()">Add cost</button></div>
+      </div>
+      ${entryTable(p, ents)}
+    </div>`;
+}
+function meterRow(label, bud, coc, rev, act, hasBase, strong){
+  const left = round2(rev-act);
+  const pct = rev>0 ? Math.round(act/rev*100) : (act>0 ? 100 : 0);
+  const tone = !hasBase ? "var(--muted)" : pct>100 ? "var(--fill-urgent)" : pct>=90 ? "var(--fill-progress)" : "var(--fill-watch)";
+  /* data-label is what the phone layout prints beside each figure once the
+     table stacks — see the budget-table rules in the stylesheet. */
+  return `<tr class="${strong?"tot":""}" style="cursor:default"><td data-label="Category" class="cat">${esc(label)}</td>
+    <td class="num" data-label="Budget">${money(bud)}</td><td class="num" data-label="+ Approved COs">${coc?money(coc):"—"}</td>
+    <td class="num" data-label="Revised">${money(rev)}</td><td class="num" data-label="Spent">${money(act)}</td>
+    <td class="num ${hasBase&&left<0?"over":""}" data-label="Left">${hasBase?(left<0?"over "+money(-left):money(left)):"—"}</td>
+    <td data-label="Used">${hasBase&&rev>0?`<div class="meter" title="${pct}% used"><i style="width:${Math.min(pct,100)}%;background:${tone}"></i></div><span class="hint">${pct}% used${pct>100?" — over":""}</span>`:`<span class="hint">—</span>`}</td></tr>`;
+}
+function baselineEditor(b){
+  return `<div class="blform">
+    <div class="fgrid">
+      <div style="grid-column:1/-1"><label for="bl_label">Label (optional)</label><input id="bl_label" value="${esc(b.label||"")}" placeholder="e.g. Original PO Summary"></div>
+      ${CATS.map((k,i)=>`<div><label for="bl_c${i}">${esc(k)} ($)</label><input id="bl_c${i}" inputmode="decimal" value="${b.budget&&b.budget[k]?esc(b.budget[k]):""}"></div>`).join("")}
+      <div><label for="bl_sell">Contract (sell) price ($)</label><input id="bl_sell" inputmode="decimal" value="${b.sell?esc(b.sell):""}"></div>
+      <div style="grid-column:1/-1"><label for="bl_file">Cost sheet file (optional PDF or Excel, up to 4 MB)</label><input id="bl_file" type="file" accept=".pdf,.xlsx,.xls,.png,.jpg"></div>
+    </div>
+    <p class="hint" style="margin:8px 0">Draft v${b.v}${b.file?` · attached: ${esc(b.file.name)}`:""}</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" onclick="blSave(false)">Save draft</button>
+      <button class="btn primary" onclick="blSave(true)">Mark Final — lock budget</button>
+      <button class="btn danger" onclick="blDiscard()">Discard draft</button>
+    </div></div>`;
+}
+async function blNew(){
+  const p = getProj(curPid); if(!p || (p.baselines||[]).some(b=>b.status==="Draft")) return;
+  const ab = (p.baselines||[]).find(b=>b.status==="Active");
+  try{
+    await mutateProject(curPid, q=>{
+      const v = Math.max(0, ...q.baselines.map(b=>b.v||0)) + 1;
+      q.baselines.push({ uid:uid(), v, status:"Draft", final:false, label:"", budget:Object.assign({}, ab?ab.budget:{}),
+                         sell: ab ? ab.sell : (q.sell||0), created:nowISO(), createdBy:ME.id, upd:nowISO() });
+    });
+    renderProject();
+  }catch(e){ fail(e); }
+}
+async function blDiscard(){
+  const p = getProj(curPid); const d = (p.baselines||[]).find(b=>b.status==="Draft"); if(!d) return;
+  if(!confirm("Discard this draft baseline?")) return;
+  try{ await mutateProject(curPid, q=>{ q.baselines = q.baselines.filter(b=>b.uid!==d.uid); }); renderProject(); }
+  catch(e){ fail(e); }
+}
+async function blSave(final){
+  const p = getProj(curPid); const draft = (p.baselines||[]).find(b=>b.status==="Draft"); if(!draft) return;
+  const budget = {}; CATS.forEach((k,i)=>{ budget[k] = round2(num(byId("bl_c"+i).value)); });
+  const sell = round2(num(byId("bl_sell").value)), label = byId("bl_label").value.trim();
+  const total = round2(CATS.reduce((s,k)=>s+budget[k],0));
+  if(final){
+    if(total<=0){ toast("Enter at least one budget amount first"); return; }
+    if(!sell && !confirm("No contract (sell) price entered. Lock the budget anyway?")) return;
+    if(!confirm(`Lock baseline v${draft.v} (${money(total)} budget) as FINAL?\n\nIt can't be edited afterwards. A later change is made as a new version and this one is kept.`)) return;
+  }
+  try{
+    const f = byId("bl_file").files[0]; let info = null;
+    if(f){
+      if(localMode()) info = { name:f.name };
+      else{
+        if(f.size > 4*1024*1024) throw new Error("That file is over 4 MB — put it in the project's Costing folder in SharePoint, then save here without it");
+        const m = await spUploadFile(projPath(p.id)+"/"+PROJ.costDir+"/Baselines", `v${draft.v}-${f.name}`, f);
+        info = { name:m.name, url:m.webUrl };
+      }
+    }
+    const saved = await mutateProject(curPid, q=>{
+      const b = q.baselines.find(x=>x.uid===draft.uid); if(!b || b.final) return;
+      b.budget = budget; b.sell = sell; b.label = label; if(info) b.file = info; b.upd = nowISO();
+      if(final){
+        q.baselines.forEach(x=>{ if(x.status==="Active"){ x.status = "Superseded"; x.upd = nowISO(); } });
+        b.status = "Active"; b.final = true; b.finalDate = todayStr(); b.finalBy = ME.id;
+        q.sell = sell;
+      }
+    });
+    if(final) sysLog(saved, `Locked budget baseline v${draft.v}: ${money(total)} budget, ${money(sell)} contract`);
+    toast(final ? "Budget locked" : "Draft saved");
+    renderProject();
+  }catch(e){ fail(e); }
+}
+
+function entryTable(p, ents){
+  const rows = ents.filter(e=>!entryFilter || e.cat===entryFilter).sort((a,b)=> (a.date||"") < (b.date||"") ? 1 : -1);
+  const tot = round2(rows.reduce((s,e)=>s+num(e.amount),0));
+  return `<div class="filters" style="margin:14px 0 8px">
+      <select id="en_filter" onchange="entryFilter=this.value;renderProject()" aria-label="Filter entries by category">
+        <option value="">All categories</option>${CATS.map(k=>`<option ${k===entryFilter?"selected":""}>${esc(k)}</option>`).join("")}</select>
+      <button class="btn sm" onclick="entriesCsv()">Export CSV</button>
+      <span class="hint" style="margin-left:auto">${rows.length} shown · ${money(tot)}</span>
+    </div>
+    ${rows.length ? `<div class="tblwrap" style="max-height:420px;box-shadow:none"><table class="mini">
+      <thead><tr><th>Date</th><th>Category</th><th>Vendor</th><th>Description</th><th>Ref</th><th>For</th><th style="text-align:right">Amount</th><th></th></tr></thead>
+      <tbody>${rows.map(e=>`<tr style="cursor:default"><td class="num" style="text-align:left">${fmtDate(e.date)}</td><td>${esc(e.cat)}</td><td>${esc(e.vendor||"")}</td>
+        <td>${esc(e.desc||"")}</td><td>${esc(e.ref||"")}</td><td>${esc(e.co||"Base")}</td><td class="num">${money(num(e.amount))}</td>
+        <td><button class="btn sm danger" onclick="entryDel('${esc(e.id)}')" aria-label="Remove entry">Remove</button></td></tr>`).join("")}</tbody></table></div>`
+      : `<p class="hint">No costs logged yet.</p>`}`;
+}
+async function entryAdd(){
+  const amt = round2(num(byId("en_amt").value));
+  if(!amt){ toast("Enter an amount"); byId("en_amt").focus(); return; }
+  const e = { id:uid(), date:byId("en_date").value||todayStr(), cat:byId("en_cat").value, vendor:byId("en_vendor").value.trim(),
+              desc:byId("en_desc").value.trim(), ref:byId("en_ref").value.trim(), co:byId("en_co").value, amount:amt, by:ME.id, upd:nowISO() };
+  try{
+    await saveEntries(curPid, (projEntries[curPid]||[]).concat([e]));
+    entryMeta = { cat:e.cat, date:e.date };
+    toast("Cost added"); renderProject();
+  }catch(err){ fail(err); }
+}
+async function entryDel(id){
+  if(!confirm("Remove this cost entry?")) return;
+  const arr = (projEntries[curPid]||[]).map(e=> e.id===id ? Object.assign({}, e, { del:true, upd:nowISO() }) : e);
+  try{ await saveEntries(curPid, arr); renderProject(); }catch(err){ fail(err); }
+}
+function entriesCsv(){
+  const p = getProj(curPid);
+  const q = v => `"${String(v==null?"":v).replace(/"/g,'""')}"`;
+  const rows = (projEntries[curPid]||[]).filter(e=>!e.del).sort((a,b)=>(a.date||"")<(b.date||"")?-1:1);
+  const csv = [["Date","Category","Vendor","Description","Ref","Applies to","Amount"].map(q).join(",")]
+    .concat(rows.map(e=>[e.date,e.cat,e.vendor,e.desc,e.ref,e.co||"Base contract",num(e.amount)].map(q).join(","))).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv"}));
+  a.download = `${p.id} costs ${todayStr()}.csv`; document.body.appendChild(a); a.click(); a.remove();
+}
+
+/* ---------- Change orders tab ---------- */
+const coNum = co => "CO-" + String(co.n).padStart(2,"0");
+const coCostTotal = co => round2(CATS.reduce((s,k)=>s+num(co.cost&&co.cost[k]),0));
+function cosTab(p){
+  const mg = canCost();
+  const cos = (p.cos||[]).filter(c=>!c.del).sort((a,b)=>b.n-a.n);
+  const appr = cos.filter(c=>c.status==="Approved"), pend = cos.filter(c=>c.status==="Draft"||c.status==="Submitted");
+  const sum = (arr,f)=>round2(arr.reduce((s,c)=>s+f(c),0));
+  return `
+    <div class="tiles">
+      ${pjTile("Approved", appr.length, appr.length?`${money(sum(appr,c=>num(c.sell)))} to the client`:"none yet")}
+      ${pjTile("Waiting", pend.length, pend.length?`${money(sum(pend,c=>num(c.sell)))} not yet approved`:"nothing open")}
+      ${mg?pjTile("Approved cost", money(sum(appr,coCostTotal)), "added to the budget"):""}
+      ${pjTile("Rejected", cos.filter(c=>c.status==="Rejected").length, "kept for the record")}
+    </div>
+    <div style="margin-bottom:14px"><button class="btn primary" onclick="coOpen(null)">New change order</button></div>
+    ${coFormOpen ? coForm(p, mg) : ""}
+    ${cos.length ? cos.map(c=>coCard(p, c, mg)).join("") : `<div class="card sec"><p class="cap">No change orders on this project yet. Use one when the scope or price changes after the contract is signed — rot found, an owner request, a code requirement.</p></div>`}`;
+}
+function coCard(p, c, mg){
+  const cls = c.status==="Approved"?"won":c.status==="Rejected"?"lost":c.status==="Submitted"?"sent":"";
+  const editable = c.status==="Draft" || c.status==="Submitted";
+  return `<div class="card cocard">
+    <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div><b>${esc(coNum(c))}</b> <span style="color:var(--muted)">· <code>${esc(p.id)}-${esc(coNum(c))}</code></span></div>
+        <div style="font-weight:600;margin-top:2px">${esc(c.title)}</div>
+        <div class="hint">${[c.building,c.trade,c.reason].filter(Boolean).map(esc).join(" · ")}</div>
+      </div>
+      <span class="badge ${cls}">${esc(c.status)}</span>
+    </div>
+    ${c.desc?`<div class="notebox" style="margin-top:10px">${esc(c.desc)}</div>`:""}
+    <div class="frow" style="margin-top:8px"><span class="k">To the client</span><span class="v">${money(num(c.sell))}</span></div>
+    ${mg?`<div class="frow"><span class="k">Our cost</span><span class="v">${coCostTotal(c)?money(coCostTotal(c)):"not entered"}</span></div>`:""}
+    ${c.status==="Approved"&&c.approved?`<div class="frow"><span class="k">Approved</span><span class="v">${esc(c.approved)}${c.approvedBy?` by ${esc(nameOf(c.approvedBy))}`:""}</span></div>`:""}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      ${editable?`<button class="btn sm" onclick="coOpen('${esc(c.uid)}')">Edit</button>`:""}
+      ${c.status==="Draft"?`<button class="btn sm primary" onclick="coStatus('${esc(c.uid)}','Submitted')">Submit to client</button>`:""}
+      ${c.status==="Submitted"?`<button class="btn sm" onclick="coStatus('${esc(c.uid)}','Draft')">Back to draft</button>`:""}
+      ${c.status==="Submitted"&&mg?`<button class="btn sm primary" onclick="coStatus('${esc(c.uid)}','Approved')">Approve</button>
+        <button class="btn sm danger" onclick="coStatus('${esc(c.uid)}','Rejected')">Reject</button>`:""}
+      ${c.status==="Draft"?`<button class="btn sm danger" onclick="coDelete('${esc(c.uid)}')">Delete</button>`:""}
+    </div>
+    ${c.status==="Submitted"&&!mg?`<p class="hint" style="margin:8px 0 0">Waiting for a manager to approve or reject.</p>`:""}
+  </div>`;
+}
+function coOpen(uidv){ coEditing = uidv; coFormOpen = true; renderProject(); const t = byId("co_title"); if(t) t.focus(); }
+function coCancel(){ coFormOpen = false; coEditing = null; renderProject(); }
+function coForm(p, mg){
+  const c = coEditing ? (p.cos||[]).find(x=>x.uid===coEditing) : null;
+  const v = f => esc(c && c[f] != null ? c[f] : "");
+  return `<div class="card sec">
+    <h3>${c?`Edit ${esc(coNum(c))}`:"New change order"}</h3>
+    <div class="fgrid">
+      <div style="grid-column:1/-1"><label for="co_title">Title</label><input id="co_title" value="${v("title")}" placeholder="e.g. Replace rotted sheathing, Bldg 3 rear"></div>
+      <div><label for="co_building">Building / area</label><input id="co_building" value="${v("building")}"></div>
+      <div><label for="co_trade">Trade</label><select id="co_trade"><option value=""></option>${TRADES.map(t=>`<option ${c&&c.trade===t?"selected":""}>${t}</option>`).join("")}</select></div>
+      <div><label for="co_reason">Reason</label><select id="co_reason"><option value=""></option>${CO_REASONS.map(t=>`<option ${c&&c.reason===t?"selected":""}>${esc(t)}</option>`).join("")}</select></div>
+      <div><label for="co_sell">Price to the client ($)</label><input id="co_sell" inputmode="decimal" value="${c&&c.sell?esc(c.sell):""}"></div>
+      <div style="grid-column:1/-1"><label for="co_desc">What changed and why</label><textarea id="co_desc" rows="3">${v("desc")}</textarea></div>
+    </div>
+    ${mg ? `<h4 style="margin:14px 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.02em">Our cost by category (managers)</h4>
+      <div class="fgrid">${CATS.map((k,i)=>`<div><label for="co_c${i}">${esc(k)} ($)</label><input id="co_c${i}" inputmode="decimal" value="${c&&c.cost&&c.cost[k]?esc(c.cost[k]):""}"></div>`).join("")}</div>` : ""}
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn primary" onclick="coSave()">${c?"Save changes":"Save as draft"}</button>
+      <button class="btn" onclick="coCancel()">Cancel</button>
+    </div></div>`;
+}
+async function coSave(){
+  const title = byId("co_title").value.trim();
+  if(!title){ toast("Give the change order a title"); byId("co_title").focus(); return; }
+  const rec = { title, building:byId("co_building").value.trim(), trade:byId("co_trade").value, reason:byId("co_reason").value,
+                desc:byId("co_desc").value.trim(), sell:round2(num(byId("co_sell").value)) };
+  let cost = null;
+  if(canCost()){ cost = {}; CATS.forEach((k,i)=>{ const x = round2(num(byId("co_c"+i).value)); if(x) cost[k] = x; }); }
+  try{
+    const wasEditing = coEditing;
+    await mutateProject(curPid, q=>{
+      if(wasEditing){
+        const co = q.cos.find(x=>x.uid===wasEditing); if(!co) return;
+        Object.assign(co, rec); if(cost) co.cost = cost; co.upd = nowISO();
+      }else{
+        const n = Math.max(0, ...q.cos.map(x=>x.n||0)) + 1;
+        q.cos.push(Object.assign({ uid:uid(), n, status:"Draft", created:nowISO(), createdBy:ME.id, upd:nowISO(), cost:cost||{} }, rec));
+      }
+    });
+    coFormOpen = false; coEditing = null;
+    toast(wasEditing ? "Change order updated" : "Change order saved as a draft");
+    renderProject();
+  }catch(e){ fail(e); }
+}
+async function coStatus(uidv, st){
+  const p = getProj(curPid); const co = (p.cos||[]).find(x=>x.uid===uidv); if(!co) return;
+  if((st==="Approved" || st==="Rejected") && !canCost()){ toast("Only managers approve or reject change orders"); return; }
+  if(st==="Approved"){
+    const cost = coCostTotal(co);
+    if(!cost && !confirm(`${coNum(co)} has no cost entered, so approving it won't raise the budget. Approve anyway?`)) return;
+    if(cost && !confirm(`Approve ${coNum(co)}?\n\nContract +${money(num(co.sell))}, budget +${money(cost)}.`)) return;
+  }
+  if(st==="Rejected" && !confirm(`Reject ${coNum(co)}? It stays on the list as rejected.`)) return;
+  try{
+    const saved = await mutateProject(curPid, q=>{
+      const c = q.cos.find(x=>x.uid===uidv); if(!c) return;
+      c.status = st; c.upd = nowISO();
+      if(st==="Approved"){ c.approved = todayStr(); c.approvedBy = ME.id; }
+    });
+    if(st==="Approved"||st==="Rejected"||st==="Submitted") sysLog(saved, `${coNum(co)} "${co.title}" ${st.toLowerCase()} — ${money(num(co.sell))} to the client`);
+    toast(`${coNum(co)} ${st.toLowerCase()}`);
+    renderProject();
+  }catch(e){ fail(e); }
+}
+async function coDelete(uidv){
+  const p = getProj(curPid); const co = (p.cos||[]).find(x=>x.uid===uidv); if(!co) return;
+  if(!confirm(`Delete draft ${coNum(co)}? Its number isn't reused.`)) return;
+  try{ await mutateProject(curPid, q=>{ const c = q.cos.find(x=>x.uid===uidv); if(c){ c.del = true; c.upd = nowISO(); } }); renderProject(); }
+  catch(e){ fail(e); }
+}
+
 /* ---------- boot ---------- */
 (async function(){
   load(); fillSelects();
@@ -1659,7 +2553,9 @@ function renderSync(){
   if(signedIn()) spPull();
   if(isManager()) renderActivity();
   const h = (location.hash||"").slice(1);
-  go(["pipeline","estimating","projects","general"].includes(h) ? h : "pipeline");
+  const pm = h.match(/^project=(.+)$/);
+  if(pm && signedIn()){ const pid = decodeURIComponent(pm[1]); if(getProj(pid)){ openProject(pid); } else go("projects"); }
+  else go(["pipeline","estimating","projects","general"].includes(h) ? h : "pipeline");
   if(IS_PREVIEW && !ME){
     const so = document.getElementById("signedOut");
     if(so) so.insertAdjacentHTML("beforeend",
