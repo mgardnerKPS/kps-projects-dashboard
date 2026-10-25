@@ -2528,6 +2528,8 @@ function mergeProject(server, mine){
 }
 async function saveProject(p){
   p.upd = nowISO();
+  // Strip transient render-only flags before persisting (schedule repair counter etc.)
+  if(p.schedule && typeof p.schedule === "object"){ delete p.schedule._repairs; }
   if(localMode()){
     const all = LS.get("kps.projects", []);
     const i = all.findIndex(x=>x.id===p.id);
@@ -2810,6 +2812,19 @@ async function openProject(pid){
   renderProject();
 }
 function setTab(k){ pjTab = k; coFormOpen = false; coEditing = null; renderProject(); }
+function renderPjTab(p, l){
+  try{
+    if(pjTab==="costing")  return costingTab(p);
+    if(pjTab==="cos")      return cosTab(p);
+    if(pjTab==="schedule") return scheduleTab(p, false);
+    return overviewTab(p, l);
+  }catch(e){
+    console.error("Project tab render failed:", pjTab, e);
+    return `<div class="co-impact" style="background:var(--urgent-bg);color:var(--urgent);margin-top:10px">
+      Couldn't render this tab (${esc(e&&e.message||String(e))}). Switch tabs or <a href="#" onclick="location.reload();return false;">reload</a>.
+    </div>`;
+  }
+}
 
 function calcProject(p, ents){
   ents = ents || [];
@@ -2850,12 +2865,7 @@ function renderProject(){
     </div>
     <div class="tabs" role="tablist">${tabs.map(([k,t])=>
       `<button role="tab" aria-current="${pjTab===k}" onclick="setTab('${k}')">${t}</button>`).join("")}</div>
-    <div id="pjBody">${
-      pjTab==="costing" ? costingTab(p) :
-      pjTab==="cos"     ? cosTab(p) :
-      pjTab==="schedule"? scheduleTab(p, /*compact*/false) :
-                          overviewTab(p, l)
-    }</div>`;
+    <div id="pjBody">${renderPjTab(p, l)}</div>`;
 }
 
 function overviewTab(p, l){
@@ -4072,14 +4082,21 @@ function renderProjectDrawer(){
   ).join("");
 
   const body = byId("pdBody");
-  if(pdTab==="overview")         body.innerHTML = pdOverview(p, l, c, stage);
-  else if(pdTab==="scope")       body.innerHTML = pdScope(p);
-  else if(pdTab==="schedule")    body.innerHTML = scheduleTab(p, /*compact*/true);
-  else if(pdTab==="subs")        body.innerHTML = pdSubs(p);
-  else if(pdTab==="costing")     body.innerHTML = pdCosting(p);
-  else if(pdTab==="cos")         body.innerHTML = pdCos(p);
-  else if(pdTab==="inspections") body.innerHTML = pdInspections(p);
-  else if(pdTab==="documents")   body.innerHTML = pdDocuments(p);
+  try{
+    if(pdTab==="overview")         body.innerHTML = pdOverview(p, l, c, stage);
+    else if(pdTab==="scope")       body.innerHTML = pdScope(p);
+    else if(pdTab==="schedule")    body.innerHTML = scheduleTab(p, /*compact*/true);
+    else if(pdTab==="subs")        body.innerHTML = pdSubs(p);
+    else if(pdTab==="costing")     body.innerHTML = pdCosting(p);
+    else if(pdTab==="cos")         body.innerHTML = pdCos(p);
+    else if(pdTab==="inspections") body.innerHTML = pdInspections(p);
+    else if(pdTab==="documents")   body.innerHTML = pdDocuments(p);
+  }catch(e){
+    console.error("Drawer tab render failed:", pdTab, e);
+    body.innerHTML = `<div class="pd-section"><div class="co-impact" style="background:var(--urgent-bg);color:var(--urgent)">
+      Couldn't render this tab (${esc(e&&e.message||String(e))}). Try another tab, or <a href="#" onclick="location.reload();return false;">reload</a>.
+    </div></div>`;
+  }
 }
 
 /* ---------- Tab: Overview ---------- */
@@ -4500,7 +4517,10 @@ function ensureSchedule(p){
     const kept = t.deps.filter(d=>uids.has(d) && d!==t.uid);
     if(kept.length !== t.deps.length){ t.deps = kept; repairs++; }
   });
-  p.schedule._repairs = (p.schedule._repairs||0) + repairs;
+  // Don't persist the repair counter — it's only interesting for this render pass.
+  // Store it on a non-enumerable-feeling key with a leading underscore so it won't
+  // appear in UI loops, and reset it (not accumulate) so saving doesn't carry it.
+  p.schedule._repairs = repairs;
   return repairs;
 }
 
@@ -4770,8 +4790,11 @@ function schedTreeHtml(p, flat, cpm, selUid){
 }
 
 function schedEditorHtml(p, t, cpm){
+  // Only leaf tasks can be real predecessors in CPM — exclude parent summaries
+  // and this task's own ancestors to prevent cycles up front.
+  const leafUids = new Set(p.schedule.tasks.filter(l=> !p.schedule.tasks.some(x=>x.parentId===l.uid)).map(l=>l.uid));
   const depOpts = p.schedule.tasks
-    .filter(x=> x.uid !== t.uid && x.parentId !== t.uid)
+    .filter(x=> x.uid !== t.uid && x.parentId !== t.uid && leafUids.has(x.uid) && !dependsOn(x.uid, t.uid, p.schedule.tasks))
     .sort((a,b)=> (a.name||"").localeCompare(b.name||""))
     .map(x=>`<option value="${esc(x.uid)}">${esc(x.name||"(untitled)")}</option>`).join("");
   const dep = (t.deps||[]).map(d=>{
