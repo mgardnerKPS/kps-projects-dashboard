@@ -458,12 +458,158 @@ td.num.over,.num.over{color:var(--urgent);font-weight:700}
   .logo span:not(.mark){display:none}
   .logo{flex:0 0 auto}
 }
+
+/* ============================================================
+   PM DASHBOARD v2 — Action Inbox, project cards with badges,
+   per-project drawer with tabs, My Projects / Weekly Review
+   ============================================================ */
+
+/* Toolbar above the inbox + board */
+.pmbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+.pmbar .seg2{display:flex;gap:0;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface);flex:0 0 auto}
+.pmbar .seg2 button{appearance:none;border:0;background:transparent;color:var(--ink-2);padding:7px 14px;font:inherit;font-size:12px;font-weight:600;cursor:pointer;border-right:1px solid var(--line)}
+.pmbar .seg2 button:last-child{border-right:0}
+.pmbar .seg2 button[aria-pressed="true"]{background:var(--ink);color:var(--plane)}
+.pmbar .pmbarlab{font-size:12px;color:var(--muted);font-weight:600;margin-right:4px}
+.pmbar .spacer{flex:1}
+
+/* Action Inbox */
+.inbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin:0 0 18px;overflow:hidden}
+.inbox-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.inbox-head h3{margin:0;font-size:14px;letter-spacing:-.01em}
+.inbox-head .count{font-size:12px;color:var(--muted);font-weight:600}
+.inbox-empty{padding:22px 16px;text-align:center;color:var(--muted);font-size:13px}
+.inbox-list{list-style:none;margin:0;padding:0}
+.inbox-item{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer}
+.inbox-item:last-child{border-bottom:0}
+.inbox-item:hover{background:var(--surface-2)}
+.inbox-dot{flex:0 0 auto;width:9px;height:9px;border-radius:50%}
+.inbox-dot.u{background:var(--urgent)}
+.inbox-dot.p{background:var(--progress)}
+.inbox-dot.w{background:var(--brand)}
+.inbox-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.inbox-title{color:var(--ink);font-weight:600}
+.inbox-meta{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inbox-meta code{font-size:11px}
+.inbox-actions{display:flex;gap:6px;flex:0 0 auto}
+.inbox-actions .btn.sm{padding:6px 11px}
+
+/* Project cards (board) */
+.proj-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin:0 0 20px}
+.proj-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:border-color .15s,transform .1s}
+.proj-card:hover{border-color:var(--ring)}
+.proj-card:active{transform:scale(.995)}
+.proj-card-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.proj-card-title{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3}
+.proj-card-sub{font-size:12px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+.proj-card-stage{flex:0 0 auto;font-size:11px;padding:3px 9px;border-radius:999px;font-weight:600;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line);white-space:nowrap}
+.proj-card-stage.won{background:var(--brand-soft);color:var(--brand-ink);border-color:transparent}
+.proj-card-stage.active{background:var(--watch-bg);color:var(--watch);border-color:transparent}
+.proj-card-stage.complete{background:var(--pass-bg);color:var(--pass);border-color:transparent}
+.proj-card-meta{font-size:12px;color:var(--ink-2);display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.proj-card-meta .pm{display:inline-flex;align-items:center;gap:5px}
+.proj-card-meta .pm i{width:20px;height:20px;border-radius:50%;background:var(--ink);color:var(--plane);display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:10px;font-weight:700}
+.proj-badges{display:flex;flex-wrap:wrap;gap:6px}
+.proj-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;cursor:pointer;border:1px solid transparent;white-space:nowrap}
+.proj-badge:hover{filter:brightness(.96)}
+.proj-badge.u{background:var(--urgent-bg);color:var(--urgent)}
+.proj-badge.p{background:var(--progress-bg);color:var(--progress)}
+.proj-badge.w{background:var(--brand-soft);color:var(--brand-ink)}
+.proj-badge.ok{background:var(--watch-bg);color:var(--watch)}
+.proj-badge.neutral{background:var(--surface-2);color:var(--ink-2);border-color:var(--line)}
+.proj-quickbar{display:flex;gap:4px;border-top:1px solid var(--line);padding-top:9px;margin-top:auto;flex-wrap:nowrap;overflow:hidden}
+.proj-quickbar button{appearance:none;background:transparent;border:0;color:var(--ink-2);font:inherit;font-size:12px;padding:5px 9px;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;flex:0 0 auto}
+.proj-quickbar button:hover{background:var(--surface-2);color:var(--ink)}
+.proj-quickbar button svg{width:13px;height:13px}
+.proj-quickbar .spacer{flex:1 1 auto}
+.proj-card-meta .pm{white-space:nowrap}
+.proj-card-meta .pm i{flex:0 0 auto}
+
+/* Project drawer (wider than lead drawer) */
+.drawer.proj{width:min(540px,100%)}
+@media (min-width:960px){ .drawer.proj{width:min(600px,46vw)} }
+.pd-head{padding:16px 20px;border-bottom:1px solid var(--line)}
+.pd-head .top{display:flex;gap:12px;align-items:flex-start}
+.pd-head .top .meta{flex:1;min-width:0}
+.pd-head h2{margin:0;font-size:17px;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis}
+.pd-head p{margin:3px 0 0;font-size:12px;color:var(--muted)}
+.pd-stage-row{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.pd-stage-row select{padding:5px 9px;font-size:12px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.pd-stage-row .pm{white-space:nowrap;font-size:12px;color:var(--ink-2);flex:0 0 auto}
+.pd-stage-row .pm-name{font-size:12px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+@media (max-width:720px){ .pd-stage-row .pm-name{display:none} .pd-stage-row{align-items:center} }
+.pd-tabs{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--line);background:var(--surface);scrollbar-width:none}
+.pd-tabs::-webkit-scrollbar{display:none}
+.pd-tabs button{appearance:none;background:transparent;border:0;color:var(--ink-2);padding:11px 14px;font:inherit;font-size:12px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex:0 0 auto}
+.pd-tabs button[aria-current="true"]{color:var(--ink);border-bottom-color:var(--brand)}
+.pd-tabs button:hover{color:var(--ink)}
+.pd-body{padding:16px 20px;overflow-y:auto;flex:1}
+.pd-section{margin-bottom:20px}
+.pd-section h4{margin:0 0 10px;font-size:12px;color:var(--muted);letter-spacing:.02em;text-transform:uppercase;font-weight:700}
+.pd-section .sub{margin:-6px 0 10px;color:var(--muted);font-size:12px}
+.pd-stat{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.pd-stat:last-child{border-bottom:0}
+.pd-stat .k{color:var(--muted);font-weight:600}
+.pd-stat .v{color:var(--ink);text-align:right}
+
+/* Scope & Buildings matrix */
+.scope-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.scope-tbl th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.02em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.scope-tbl td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.scope-tbl tr:last-child td{border-bottom:0}
+.scope-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px}
+.scope-status.todo{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.scope-status.wip{background:var(--progress-bg);color:var(--progress)}
+.scope-status.done{background:var(--watch-bg);color:var(--watch)}
+
+/* Sub rows */
+.sub-row{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.sub-row:last-child{border-bottom:0}
+.sub-row .avatar{width:34px;height:34px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:0 0 auto}
+.sub-row .info{flex:1;min-width:0}
+.sub-row .n{font-size:13px;font-weight:600;color:var(--ink)}
+.sub-row .m{font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;margin-top:3px;align-items:center}
+.chip-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 7px;border-radius:999px;font-weight:600}
+.chip-tag.ok{background:var(--watch-bg);color:var(--watch)}
+.chip-tag.warn{background:var(--progress-bg);color:var(--progress)}
+.chip-tag.err{background:var(--urgent-bg);color:var(--urgent)}
+.chip-tag.gray{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+
+/* Inspection rows & doc list */
+.insp-row,.doc-row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.insp-row:last-child,.doc-row:last-child{border-bottom:0}
+.insp-row .ico,.doc-row .ico{width:32px;height:32px;border-radius:8px;background:var(--brand-soft);color:var(--brand-ink);display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+.insp-row .ico svg,.doc-row .ico svg{width:16px;height:16px}
+.insp-row .info,.doc-row .info{flex:1;min-width:0}
+.insp-row .n,.doc-row .n{font-weight:600;color:var(--ink)}
+.insp-row .m,.doc-row .m{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* Weekly review table */
+.weekly-tbl{width:100%;border-collapse:collapse;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.weekly-tbl th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.02em;text-transform:uppercase;padding:12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.weekly-tbl td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle;cursor:pointer}
+.weekly-tbl tr:last-child td{border-bottom:0}
+.weekly-tbl tr:hover td{background:var(--surface-2)}
+.weekly-tbl .num{text-align:right;font-variant-numeric:tabular-nums}
+.weekly-over{color:var(--urgent);font-weight:600}
+.weekly-under{color:var(--watch);font-weight:600}
+.weekly-neutral{color:var(--ink-2)}
+
+/* Mobile: project drawer full-screen, cards stack */
+@media (max-width:720px){
+  .drawer.proj{width:100%}
+  .proj-board{grid-template-columns:1fr}
+  .inbox-item{flex-wrap:wrap}
+  .inbox-actions{width:100%;margin-left:21px}
+  .pd-tabs{position:sticky;top:0;z-index:2}
+}
+
 @media (max-width:430px){
   .logo{display:none}
   .navbtns{margin-right:auto}
 }
 @media print{
-  header,.filters,.chips,.hero,.navbtns,.icbtn,.devnote{display:none!important}
+  header,.filters,.chips,.hero,.navbtns,.icbtn,.devnote,.pmbar,.inbox,.proj-quickbar{display:none!important}
   body{background:#fff}
 }
 </style>
@@ -589,13 +735,40 @@ td.num.over,.num.over{color:var(--urgent);font-weight:700}
   <p class="sub" id="projSub"></p>
   <div class="tiles" id="projTiles"></div>
   <div id="awaitBox"></div>
-  <div class="tblwrap" style="margin-bottom:26px">
+
+  <!-- PM dashboard v2: scope + view toolbar -->
+  <div class="pmbar" id="pmBar">
+    <span class="pmbarlab">Show</span>
+    <div class="seg2" id="scopeSeg">
+      <button aria-pressed="true"  onclick="setPmScope('mine')">My projects</button>
+      <button aria-pressed="false" onclick="setPmScope('all')">All projects</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="seg2" id="viewSeg">
+      <button aria-pressed="true"  onclick="setPmView('board')">Board</button>
+      <button aria-pressed="false" onclick="setPmView('table')">Table</button>
+      <button aria-pressed="false" onclick="setPmView('review')">Weekly review</button>
+    </div>
+  </div>
+
+  <!-- Action Inbox -->
+  <div class="inbox" id="actionInbox"></div>
+
+  <!-- Board view -->
+  <div class="proj-board hide" id="projBoard"></div>
+
+  <!-- Table view (existing) -->
+  <div class="tblwrap hide" id="projTableWrap" style="margin-bottom:26px">
     <table><thead><tr>
       <th>Project ID</th><th>Property / scope</th><th>PM</th>
-      <th style="text-align:right">Awarded</th><th style="text-align:right">Contract</th><th>Change orders</th>
+      <th style="text-align:right">Awarded</th><th style="text-align:right">Contract</th><th>Change orders</th><th>Attention</th>
     </tr></thead><tbody id="projBody"></tbody></table>
     <div class="empty hide" id="projEmpty">No projects yet. Mark a lead Won, then award it to create its Project ID.</div>
   </div>
+
+  <!-- Weekly review view -->
+  <div class="hide" id="projWeekly" style="margin-bottom:26px"></div>
+
   <h2 style="font-size:16px;letter-spacing:-.01em;margin:0 0 4px">Project management tools</h2>
   <p class="sub">Modules that hang off a project once it's won.</p>
   <div class="grid" id="gridProjects"></div>
@@ -662,6 +835,14 @@ td.num.over,.num.over{color:var(--urgent);font-weight:700}
     </button>
   </div>
   <div class="dbody" id="dBody"></div>
+</aside>
+
+<!-- Project drawer (PM dashboard v2) -->
+<div class="scrim" id="pdScrim" onclick="closeProjectDrawer()"></div>
+<aside class="drawer proj" id="pdDrawer" aria-hidden="true">
+  <div class="pd-head" id="pdHead"></div>
+  <div class="pd-tabs" id="pdTabs" role="tablist"></div>
+  <div class="pd-body" id="pdBody"></div>
 </aside>
 <div class="toast" id="toast"></div>
 <script>
@@ -954,6 +1135,10 @@ function applyRole(){
   document.getElementById("navGen").classList.toggle("hide", !signedIn());
   document.querySelectorAll("[data-mgr]").forEach(el=>el.classList.toggle("hide", !mg));
   document.getElementById("signedOut").classList.toggle("hide", signedIn());
+  // Re-evaluate default PM scope now that identity is known, unless the user has set one.
+  if(typeof defaultPmScope === "function" && !LS.get("kps.pmScope", null)){
+    pmScope = defaultPmScope();
+  }
 }
 
 /* ---------- change log ----------
@@ -2226,14 +2411,21 @@ function renderProjects(){
   const box = byId("awaitBox");
   box.innerHTML =
     (localMode() && signedIn() ? `<div class="pend" style="margin:0 0 14px">Preview mode: projects here are kept in this browser only. On the hosted site they are saved to SharePoint.</div>` : "") +
-    (waiting.length ? `<div class="card sec">
-      <h3>Won — ready to award</h3>
-      <p class="cap">Awarding makes the permanent Project ID and the project folder, and opens costing and change orders.</p>
-      ${waiting.map(l=>{ const i = leads.indexOf(l); return `<div class="frow" style="align-items:center">
-          <span class="v" style="text-align:left"><b>${esc(l.t)}</b>${l.s?`<span style="color:var(--muted)"> · ${esc(l.s)}</span>`:""}</span>
-          <span style="display:flex;gap:10px;align-items:center">${l.pm?`<span class="pm">${esc(l.pm)}</span>`:""}
-          <button class="btn sm primary" onclick="openAward(${i})">Award</button></span></div>`; }).join("")}
-    </div>` : "") +
+    (waiting.length ? `<details class="card sec" style="padding:0;margin:0 0 14px">
+      <summary style="cursor:pointer;padding:12px 16px;list-style:none;display:flex;align-items:center;gap:10px">
+        <span style="font-weight:600">Won — ready to award</span>
+        <span style="color:var(--muted);font-size:12px">${waiting.length} job${waiting.length===1?"":"s"} waiting for a Project ID</span>
+        <span style="flex:1"></span>
+        <span style="color:var(--muted);font-size:11px">click to expand</span>
+      </summary>
+      <div style="padding:0 16px 14px">
+        <p class="cap">Awarding makes the permanent Project ID and the project folder, and opens costing and change orders.</p>
+        ${waiting.map(l=>{ const i = leads.indexOf(l); return `<div class="frow" style="align-items:center">
+            <span class="v" style="text-align:left"><b>${esc(l.t)}</b>${l.s?`<span style="color:var(--muted)"> · ${esc(l.s)}</span>`:""}</span>
+            <span style="display:flex;gap:10px;align-items:center">${l.pm?`<span class="pm">${esc(l.pm)}</span>`:""}
+            <button class="btn sm primary" onclick="openAward(${i})">Award</button></span></div>`; }).join("")}
+      </div>
+    </details>` : "") +
     (orphanFolders.length && signedIn() ? `<p class="hint" style="margin:0 0 14px">${orphanFolders.length} folder${orphanFolders.length===1?"":"s"} under Projects ${orphanFolders.length===1?"has":"have"} no project record yet (${orphanFolders.map(esc).join(", ")}). Pick ${orphanFolders.length===1?"it":"them"} when you award the matching job so nothing is duplicated.</p>` : "");
 
   const tot = list.reduce((s,p)=>s+calcProject(p,[]).revContract, 0);
@@ -2913,6 +3105,855 @@ function renderClosed(){
   const pass = lostLeads.filter(r=>r.outcome==="Pass").length;
   byId("leadsSub").textContent =
     `${rows.length} of ${lostLeads.length} closed leads shown · ${lost} lost · ${pass} passed`;
+}
+
+/* ============================================================
+   PM DASHBOARD v2 — Action Inbox, project cards with badges,
+   per-project drawer with tabs. The SharePoint lists for subs,
+   agreements, inspections and documents don't exist yet, so this
+   layer runs on mock data where real data isn't there yet, keyed
+   by Project ID. When the lists arrive, swap the MOCK_* arrays
+   for real list reads — the UI doesn't change.
+   ============================================================ */
+
+/* ---------- state ---------- */
+let pmScope = LS.get("kps.pmScope", null);          // "mine" | "all" (defaulted per-role below)
+let pmView  = LS.get("kps.pmView",  "board");       // "board" | "table" | "review"
+let pdPid = null;                                   // open project drawer: project id
+let pdTab = "overview";                             // open project drawer: tab
+/* Managers oversee the whole book, so default them to "all". A non-manager
+   PM defaults to "mine" so their own workload is what they see first. */
+function defaultPmScope(){ return isManager() ? "all" : "mine"; }
+
+/* ---------- mock data (demo until SharePoint lists exist) ---------- */
+/* Subcontractor directory — the approved sub list that lives behind the
+   intake wizard once Subcontractor Documentation is built. */
+const MOCK_SUBS = [
+  { id:"s1", name:"J. Rivera Roofing",        trade:"Roofing",  coi:{status:"valid",   until:"2027-04-14"}, w9:true },
+  { id:"s2", name:"Northeast Carpentry Co.",  trade:"Carpentry",coi:{status:"valid",   until:"2026-12-08"}, w9:true },
+  { id:"s3", name:"M&K Siding LLC",           trade:"Siding",   coi:{status:"expired", until:"2026-10-18"}, w9:true },
+  { id:"s4", name:"Patriot Painting",         trade:"Painting", coi:{status:"missing", until:""         }, w9:false},
+  { id:"s5", name:"BayState Decks",           trade:"Decks",    coi:{status:"valid",   until:"2027-02-22"}, w9:true },
+  { id:"s6", name:"Granite Masonry",          trade:"Masonry",  coi:{status:"valid",   until:"2027-01-30"}, w9:true },
+  { id:"s7", name:"ClearPath Gutters",        trade:"Gutters",  coi:{status:"valid",   until:"2026-11-30"}, w9:true },
+];
+/* Per-project sub assignments — building × trade → sub.
+   Agreement status: "signed", "sent" (waiting on sub), "pending" (not sent yet).
+   `assigned` is days since the sub was tied to this project — drives the
+   Day 1/3/5/7/10 escalation. */
+const MOCK_PROJECT_SUBS = {
+  // keyed by projectId → list of assignments
+  "__sample__": []
+};
+/* Mock inspection records — stand in for what the Field Inspection app
+   will file to SharePoint. */
+const MOCK_INSPECTIONS_BY_PID = {};
+/* Mock documents — stand in for the SharePoint folder contents. */
+const MOCK_DOCS_BY_PID = {};
+
+/* ---------- demo project seeding ----------
+   When there are no real awarded projects loaded (preview mode, or a
+   signed-in session with an empty SharePoint), promote some of the Won
+   leads to synthetic projects so the inbox and board have substance to
+   demo. Nothing is written to SharePoint — this stays in memory.
+*/
+function slugProp(s){
+  return (s||"Project").split(/[\(\-\/]/)[0].trim().replace(/[^a-zA-Z0-9 ]/g,"").trim()
+         .split(/\s+/).slice(0,3).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join("");
+}
+function pseudoId(l, idx){ return `${slugProp(l.t)}-2026-${String(idx+1).padStart(3,"0")}`; }
+function seedDemoProjects(){
+  if(projects.length>0) return;                  // real projects loaded — don't inject
+  const wonSeeds = leads.filter(l=>l.st==="Won" && !l.pid).slice(0, 10);
+  if(!wonSeeds.length) return;
+  const stages = ["Won","Won","Costing Active","Costing Active","Costing Active","Costing Active","Won","Costing Active","Complete","Costing Active"];
+  wonSeeds.forEach((l, i)=>{
+    const pid = pseudoId(l, i);
+    const sell = 25000 + Math.floor((pid.charCodeAt(0)*997 + i*4113) % 180000);
+    const createdDays = 7 + (i*5)%40;
+    const createdISO = new Date(TODAY.getTime() - createdDays*86400000).toISOString();
+    const rec = {
+      id: pid, property:l.t, scope:l.s||"", pm:l.pm||"", leadId:l.id,
+      created: createdISO, upd: createdISO, createdBy: ME?ME.id:"demo",
+      sell, baselines: [], cos: [],
+      _demoStage: stages[i] || "Won",
+      _demo: true
+    };
+    // Half get an active baseline so Cost badges can appear
+    if(i%2===0){
+      rec.baselines.push({ uid:uid(), v:1, status:"Active", final:true, label:"Original PO Summary",
+                           budget:{ Materials: sell*0.35, Labor: sell*0.30, Subcontractors: sell*0.18,
+                                    "Equipment & dumpster": sell*0.03, "Permits & fees": sell*0.01, Other: sell*0.01 },
+                           sell, created:createdISO, createdBy:ME?ME.id:"demo", finalDate:createdISO.slice(0,10), finalBy:ME?ME.id:"demo", upd:createdISO });
+    }
+    // A couple of change orders to show the open-CO badge
+    if(i===1 || i===4){
+      rec.cos.push({ uid:uid(), num:1, title:"Hidden rot at NW cheekwall", reason:"Hidden condition / rot",
+                     status:"Submitted", sell:4200, cost:{ Materials:1800, Labor:2000, Subcontractors:0, "Equipment & dumpster":200, "Permits & fees":0, Other:0 },
+                     created:nowISO(), upd:nowISO() });
+    }
+    projects.push(rec);
+    seedMockSupport(rec, l, i);
+  });
+}
+function seedMockSupport(rec, l, i){
+  const pid = rec.id;
+  // Buildings × trades for the Scope tab
+  const buildingCount = 1 + (i%4);
+  const trades = (rec.scope||"").split(/[\/,&+]/).map(s=>s.trim()).filter(Boolean);
+  const defaultTrades = trades.length ? trades : ["Primary scope"];
+  const buildings = [];
+  for(let b=0; b<buildingCount; b++){
+    buildings.push({
+      id:`${pid}-B${b+1}`, name: buildingCount>1 ? `Building ${b+1}` : "Primary",
+      trades: defaultTrades.map((t,ti)=>({
+        id:`${pid}-B${b+1}-T${ti}`, trade:t,
+        subId: null, estDays: 4 + ((b+ti)%6)*2, actDays: 0,
+        status: (i<4 && b===0 && ti===0) ? "wip" : "todo"
+      }))
+    });
+  }
+  rec._buildings = buildings;
+
+  // Sub assignments — pick a few subs that match the scope roughly
+  const matchSubs = {
+    "Roofing":"s1", "Roof":"s1", "Roofs":"s1",
+    "Carpentry":"s2", "Siding":"s3", "Painting":"s4", "Paint":"s4",
+    "Deck":"s5", "Decks":"s5", "Masonry":"s6", "Gutters":"s7"
+  };
+  const asg = [];
+  buildings.forEach(b=> b.trades.forEach(t=>{
+    const key = Object.keys(matchSubs).find(k => t.trade.toLowerCase().includes(k.toLowerCase()));
+    if(!key) return;
+    const subId = matchSubs[key];
+    // Assigned 1-14 days ago
+    const daysAgo = 1 + ((pid.length + b.id.length + t.id.length) % 14);
+    // Agreement status pattern — demo variety
+    let agreementStatus = "signed";
+    if(daysAgo >= 10 && (i%3===0)) agreementStatus = "sent";
+    else if(daysAgo >= 5 && (i%3===1)) agreementStatus = "sent";
+    else if(daysAgo >= 3 && (i%3===2) && b.name==="Primary") agreementStatus = "sent";
+    asg.push({ subId, bldg:b.name, trade:t.trade, assignedDaysAgo:daysAgo, agreementStatus,
+               id:`${pid}-${subId}-${b.id}-${t.id}` });
+    t.subId = subId;
+  }));
+  MOCK_PROJECT_SUBS[pid] = asg;
+
+  // Inspections — some projects have a precon done, some have one scheduled
+  const insps = [];
+  if(i%2===0) insps.push({ type:"Precon Exterior", date:rec.created.slice(0,10), by:"Field crew", status:"filed" });
+  if(i===4 || i===7) insps.push({ type:"Daily Progress", date:new Date(TODAY.getTime()-3*86400000).toISOString().slice(0,10), by:"PM", status:"filed" });
+  if(rec._demoStage==="Complete") insps.push({ type:"Final / End of Project", date:new Date(TODAY.getTime()-1*86400000).toISOString().slice(0,10), by:"PM", status:"filed" });
+  MOCK_INSPECTIONS_BY_PID[pid] = insps;
+
+  // Documents — the SharePoint folder, mocked
+  const docs = [];
+  docs.push({ name:"Signed Contract.pdf",   kind:"pdf", folder:"", size:"412 KB" });
+  docs.push({ name:"PO Summary — Original.pdf", kind:"pdf", folder:"Estimating", size:"186 KB" });
+  if(rec.baselines.length) docs.push({ name:"Cost Baseline v1 — Final.xlsx", kind:"xlsx", folder:"Costing", size:"74 KB" });
+  if(insps.length) docs.push({ name:"Precon Exterior Report.pdf", kind:"pdf", folder:"Inspections", size:"3.4 MB" });
+  MOCK_DOCS_BY_PID[pid] = docs;
+}
+
+/* ---------- lifecycle stage derivation ----------
+   Until the Projects list stores CurrentStage as its own field, derive it
+   from the demo seed (_demoStage) or from what we know: completed? costing
+   active with a baseline? just won? */
+function derivedStage(p){
+  if(p._demoStage) return p._demoStage;
+  const ents = (projEntries[p.id]||[]).filter(e=>!e.del);
+  const hasBaseline = (p.baselines||[]).some(b=>b.status==="Active");
+  if(ents.length && hasBaseline) return "Costing Active";
+  if(hasBaseline) return "Costing Active";
+  return "Won";
+}
+
+/* ---------- "my projects" filter ----------
+   Match against the signed-in user's known PM initials from the roster.
+   Falls back to no-op when no identity is set (preview). */
+function myInitials(){
+  if(!ME) return "";
+  const em = (ME.email||"").toLowerCase();
+  const row = ROSTER.find(r => r.email && r.email.toLowerCase()===em);
+  if(row) return row.id;
+  // Managers see everything by default
+  if(isManager()) return "";
+  // Fallback: initial match from display name
+  const n = (ME.name||"").split(" ").map(x=>x[0]).join("").toUpperCase();
+  return n || "";
+}
+function isMyProject(p){
+  const init = myInitials();
+  if(!init) return true;              // no identity → show everything
+  const l = leadFor(p);
+  const pm = (l&&l.pm) || p.pm || "";
+  return pm.toUpperCase().split(/[\s\/,]+/).includes(init.toUpperCase());
+}
+function scopedProjects(){
+  const list = projects.slice().sort((a,b)=> (b.upd||b.created||"") < (a.upd||a.created||"") ? -1 : 1);
+  if(pmScope==="all" || isManager() && pmScope==="all") return list;
+  if(pmScope==="mine" && myInitials()) return list.filter(isMyProject);
+  return list;
+}
+
+/* ---------- Action Inbox ---------- */
+function daysSince(iso){ if(!iso) return 0; const d = new Date(iso); return Math.max(0, Math.round((TODAY - d)/86400000)); }
+function stageTone(stage){
+  if(stage==="Complete")      return "ok";
+  if(stage==="Costing Active")return "p";
+  if(stage==="Won")           return "w";
+  return "neutral";
+}
+
+function buildActionInbox(){
+  const items = [];
+  const list = scopedProjects();
+  list.forEach(p=>{
+    const stage = derivedStage(p);
+    const l = leadFor(p);
+    const pm = (l&&l.pm) || p.pm || "—";
+    // Agreement overdue — any assigned sub whose agreementStatus is "sent" and assignedDaysAgo >= 3
+    (MOCK_PROJECT_SUBS[p.id]||[]).forEach(a=>{
+      if(a.agreementStatus==="sent" && a.assignedDaysAgo>=3){
+        const sev = a.assignedDaysAgo>=10 ? "u" : a.assignedDaysAgo>=5 ? "u" : "p";
+        const sub = MOCK_SUBS.find(s=>s.id===a.subId);
+        items.push({
+          sev, kind:"agreement", pid:p.id, pm,
+          title: `Sign agreement — ${sub?sub.name:a.subId} · ${a.trade}`,
+          meta: `${p.property} · ${p.id} · ${a.assignedDaysAgo} days since assignment`,
+          cta: "Send reminder",
+          action: `sendAgreementReminder('${esc(p.id)}','${esc(a.id)}')`,
+          tab: "subs"
+        });
+      }
+    });
+    // Cost baseline not Final yet — stage past Won
+    if(stage==="Costing Active" && !((p.baselines||[]).some(b=>b.status==="Active"))){
+      items.push({
+        sev:"p", kind:"baseline", pid:p.id, pm,
+        title:"Mark cost baseline Final",
+        meta: `${p.property} · ${p.id} · entered Costing Active ${daysSince(p.upd||p.created)}d ago`,
+        cta:"Open costing",
+        action:`openProjectDrawer('${esc(p.id)}','costing')`,
+        tab:"costing"
+      });
+    }
+    // Change orders not yet approved
+    const pendingCOs = (p.cos||[]).filter(co=>!co.del && (co.status==="Draft" || co.status==="Submitted"));
+    pendingCOs.forEach(co=>{
+      items.push({
+        sev: co.status==="Submitted" ? "w" : "p",
+        kind:"co", pid:p.id, pm,
+        title: `Approve change order #${co.num} — ${co.title}`,
+        meta: `${p.property} · ${p.id} · ${money(num(co.sell))}`,
+        cta:"Review",
+        action:`openProjectDrawer('${esc(p.id)}','cos')`,
+        tab:"cos"
+      });
+    });
+    // COI expired / missing for an assigned sub
+    (MOCK_PROJECT_SUBS[p.id]||[]).forEach(a=>{
+      const sub = MOCK_SUBS.find(s=>s.id===a.subId);
+      if(!sub) return;
+      if(sub.coi.status==="expired"){
+        items.push({
+          sev:"u", kind:"coi", pid:p.id, pm,
+          title:`COI expired — ${sub.name}`,
+          meta: `${p.property} · ${p.id} · expired ${fmtDate(sub.coi.until)}`,
+          cta:"Request new COI",
+          action:`requestCoi('${esc(sub.id)}')`,
+          tab:"subs"
+        });
+      } else if(sub.coi.status==="missing"){
+        items.push({
+          sev:"u", kind:"coi", pid:p.id, pm,
+          title:`COI missing — ${sub.name}`,
+          meta: `${p.property} · ${p.id} · never on file`,
+          cta:"Request COI",
+          action:`requestCoi('${esc(sub.id)}')`,
+          tab:"subs"
+        });
+      }
+    });
+    // Stale project (10+ days since last update) + not complete
+    if(stage!=="Complete" && daysSince(p.upd||p.created) >= 10){
+      items.push({
+        sev:"p", kind:"stale", pid:p.id, pm,
+        title:"Stale — no activity in 10+ days",
+        meta: `${p.property} · ${p.id} · last update ${daysSince(p.upd||p.created)}d ago`,
+        cta:"Add note",
+        action:`openProjectDrawer('${esc(p.id)}','overview')`,
+        tab:"overview"
+      });
+    }
+  });
+  // Severity ordering: u > p > w > ok
+  const sevOrder = {u:0, p:1, w:2, ok:3};
+  items.sort((a,b)=>{
+    const d = (sevOrder[a.sev]||9) - (sevOrder[b.sev]||9);
+    if(d) return d;
+    return a.title.localeCompare(b.title);
+  });
+  return items;
+}
+
+function renderActionInbox(){
+  const box = byId("actionInbox"); if(!box) return;
+  const items = buildActionInbox();
+  if(!items.length){
+    box.innerHTML = `
+      <div class="inbox-head"><h3>Action Inbox</h3><span class="count">0 items · all clear</span></div>
+      <div class="inbox-empty">Nothing needs your attention right now. Check back after the next field update.</div>`;
+    return;
+  }
+  const shown = items.slice(0, 12);
+  box.innerHTML = `
+    <div class="inbox-head"><h3>Action Inbox</h3>
+      <span class="count">${items.length} item${items.length===1?"":"s"}${items.length>shown.length?` · showing ${shown.length}`:""}</span>
+    </div>
+    <ul class="inbox-list">
+      ${shown.map(it=>`<li class="inbox-item" onclick="openProjectDrawer('${esc(it.pid)}','${esc(it.tab)}')">
+        <span class="inbox-dot ${it.sev}"></span>
+        <div class="inbox-main">
+          <div class="inbox-title">${esc(it.title)}</div>
+          <div class="inbox-meta">${esc(it.meta)}</div>
+        </div>
+        <div class="inbox-actions">
+          <button class="btn sm primary" onclick="event.stopPropagation();${it.action}">${esc(it.cta)}</button>
+        </div>
+      </li>`).join("")}
+    </ul>`;
+}
+
+/* ---------- Scope + view toggles ---------- */
+function setPmScope(v){
+  pmScope = v;
+  LS.set("kps.pmScope", v);
+  const seg = byId("scopeSeg"); if(seg) seg.querySelectorAll("button").forEach((b,i)=> b.setAttribute("aria-pressed", (i===0?v==="mine":v==="all") ? "true" : "false"));
+  renderProjectsV2();
+}
+function setPmView(v){
+  pmView = v;
+  LS.set("kps.pmView", v);
+  const seg = byId("viewSeg"); if(seg) seg.querySelectorAll("button").forEach((b,i)=> b.setAttribute("aria-pressed", (["board","table","review"][i]===v)?"true":"false"));
+  renderProjectsV2();
+}
+
+/* ---------- project card badges ----------
+   Return [{tone,label,title,tab}] — each tone→color maps to .proj-badge.X */
+function projectBadges(p){
+  const out = [];
+  const stage = derivedStage(p);
+  // Agreement
+  const asgs = MOCK_PROJECT_SUBS[p.id]||[];
+  const overdueAgr = asgs.filter(a=>a.agreementStatus==="sent" && a.assignedDaysAgo>=5);
+  const warnAgr   = asgs.filter(a=>a.agreementStatus==="sent" && a.assignedDaysAgo>=3 && a.assignedDaysAgo<5);
+  if(overdueAgr.length)   out.push({tone:"u", label:`Agreement · ${overdueAgr.length}`, tab:"subs", title:`${overdueAgr.length} unsigned ≥5d`});
+  else if(warnAgr.length) out.push({tone:"p", label:`Agreement · ${warnAgr.length}`, tab:"subs", title:`${warnAgr.length} unsigned ≥3d`});
+  // COI
+  const badCoi = asgs.filter(a=>{ const s=MOCK_SUBS.find(x=>x.id===a.subId); return s && (s.coi.status==="expired"||s.coi.status==="missing"); });
+  if(badCoi.length) out.push({tone:"u", label:`COI`, tab:"subs", title:`${badCoi.length} COI issue${badCoi.length===1?"":"s"}`});
+  // Baseline
+  if(stage==="Costing Active" && !((p.baselines||[]).some(b=>b.status==="Active"))){
+    out.push({tone:"p", label:"Baseline", tab:"costing", title:"No baseline marked Final"});
+  }
+  // Change orders
+  const pendCOs = (p.cos||[]).filter(co=>!co.del && (co.status==="Draft"||co.status==="Submitted"));
+  if(pendCOs.length) out.push({tone:"w", label:`CO · ${pendCOs.length}`, tab:"cos", title:`${pendCOs.length} unapproved change order${pendCOs.length===1?"":"s"}`});
+  // Stale
+  if(stage!=="Complete" && daysSince(p.upd||p.created) >= 10){
+    out.push({tone:"p", label:"Stale", tab:"overview", title:`No activity ${daysSince(p.upd||p.created)}d`});
+  }
+  // Cost vs budget (if active baseline + spending)
+  const c = calcProject(p, (projEntries[p.id]||[]).filter(e=>!e.del));
+  if(c.ab && c.totRev>0){
+    const pct = (c.totAct/c.totRev)*100;
+    if(pct>102)      out.push({tone:"u", label:`${Math.round(pct-100)}% over`, tab:"costing", title:"Cost >2% over revised budget"});
+    else if(pct>=98) out.push({tone:"p", label:`At budget`, tab:"costing", title:"Within 2% of budget"});
+  }
+  // Inspections scheduled but not filed (post-"Won" with no precon on file)
+  const insps = MOCK_INSPECTIONS_BY_PID[p.id]||[];
+  if(stage!=="Complete" && !insps.some(x=>x.type.startsWith("Precon"))){
+    out.push({tone:"neutral", label:"Precon needed", tab:"inspections", title:"No preconstruction inspection filed"});
+  }
+  if(!out.length) out.push({tone:"ok", label:"All clear", tab:"overview", title:"Nothing flagged on this project"});
+  return out;
+}
+
+/* ---------- Project cards (board) ---------- */
+function renderProjectBoard(){
+  const el = byId("projBoard"); if(!el) return;
+  const list = scopedProjects();
+  if(!list.length){
+    const anyProjects = projects.length>0;
+    el.innerHTML = `<div class="card sec" style="grid-column:1/-1"><p class="cap">${
+      anyProjects
+        ? `No projects to show under <b>My projects</b>${myInitials()?` (${esc(myInitials())})`:""}. <a href="#" onclick="setPmScope('all');return false;">Switch to All projects →</a>`
+        : `No projects yet. Mark a Won lead and award it to create one.`
+    }</p></div>`;
+    return;
+  }
+  el.innerHTML = list.map(p=>{
+    const l = leadFor(p);
+    const pm = (l&&l.pm) || p.pm || "";
+    const stage = derivedStage(p);
+    const stageCls = stage==="Won"?"won":stage==="Costing Active"?"active":stage==="Complete"?"complete":"";
+    const c = calcProject(p, (projEntries[p.id]||[]).filter(e=>!e.del));
+    const badges = projectBadges(p);
+    const folderUrl = `https://${SP.host}${SP.site}/Shared%20Documents/Projects/${encodeURIComponent(p.id)}`;
+    return `<div class="proj-card" onclick="openProjectDrawer('${esc(p.id)}','overview')">
+      <div class="proj-card-head">
+        <div style="min-width:0;flex:1">
+          <div class="proj-card-title">${esc(p.property)}</div>
+          <div class="proj-card-sub"><code>${esc(p.id)}</code>${p.scope?` · ${esc(p.scope)}`:""}</div>
+        </div>
+        <span class="proj-card-stage ${stageCls}">${esc(stage)}</span>
+      </div>
+      <div class="proj-card-meta">
+        ${pm?`<span class="pm" title="${esc(nameOf(pm))}">${esc(initials(pm))}</span>`:""}
+        ${c.revContract?`<span style="font-weight:600;color:var(--ink)">${money(c.revContract)}</span>`:""}
+        <span style="color:var(--muted)">${daysSince(p.upd||p.created)}d since update</span>
+      </div>
+      <div class="proj-badges">
+        ${badges.map(b=>`<span class="proj-badge ${b.tone}" title="${esc(b.title||'')}" onclick="event.stopPropagation();openProjectDrawer('${esc(p.id)}','${esc(b.tab)}')">${esc(b.label)}</span>`).join("")}
+      </div>
+      <div class="proj-quickbar">
+        <button title="Change stage" onclick="event.stopPropagation();openProjectDrawer('${esc(p.id)}','overview')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h12M12 4l8 8-8 8"/></svg>Stage</button>
+        <button title="Add note" onclick="event.stopPropagation();openProjectDrawer('${esc(p.id)}','overview')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5l4 4L8 20H4v-4z"/></svg>Note</button>
+        <button title="Open SharePoint folder" onclick="event.stopPropagation();window.open('${esc(folderUrl)}','_blank')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></button>
+        <span class="spacer"></span>
+        <button title="Open full project page" onclick="event.stopPropagation();openProject('${esc(p.id)}')">Full →</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ---------- Weekly review view ---------- */
+function renderWeeklyReview(){
+  const el = byId("projWeekly"); if(!el) return;
+  const list = scopedProjects();
+  if(!list.length){ el.innerHTML = `<div class="card sec"><p class="cap">No projects to show for this filter.</p></div>`; return; }
+  const rows = list.map(p=>{
+    const stage = derivedStage(p);
+    const l = leadFor(p);
+    const pm = (l&&l.pm) || p.pm || "—";
+    const c = calcProject(p, (projEntries[p.id]||[]).filter(e=>!e.del));
+    const variance = c.ab && c.totRev>0 ? ((c.totAct-c.totRev)/c.totRev*100) : null;
+    const open = projectBadges(p).filter(b=>b.tone!=="ok").length;
+    return { p, stage, pm, daysInStage: daysSince(p.upd||p.created),
+             variance, open, upd: p.upd||p.created };
+  }).sort((a,b)=> (b.open - a.open) || (b.daysInStage - a.daysInStage));
+  el.innerHTML = `<table class="weekly-tbl">
+    <thead><tr>
+      <th>Project</th><th>Stage</th><th>PM</th>
+      <th class="num">Days in stage</th>
+      <th class="num">Budget var</th>
+      <th class="num">Open items</th>
+      <th>Last update</th>
+    </tr></thead>
+    <tbody>${rows.map(r=>{
+      const varCls = r.variance===null?"weekly-neutral":(r.variance>2?"weekly-over":r.variance<-2?"weekly-under":"weekly-neutral");
+      const varStr = r.variance===null?"—":(r.variance>0?`+${r.variance.toFixed(1)}%`:`${r.variance.toFixed(1)}%`);
+      return `<tr onclick="openProjectDrawer('${esc(r.p.id)}','overview')">
+        <td><div style="font-weight:600;color:var(--ink)">${esc(r.p.property)}</div>
+            <div style="color:var(--muted);font-size:12px"><code>${esc(r.p.id)}</code></div></td>
+        <td><span class="proj-card-stage ${r.stage==='Won'?'won':r.stage==='Costing Active'?'active':r.stage==='Complete'?'complete':''}">${esc(r.stage)}</span></td>
+        <td>${r.pm?`<span class="pm">${esc(r.pm)}</span>`:"—"}</td>
+        <td class="num">${r.daysInStage}d</td>
+        <td class="num ${varCls}">${varStr}</td>
+        <td class="num" style="font-weight:600;color:${r.open?'var(--urgent)':'var(--ink-2)'}">${r.open}</td>
+        <td style="color:var(--ink-2);font-size:12px">${r.upd?fmtDate(r.upd.slice(0,10)):"—"}</td>
+      </tr>`;
+    }).join("")}</tbody>
+  </table>`;
+}
+
+/* ---------- Projects view v2 renderer (wraps the old one) ---------- */
+let _origRenderProjects = renderProjects;
+function renderProjectsV2(){
+  // Default scope by role on first render after sign-in
+  if(pmScope===null) pmScope = defaultPmScope();
+  // Reflect scope on the toolbar
+  const sseg = byId("scopeSeg");
+  if(sseg) sseg.querySelectorAll("button").forEach((b,i)=> b.setAttribute("aria-pressed", ((i===0?pmScope==="mine":pmScope==="all"))?"true":"false"));
+  const vseg = byId("viewSeg");
+  if(vseg) vseg.querySelectorAll("button").forEach((b,i)=> b.setAttribute("aria-pressed", (["board","table","review"][i]===pmView)?"true":"false"));
+  // Seed demo data once if the real projects list is empty
+  seedDemoProjects();
+  // Call the original to keep the Won-ready-to-award section, tiles and the body table rows
+  _origRenderProjects();
+  // Augment the table rows with an Attention column so the table view carries badges too
+  const body = byId("projBody");
+  if(body){
+    const list = scopedProjects();
+    body.innerHTML = list.map(p=>{
+      const l = leadFor(p), c = calcProject(p, []);
+      const pending = c.pendN;
+      const stage = derivedStage(p);
+      const badges = projectBadges(p);
+      return `<tr onclick="openProjectDrawer('${esc(p.id)}','overview')">
+        <td><code>${esc(p.id)}</code></td>
+        <td class="prop">${esc(p.property)}${p.scope?`<span class="scope">${esc(p.scope)}</span>`:""}</td>
+        <td>${(l&&l.pm)||p.pm?`<span class="pm">${esc((l&&l.pm)||p.pm)}</span>`:`<span style="color:var(--muted)">—</span>`}</td>
+        <td class="num" style="color:var(--ink-2)">${p.created?fmtDate(p.created.slice(0,10)):"—"}</td>
+        <td class="num">${canCost() ? money(c.revContract) : "—"}</td>
+        <td class="num">${c.apprN||pending ? `${c.apprN} approved${pending?` · ${pending} open`:""}` : "—"}</td>
+        <td><div class="proj-badges">${badges.slice(0,3).map(b=>`<span class="proj-badge ${b.tone}" onclick="event.stopPropagation();openProjectDrawer('${esc(p.id)}','${esc(b.tab)}')">${esc(b.label)}</span>`).join("")}</div></td>
+      </tr>`;
+    }).join("");
+    byId("projEmpty").classList.toggle("hide", list.length>0);
+  }
+  // Show the right view container
+  byId("projBoard").classList.toggle("hide", pmView!=="board");
+  byId("projTableWrap").classList.toggle("hide", pmView!=="table");
+  byId("projWeekly").classList.toggle("hide", pmView!=="review");
+  if(pmView==="board")  renderProjectBoard();
+  if(pmView==="review") renderWeeklyReview();
+  renderActionInbox();
+}
+// Swap: anything that calls renderProjects() picks up v2.
+renderProjects = renderProjectsV2;
+
+/* ============================================================
+   PROJECT DRAWER
+   ============================================================ */
+function openProjectDrawer(pid, tab){
+  if(!getProj(pid)){ seedDemoProjects(); }
+  if(!getProj(pid)){ toast("Project not found"); return; }
+  pdPid = pid; pdTab = tab || "overview";
+  renderProjectDrawer();
+  byId("pdDrawer").classList.add("on");
+  byId("pdDrawer").setAttribute("aria-hidden","false");
+  byId("pdScrim").classList.add("on");
+}
+function closeProjectDrawer(){
+  pdPid = null;
+  byId("pdDrawer").classList.remove("on");
+  byId("pdDrawer").setAttribute("aria-hidden","true");
+  byId("pdScrim").classList.remove("on");
+}
+function setPdTab(k){ pdTab = k; renderProjectDrawer(); byId("pdBody").scrollTop = 0; }
+
+const PD_TABS = [
+  ["overview",   "Overview"],
+  ["scope",      "Scope & Buildings"],
+  ["subs",       "Subs & Agreements"],
+  ["costing",    "Costing"],
+  ["cos",        "Change Orders"],
+  ["inspections","Inspections"],
+  ["documents",  "Documents"]
+];
+
+function renderProjectDrawer(){
+  if(!pdPid) return;
+  const p = getProj(pdPid); if(!p) return;
+  const l = leadFor(p);
+  const pm = (l&&l.pm) || p.pm || "";
+  const stage = derivedStage(p);
+  const stageCls = stage==="Won"?"won":stage==="Costing Active"?"active":stage==="Complete"?"complete":"";
+  const c = calcProject(p, (projEntries[p.id]||[]).filter(e=>!e.del));
+  const folderUrl = `https://${SP.host}${SP.site}/Shared%20Documents/Projects/${encodeURIComponent(p.id)}`;
+
+  byId("pdHead").innerHTML = `
+    <div class="top">
+      <div class="meta">
+        <h2>${esc(p.property)}</h2>
+        <p><code>${esc(p.id)}</code>${p.scope?` · ${esc(p.scope)}`:""}</p>
+      </div>
+      <button class="icbtn" onclick="closeProjectDrawer()" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="pd-stage-row">
+      <span class="proj-card-stage ${stageCls}">${esc(stage)}</span>
+      ${pm?`<span class="pm" title="${esc(nameOf(pm))}">${esc(initials(pm))}</span><span class="pm-name">${esc(nameOf(pm))}</span>`:""}
+      ${c.revContract?`<span style="color:var(--ink-2);font-size:12px;margin-left:auto;white-space:nowrap">${money(c.revContract)}</span>`:`<span style="flex:1"></span>`}
+      <button class="btn sm" onclick="window.open('${esc(folderUrl)}','_blank')">Open folder</button>
+      <button class="btn sm" onclick="openProject('${esc(p.id)}');closeProjectDrawer()">Full page →</button>
+    </div>`;
+
+  const canCostNow = canCost();
+  const tabs = PD_TABS.filter(([k])=> !(k==="costing" && !canCostNow));
+  byId("pdTabs").innerHTML = tabs.map(([k,t])=>
+    `<button role="tab" aria-current="${pdTab===k?'true':'false'}" onclick="setPdTab('${k}')">${t}</button>`
+  ).join("");
+
+  const body = byId("pdBody");
+  if(pdTab==="overview")         body.innerHTML = pdOverview(p, l, c, stage);
+  else if(pdTab==="scope")       body.innerHTML = pdScope(p);
+  else if(pdTab==="subs")        body.innerHTML = pdSubs(p);
+  else if(pdTab==="costing")     body.innerHTML = pdCosting(p);
+  else if(pdTab==="cos")         body.innerHTML = pdCos(p);
+  else if(pdTab==="inspections") body.innerHTML = pdInspections(p);
+  else if(pdTab==="documents")   body.innerHTML = pdDocuments(p);
+}
+
+/* ---------- Tab: Overview ---------- */
+function pdOverview(p, l, c, stage){
+  const pm = (l&&l.pm) || p.pm || "";
+  const open = projectBadges(p).filter(b=>b.tone!=="ok");
+  const nextActs = open.slice(0,5);
+  return `
+    <div class="pd-section">
+      <h4>At a glance</h4>
+      <div class="pd-stat"><span class="k">Project ID</span><span class="v"><code>${esc(p.id)}</code></span></div>
+      <div class="pd-stat"><span class="k">Property</span><span class="v">${esc(p.property)}</span></div>
+      <div class="pd-stat"><span class="k">Scope</span><span class="v">${esc(p.scope||"—")}</span></div>
+      <div class="pd-stat"><span class="k">PM</span><span class="v">${pm?esc(nameOf(pm))+" ("+esc(pm)+")":"Unassigned"}</span></div>
+      <div class="pd-stat"><span class="k">Stage</span><span class="v">${esc(stage)}</span></div>
+      <div class="pd-stat"><span class="k">Awarded</span><span class="v">${p.created?fmtDate(p.created.slice(0,10)):"—"}</span></div>
+      ${canCost()?`<div class="pd-stat"><span class="k">Contract</span><span class="v">${c.revContract?money(c.revContract):"—"}</span></div>`:""}
+      ${canCost()&&c.ab?`<div class="pd-stat"><span class="k">Budget / Spent</span><span class="v">${money(c.totRev)} / ${money(c.totAct)}</span></div>`:""}
+    </div>
+    <div class="pd-section">
+      <h4>Needs your attention</h4>
+      ${open.length ? `<ul class="inbox-list" style="margin:0;padding:0">${open.map(b=>`
+        <li class="inbox-item" onclick="setPdTab('${esc(b.tab)}')">
+          <span class="inbox-dot ${b.tone==='u'?'u':b.tone==='p'?'p':'w'}"></span>
+          <div class="inbox-main"><div class="inbox-title">${esc(b.label)}</div><div class="inbox-meta">${esc(b.title||'')}</div></div>
+          <div class="inbox-actions"><button class="btn sm" onclick="event.stopPropagation();setPdTab('${esc(b.tab)}')">Open</button></div>
+        </li>`).join("")}</ul>` : `<p class="hint">Nothing flagged. 🎉</p>`}
+    </div>
+    <div class="pd-section">
+      <h4>Quick actions</h4>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <button class="btn sm" onclick="setPdTab('scope')">Mark a building complete</button>
+        <button class="btn sm" onclick="setPdTab('subs')">Assign a sub</button>
+        <button class="btn sm" onclick="setPdTab('cos')">New change order</button>
+        <button class="btn sm" onclick="setPdTab('inspections')">Start inspection</button>
+        <button class="btn sm" onclick="setPdTab('documents')">Upload document</button>
+      </div>
+    </div>`;
+}
+
+/* ---------- Tab: Scope & Buildings ---------- */
+function pdScope(p){
+  const bs = p._buildings || [];
+  if(!bs.length) return `<div class="pd-section"><p class="hint">No buildings on file. Add them from the full project page.</p></div>`;
+  return bs.map(b=>`
+    <div class="pd-section">
+      <h4>${esc(b.name)}</h4>
+      <table class="scope-tbl">
+        <thead><tr><th>Trade</th><th>Sub</th><th class="num">Est days</th><th class="num">Actual</th><th>Status</th><th></th></tr></thead>
+        <tbody>${b.trades.map(t=>{
+          const sub = MOCK_SUBS.find(s=>s.id===t.subId);
+          const cls = t.status==="done"?"done":t.status==="wip"?"wip":"todo";
+          const label = t.status==="done"?"Complete":t.status==="wip"?"In progress":"Not started";
+          return `<tr>
+            <td style="font-weight:600">${esc(t.trade)}</td>
+            <td style="color:var(--ink-2)">${sub?esc(sub.name):`<span class="hint">unassigned</span>`}</td>
+            <td class="num">${t.estDays}</td>
+            <td class="num">${t.actDays||"—"}</td>
+            <td><span class="scope-status ${cls}">${label}</span></td>
+            <td style="text-align:right">${t.status!=="done"?`<button class="btn sm" onclick="markTradeStatus('${esc(p.id)}','${esc(t.id)}','${t.status==='todo'?'wip':'done'}')">${t.status==='todo'?'Start':'Mark complete'}</button>`:""}</td>
+          </tr>`;
+        }).join("")}</tbody>
+      </table>
+    </div>`).join("");
+}
+function markTradeStatus(pid, tid, status){
+  const p = getProj(pid); if(!p || !p._buildings) return;
+  p._buildings.forEach(b=> b.trades.forEach(t=>{ if(t.id===tid){
+    t.status = status;
+    if(status==="done" && !t.actDays) t.actDays = t.estDays;
+  }}));
+  p.upd = nowISO();
+  renderProjectDrawer();
+  toast(status==="done" ? "Marked complete" : "Marked in progress");
+  renderActionInbox();
+}
+
+/* ---------- Tab: Subs & Agreements ---------- */
+function pdSubs(p){
+  const asgs = MOCK_PROJECT_SUBS[p.id]||[];
+  const addable = MOCK_SUBS.map(s=>`<option value="${s.id}">${esc(s.name)} · ${esc(s.trade)}</option>`).join("");
+  const rows = asgs.map(a=>{
+    const sub = MOCK_SUBS.find(s=>s.id===a.subId);
+    if(!sub) return "";
+    const coiCls = sub.coi.status==="valid"?"ok":sub.coi.status==="expired"?"err":"err";
+    const coiLab = sub.coi.status==="valid"?`COI valid to ${fmtDate(sub.coi.until)}`:sub.coi.status==="expired"?`COI expired ${fmtDate(sub.coi.until)}`:"COI missing";
+    const agrCls = a.agreementStatus==="signed"?"ok":(a.assignedDaysAgo>=5?"err":"warn");
+    const agrLab = a.agreementStatus==="signed"?"Agreement signed":`Agreement sent · ${a.assignedDaysAgo}d`;
+    const w9 = sub.w9?`<span class="chip-tag ok">W-9</span>`:`<span class="chip-tag err">W-9 missing</span>`;
+    return `<div class="sub-row">
+      <span class="avatar">${esc(sub.name.split(/\s+/).slice(0,2).map(x=>x[0]).join(""))}</span>
+      <div class="info">
+        <div class="n">${esc(sub.name)} <span class="hint" style="font-weight:400">· ${esc(a.bldg)} · ${esc(a.trade)}</span></div>
+        <div class="m">
+          <span class="chip-tag ${agrCls}">${esc(agrLab)}</span>
+          <span class="chip-tag ${coiCls}">${esc(coiLab)}</span>
+          ${w9}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+        ${a.agreementStatus==="sent"?`<button class="btn sm primary" onclick="sendAgreementReminder('${esc(p.id)}','${esc(a.id)}')">Send reminder</button>`:""}
+        ${a.agreementStatus==="pending"?`<button class="btn sm primary" onclick="sendAgreement('${esc(p.id)}','${esc(a.id)}')">Send agreement</button>`:""}
+        ${sub.coi.status!=="valid"?`<button class="btn sm" onclick="requestCoi('${esc(sub.id)}')">Request COI</button>`:""}
+      </div>
+    </div>`;
+  }).join("");
+  return `
+    <div class="pd-section">
+      <h4>Assigned subcontractors</h4>
+      ${asgs.length ? rows : `<p class="hint">No subs assigned yet. Add one below.</p>`}
+    </div>
+    <div class="pd-section">
+      <h4>Assign a sub</h4>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <select id="subPick" style="flex:1;min-width:160px;padding:7px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px">
+          <option value="">Pick a sub…</option>${addable}
+        </select>
+        <input id="subBldg" placeholder="Building (e.g. Building 1)" style="flex:1;min-width:140px;padding:7px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px">
+        <button class="btn primary" onclick="assignSub('${esc(p.id)}')">Assign</button>
+      </div>
+      <p class="hint" style="margin-top:8px">Picks from the approved sub database. New subs get added through the Subcontractor Documentation module (coming).</p>
+    </div>`;
+}
+function sendAgreement(pid, aid){
+  const asgs = MOCK_PROJECT_SUBS[pid]||[];
+  const a = asgs.find(x=>x.id===aid); if(!a) return;
+  a.agreementStatus = "sent"; a.assignedDaysAgo = 0;
+  toast("Agreement sent"); renderProjectDrawer(); renderActionInbox();
+}
+function sendAgreementReminder(pid, aid){
+  const asgs = MOCK_PROJECT_SUBS[pid]||[];
+  const a = asgs.find(x=>x.id===aid); if(!a) return;
+  toast(`Reminder sent to ${(MOCK_SUBS.find(s=>s.id===a.subId)||{}).name||"sub"}`);
+}
+function requestCoi(subId){
+  const s = MOCK_SUBS.find(x=>x.id===subId); if(!s) return;
+  toast(`COI request sent to ${s.name}`);
+}
+function assignSub(pid){
+  const sel = byId("subPick"), bldg = byId("subBldg");
+  if(!sel.value){ toast("Pick a sub first"); return; }
+  const sub = MOCK_SUBS.find(s=>s.id===sel.value);
+  const list = MOCK_PROJECT_SUBS[pid] = MOCK_PROJECT_SUBS[pid]||[];
+  list.push({ subId:sub.id, bldg: bldg.value||"Primary", trade:sub.trade,
+              assignedDaysAgo:0, agreementStatus:"pending",
+              id:`${pid}-${sub.id}-${Date.now().toString(36)}` });
+  toast(`${sub.name} assigned`);
+  renderProjectDrawer(); renderActionInbox();
+}
+
+/* ---------- Tab: Costing (reuses existing costingTab) ---------- */
+function pdCosting(p){
+  // Reuse the existing full-page costing content, but add a hint linking out to the full page
+  curPid = p.id;                              // the existing costing handlers read curPid
+  return `<div class="pd-section">
+    ${costingTab(p)}
+    <p class="hint" style="margin-top:10px">Need the full workspace? <a href="#" onclick="openProject('${esc(p.id)}');closeProjectDrawer();return false;">Open the full project page →</a></p>
+  </div>`;
+}
+
+/* ---------- Tab: Change Orders ---------- */
+function pdCos(p){
+  const cos = (p.cos||[]).filter(co=>!co.del);
+  if(!cos.length) return `<div class="pd-section"><h4>No change orders yet</h4><p class="hint">Change orders raised here are numbered under <code>${esc(p.id)}</code>.</p><button class="btn primary" onclick="openProject('${esc(p.id)}');closeProjectDrawer()">Open full page to add one</button></div>`;
+  return `<div class="pd-section">
+    <h4>Change orders</h4>
+    ${cos.map(co=>{
+      const sel = num(co.sell);
+      const cost = CATS.reduce((s,c)=>s+num(co.cost&&co.cost[c]),0);
+      const cls = co.status==="Approved"?"ok":co.status==="Draft"?"warn":"err";
+      return `<div class="sub-row">
+        <span class="avatar">#${co.num||"?"}</span>
+        <div class="info">
+          <div class="n">${esc(co.title||"Untitled")}</div>
+          <div class="m">
+            <span class="chip-tag ${cls}">${esc(co.status)}</span>
+            ${sel?`<span>${money(sel)} to client</span>`:""}
+            ${cost?`<span style="color:var(--muted)">${money(cost)} cost</span>`:""}
+            ${co.reason?`<span style="color:var(--muted)">${esc(co.reason)}</span>`:""}
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+          ${co.status==="Submitted"&&isManager()?`<button class="btn sm primary" onclick="approveChangeOrder('${esc(p.id)}','${esc(co.uid||'')}')">Approve</button>`:""}
+          ${co.status==="Draft"?`<button class="btn sm" onclick="submitChangeOrder('${esc(p.id)}','${esc(co.uid||'')}')">Submit</button>`:""}
+        </div>
+      </div>`;
+    }).join("")}
+    <p class="hint" style="margin-top:10px"><a href="#" onclick="openProject('${esc(p.id)}');closeProjectDrawer();return false;">Open the full project page →</a> to add change orders with line-item cost breakdowns.</p>
+  </div>`;
+}
+function approveChangeOrder(pid, uid){
+  const p = getProj(pid); if(!p) return;
+  const co = (p.cos||[]).find(x=>x.uid===uid); if(!co) return;
+  co.status = "Approved"; co.approvedAt = nowISO(); p.upd = nowISO();
+  toast(`CO #${co.num} approved`); renderProjectDrawer(); renderActionInbox(); renderProjectBoard();
+}
+function submitChangeOrder(pid, uid){
+  const p = getProj(pid); if(!p) return;
+  const co = (p.cos||[]).find(x=>x.uid===uid); if(!co) return;
+  co.status = "Submitted"; p.upd = nowISO();
+  toast(`CO #${co.num} submitted`); renderProjectDrawer();
+}
+
+/* ---------- Tab: Inspections ---------- */
+function pdInspections(p){
+  const insps = MOCK_INSPECTIONS_BY_PID[p.id]||[];
+  const types = ["Precon Exterior","Precon Interior","Daily Progress","Punchlist","Final / End of Project"];
+  return `
+    <div class="pd-section">
+      <h4>Filed reports</h4>
+      ${insps.length ? insps.map(i=>`<div class="insp-row">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg></span>
+        <div class="info"><div class="n">${esc(i.type)}</div><div class="m">${esc(fmtDate(i.date))} · ${esc(i.by)}</div></div>
+        <button class="btn sm" onclick="toast('Opens the filed report (PDF) in SharePoint')">View</button>
+      </div>`).join("") : `<p class="hint">No reports filed yet for this project.</p>`}
+    </div>
+    <div class="pd-section">
+      <h4>Start a new inspection</h4>
+      <p class="sub">Opens the KPS Field Inspection app with <code>${esc(p.id)}</code> and the property pre-filled.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        ${types.map(t=>`<button class="btn sm" onclick="startInspection('${esc(p.id)}','${esc(t)}')">${esc(t)}</button>`).join("")}
+      </div>
+    </div>`;
+}
+function startInspection(pid, type){
+  const p = getProj(pid); if(!p) return;
+  const base = "https://mgardnerkps.github.io/kpsinspectionprogram/";
+  const url = `${base}#projectId=${encodeURIComponent(pid)}&property=${encodeURIComponent(p.property)}&type=${encodeURIComponent(type)}`;
+  window.open(url, "_blank");
+  toast("Opened Field Inspection in a new tab");
+}
+
+/* ---------- Tab: Documents ---------- */
+function pdDocuments(p){
+  const docs = MOCK_DOCS_BY_PID[p.id]||[];
+  const folderUrl = `https://${SP.host}${SP.site}/Shared%20Documents/Projects/${encodeURIComponent(p.id)}`;
+  const kindIcon = { pdf:"PDF", xlsx:"XLS", docx:"DOC", jpg:"IMG", png:"IMG" };
+  return `
+    <div class="pd-section">
+      <h4>Files in Projects/${esc(p.id)}/</h4>
+      ${docs.length ? docs.map(d=>`<div class="doc-row">
+        <span class="ico" style="font-size:10px;font-weight:700">${esc(kindIcon[d.kind]||"FILE")}</span>
+        <div class="info"><div class="n">${esc(d.name)}</div><div class="m">${d.folder?esc(d.folder)+" · ":""}${esc(d.size)}</div></div>
+        <button class="btn sm" onclick="toast('Opens the file in SharePoint')">Open</button>
+      </div>`).join("") : `<p class="hint">No files uploaded yet.</p>`}
+    </div>
+    <div class="pd-section">
+      <h4>Upload a file</h4>
+      <input type="file" id="pdUpload" style="font-size:13px">
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" onclick="pdUploadDoc('${esc(p.id)}')">Upload to project folder</button>
+        <button class="btn" onclick="window.open('${esc(folderUrl)}','_blank')">Open folder in SharePoint</button>
+      </div>
+    </div>`;
+}
+function pdUploadDoc(pid){
+  const f = byId("pdUpload"); const file = f && f.files && f.files[0];
+  if(!file){ toast("Pick a file first"); return; }
+  const docs = MOCK_DOCS_BY_PID[pid] = MOCK_DOCS_BY_PID[pid]||[];
+  const kind = file.name.split(".").pop().toLowerCase();
+  const kb = Math.max(1, Math.round(file.size/1024));
+  const size = kb>=1024 ? (kb/1024).toFixed(1)+" MB" : kb+" KB";
+  docs.push({ name:file.name, kind, folder:"", size });
+  toast(`${file.name} uploaded (demo — not written to SharePoint)`);
+  renderProjectDrawer();
 }
 
 /* ---------- boot ---------- */
