@@ -616,17 +616,40 @@ td.num.over,.num.over{color:var(--urgent);font-weight:700}
 .scope-status.done{background:var(--watch-bg);color:var(--watch)}
 
 /* Sub rows */
-.sub-row{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.sub-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
 .sub-row:last-child{border-bottom:0}
 .sub-row .avatar{width:34px;height:34px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:0 0 auto}
+.sub-row.co .avatar{background:var(--progress-bg);color:var(--progress)}
 .sub-row .info{flex:1;min-width:0}
-.sub-row .n{font-size:13px;font-weight:600;color:var(--ink)}
-.sub-row .m{font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;margin-top:3px;align-items:center}
+.sub-row .n{font-size:13px;font-weight:600;color:var(--ink);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.sub-row .m{font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;align-items:center}
+.sub-row .scope-line{font-size:12px;color:var(--ink-2);margin-top:2px}
+.sub-row .sub-files{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:6px;font-size:11.5px;color:var(--muted)}
+.sub-row .sub-files .file-lab{font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.02em;font-size:10.5px}
+.sub-row .sub-files a.file-chip{color:var(--brand-ink);text-decoration:none;font-weight:500;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;vertical-align:bottom}
+.sub-row .sub-files a.file-chip:hover{text-decoration:underline}
+.sub-row-actions{display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex:0 0 auto;min-width:124px}
+.sub-row-actions .btn.sm{padding:5px 10px;font-size:11.5px;justify-content:center;width:100%}
+.sub-row-actions .uplbtn{position:relative;overflow:hidden}
+.sub-row-actions .uplbtn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.subs-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px}
+.subs-toolbar .seg2{display:flex;gap:0;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+.subs-toolbar .seg2 button{appearance:none;border:0;background:transparent;color:var(--ink-2);padding:6px 13px;font:inherit;font-size:12px;font-weight:600;cursor:pointer;border-right:1px solid var(--line)}
+.subs-toolbar .seg2 button:last-child{border-right:0}
+.subs-toolbar .seg2 button[aria-pressed="true"]{background:var(--ink);color:var(--plane)}
+.subs-toolbar .pmbarlab{font-size:12px;color:var(--muted);font-weight:600}
+.subs-toolbar .spacer{flex:1}
+.sub-group-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 6px}
+.sub-group-head h4{margin:0;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.02em;font-weight:700}
+.sub-group-head .ct{font-size:11px;color:var(--muted);font-weight:600}
+.co-impact{background:var(--brand-soft);border:1px solid transparent;border-radius:9px;padding:9px 12px;font-size:12.5px;color:var(--brand-ink);display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
+.co-impact b{font-weight:700}
 .chip-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 7px;border-radius:999px;font-weight:600}
 .chip-tag.ok{background:var(--watch-bg);color:var(--watch)}
 .chip-tag.warn{background:var(--progress-bg);color:var(--progress)}
 .chip-tag.err{background:var(--urgent-bg);color:var(--urgent)}
 .chip-tag.gray{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.chip-tag.co{background:var(--progress-bg);color:var(--progress)}
 
 /* Inspection rows & doc list */
 .insp-row,.doc-row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
@@ -666,6 +689,121 @@ td.num.over,.num.over{color:var(--urgent);font-weight:700}
   header,.filters,.chips,.hero,.navbtns,.icbtn,.devnote,.pmbar,.inbox,.proj-quickbar{display:none!important}
   body{background:#fff}
 }
+
+/* ============================================================
+   SCHEDULE / GANTT
+   ============================================================ */
+.sched-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 12px}
+.sched-toolbar .seg2{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+.sched-toolbar .seg2 button{appearance:none;border:0;background:transparent;color:var(--ink-2);padding:6px 13px;font:inherit;font-size:12px;font-weight:600;cursor:pointer;border-right:1px solid var(--line)}
+.sched-toolbar .seg2 button:last-child{border-right:0}
+.sched-toolbar .seg2 button[aria-pressed="true"]{background:var(--ink);color:var(--plane)}
+.sched-toolbar .spacer{flex:1}
+.sched-stats{display:flex;gap:14px;align-items:center;font-size:12px;color:var(--ink-2);flex-wrap:wrap}
+.sched-stats b{color:var(--ink)}
+.sched-stats .crit{color:var(--urgent);font-weight:700}
+
+/* Task tree editor */
+.sched-wrap{display:grid;grid-template-columns:minmax(320px,480px) 1fr;gap:16px;align-items:start}
+@media (max-width:960px){.sched-wrap{grid-template-columns:1fr}}
+.sched-tree{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.sched-tree-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--surface-2);font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.02em}
+.sched-tree-head .spacer{flex:1}
+.sched-tree-body{max-height:62vh;overflow:auto}
+.sched-task{display:grid;grid-template-columns:minmax(0,1fr) 94px 94px 46px 24px;gap:6px;align-items:center;padding:7px 10px;border-bottom:1px solid var(--line);font-size:12.5px;cursor:pointer}
+.sched-task:hover{background:var(--surface-2)}
+.sched-task.sel{background:var(--brand-soft)}
+.sched-task.crit .nm{color:var(--urgent)}
+.sched-task.milestone .nm::before{content:"◆ ";color:var(--brand)}
+.sched-task .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.sched-task .nm .caret{width:14px;flex:0 0 auto;color:var(--muted);font-size:10px}
+.sched-task .nm input.inline-name{width:100%;background:transparent;border:0;color:inherit;font:inherit;padding:2px 2px}
+.sched-task .nm input.inline-name:focus{outline:1px solid var(--brand);border-radius:3px}
+.sched-task .dt{font-variant-numeric:tabular-nums;color:var(--ink-2);text-align:right;font-size:11.5px}
+.sched-task .dur{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-2);font-size:11.5px}
+.sched-task .pct-mini{font-size:10px;color:var(--muted);text-align:right}
+.sched-task .add-child{opacity:0;transition:opacity .1s;background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:14px;padding:0}
+.sched-task:hover .add-child{opacity:1}
+
+.sched-empty{padding:24px 16px;text-align:center;color:var(--muted);font-size:13px}
+.sched-add{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--line);background:var(--surface-2)}
+.sched-add input{flex:1;min-width:0;padding:7px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:12.5px}
+.sched-add button{padding:7px 12px;font-size:12px}
+
+/* Task editor panel */
+.sched-edit{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px}
+.sched-edit h4{margin:0 0 10px;font-size:13px;letter-spacing:-.01em}
+.sched-edit .fgrid-s{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sched-edit label{display:block;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.02em;margin-bottom:3px;text-transform:uppercase}
+.sched-edit input,.sched-edit select,.sched-edit textarea{width:100%;padding:7px 9px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:12.5px}
+.sched-edit textarea{resize:vertical;min-height:60px}
+.sched-edit .depbox{display:flex;flex-wrap:wrap;gap:4px;padding:6px;border:1px solid var(--line);border-radius:7px;min-height:38px;background:var(--surface-2)}
+.sched-edit .depbox .dep{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:11.5px}
+.sched-edit .depbox .dep button{appearance:none;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0}
+.sched-edit .row-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.sched-edit .row-btns .btn{flex:1;justify-content:center}
+.sched-edit .danger{background:var(--urgent-bg);border-color:transparent;color:var(--urgent)}
+
+/* Gantt chart */
+.gantt{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.gantt-scroll{overflow:auto;max-height:72vh}
+.gantt svg{display:block;background:var(--surface)}
+.gantt .wkd{fill:var(--surface-2)}
+.gantt .grid{stroke:var(--line);stroke-width:1}
+.gantt .today{stroke:var(--brand);stroke-width:2;stroke-dasharray:4 3}
+.gantt .lbl-x{fill:var(--muted);font:600 10px system-ui,-apple-system,"Segoe UI",sans-serif}
+.gantt .lbl-x-month{fill:var(--ink);font:700 11px system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.01em}
+.gantt .lbl-y{fill:var(--ink);font:500 11.5px system-ui,-apple-system,"Segoe UI",sans-serif;dominant-baseline:middle}
+.gantt .lbl-y.parent{font-weight:700}
+.gantt .lbl-y.crit{fill:var(--urgent);font-weight:700}
+.gantt .row{fill:transparent}
+.gantt .row:hover{fill:var(--surface-2)}
+.gantt .bar{fill:var(--brand-soft);stroke:var(--brand);stroke-width:1;rx:3;ry:3;cursor:pointer}
+.gantt .bar.crit{fill:var(--urgent-bg);stroke:var(--urgent)}
+.gantt .bar.done{opacity:.55}
+.gantt .bar-pct{fill:var(--brand);rx:3;ry:3;pointer-events:none}
+.gantt .bar.crit + .bar-pct, .gantt .bar-pct.crit{fill:var(--urgent)}
+.gantt .parent-bar{fill:var(--ink);stroke:none;height:4px;rx:2;ry:2;opacity:.75}
+.gantt .parent-cap{fill:var(--ink)}
+.gantt .milestone{fill:var(--brand);stroke:none;cursor:pointer}
+.gantt .milestone.crit{fill:var(--urgent)}
+.gantt .dep{fill:none;stroke:var(--muted);stroke-width:1;marker-end:url(#arrh)}
+.gantt .dep.crit{stroke:var(--urgent);stroke-width:1.6}
+.gantt .lane-sep{stroke:var(--line);stroke-width:1}
+.gantt .legend{display:flex;gap:14px;padding:8px 12px;border-top:1px solid var(--line);background:var(--surface-2);font-size:11px;color:var(--muted);flex-wrap:wrap;align-items:center}
+.gantt .legend .sw{display:inline-block;width:14px;height:10px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.gantt .legend .sw.b{background:var(--brand-soft);border:1px solid var(--brand)}
+.gantt .legend .sw.c{background:var(--urgent-bg);border:1px solid var(--urgent)}
+.gantt .legend .sw.d{background:var(--ink);opacity:.75}
+.gantt .legend .sw.m{background:var(--brand);transform:rotate(45deg);border-radius:0}
+/* Lane headers */
+.gantt .lane-hdr-bg{fill:var(--surface-2)}
+.gantt .lane-hdr{fill:var(--ink);font:700 11.5px system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.01em;dominant-baseline:middle}
+.gantt .lane-hdr-ct{fill:var(--muted);font:600 10.5px system-ui,-apple-system,"Segoe UI",sans-serif;dominant-baseline:middle}
+.gantt .bar{transition:filter .1s}
+.gantt .bar:hover{filter:brightness(1.03) drop-shadow(0 1px 2px rgba(0,0,0,.08))}
+
+/* Schedule empty-state hero */
+.sched-hero{
+  position:relative; margin:4px 0 10px; padding:22px;
+  border-radius:14px; overflow:hidden;
+  background:
+    radial-gradient(900px 240px at 10% -10%, color-mix(in srgb, var(--brand) 16%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--surface), var(--surface-2));
+  border:1px solid var(--line); box-shadow:var(--shadow);
+}
+.sched-hero-top{display:flex;gap:14px;align-items:flex-start}
+.sched-hero-ic{
+  width:44px;height:44px;border-radius:12px;flex:0 0 auto;
+  display:grid;place-items:center;color:var(--brand);background:var(--brand-soft);
+}
+.sched-hero-ic svg{width:22px;height:22px}
+.sched-hero h3{margin:0}
+.sched-hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 8px}
+.sched-hero-actions .btn{padding:10px 16px;font-size:13px}
+.sched-hero-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.sched-hero-steps > div{padding:9px 12px;border:1px dashed var(--line);border-radius:9px;font-size:12.5px;color:var(--ink-2);background:var(--surface)}
+@media (max-width:720px){ .sched-hero-steps{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -2135,6 +2273,35 @@ const PROJ = { dir:"/Projects", file:"project.json", costDir:"Costing", entries:
 const SUBFOLDERS = ["Estimating","Inspections","Subcontractors","Costing","ChangeOrders"];
 const CATS = ["Materials","Labor","Subcontractors","Equipment & dumpster","Permits & fees","Other"];
 const TRADES = ["Roofing","Decks","Siding","Windows","Porches","Carpentry","Painting","Masonry","Gutters","Other"];
+
+/* Built-in trade knowledge so the scheduler can lay out a reasonable plan
+   on its own. `days` is a per-building default duration; `after` is the
+   list of trades that typically must finish first (used to wire deps).
+   Also used for consistent brand-neutral bar coloring on the Gantt. */
+const TRADE_LIB = {
+  "Demo":      { days: 2, after: [],                        color:"#8a7a5e" },
+  "Masonry":   { days: 3, after: [],                        color:"#8c6f54" },
+  "Carpentry": { days: 4, after: ["Demo"],                  color:"#b67c00" },
+  "Roofing":   { days: 3, after: ["Carpentry"],             color:"#1c5cab" },
+  "Siding":    { days: 5, after: ["Carpentry"],             color:"#2a8f7a" },
+  "Windows":   { days: 2, after: ["Carpentry"],             color:"#5b6b7f" },
+  "Doors":     { days: 1, after: ["Carpentry"],             color:"#6c6a90" },
+  "Porches":   { days: 4, after: ["Carpentry","Demo"],      color:"#a06448" },
+  "Decks":     { days: 5, after: ["Demo","Carpentry"],      color:"#b35050" },
+  "Painting":  { days: 4, after: ["Carpentry","Siding"],    color:"#4f8d4f" },
+  "Gutters":   { days: 1, after: ["Roofing"],               color:"#4f6b8d" },
+  "Other":     { days: 2, after: [],                        color:"#898781" }
+};
+function tradeInfo(name){
+  const key = (name||"").trim();
+  return TRADE_LIB[key] || { days: 2, after: [], color: colorFromString(key||"task") };
+}
+/* Deterministic fallback color for anything not in the library. */
+function colorFromString(s){
+  let h = 0; for(let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i)) >>> 0;
+  const hue = h % 360;
+  return `hsl(${hue} 45% 46%)`;
+}
 const CO_REASONS = ["Owner request","Hidden condition / rot","Code or permit requirement","Scope clarification","Other"];
 /* Costing is whole-module: whoever is listed here can see and edit all of it.
    Same caveat as MANAGERS — this is tidiness in the browser, not security. */
@@ -2218,19 +2385,111 @@ async function spUploadFile(dir, name, file){
 }
 
 /* ---------- loading and saving ---------- */
+/* Project loader — tolerant of per-file failures.
+   One unreadable or malformed project.json never kills the whole load; the
+   folder is bucketed as "orphan" with a reason remembered on loadErrors so
+   the UI can tell the user about it. The schedule, baselines and cos
+   collections are ensured on every record so a missing or corrupt
+   sub-object (e.g. schedule saved as null in an earlier version) doesn't
+   blow up renderers downstream. */
+let loadErrors = [];       // [{name, reason, raw?}]
 async function loadProjects(){
-  if(localMode()){ projects = LS.get("kps.projects", []); orphanFolders = []; return; }
+  loadErrors = [];
+  if(localMode()){
+    const raw = LS.get("kps.projects", []);
+    projects = Array.isArray(raw) ? raw.filter(x=>x && x.id).map(safeProjectShape) : [];
+    orphanFolders = [];
+    return;
+  }
   if(!spOn()) return;
   const folders = (await spList(PROJ.dir)).filter(x=>x.folder).map(x=>x.name);
   const recs = [], orph = [];
   await Promise.all(folders.map(async name=>{
     try{
       const got = await spRead(projPath(name), PROJ.file);
-      if(got && got.data && got.data.id) recs.push(got.data); else orph.push(name);
-    }catch(e){ if(e.denied) orph.push(name); else throw e; }
+      if(got && got.data && got.data.id){
+        try { recs.push(safeProjectShape(got.data)); }
+        catch(e){
+          loadErrors.push({ name, reason:"shape-check failed: "+(e&&e.message||e) });
+          orph.push(name);
+        }
+      } else {
+        orph.push(name);
+        if(got && got.data && !got.data.id) loadErrors.push({ name, reason:"project.json has no id" });
+      }
+    }catch(e){
+      if(e.denied){ orph.push(name); loadErrors.push({ name, reason:"access denied" }); return; }
+      // Malformed JSON, network blip for this one file, etc — don't fail the whole load.
+      console.error("project.json unreadable:", name, e);
+      loadErrors.push({ name, reason: e && e.message ? e.message : "unreadable" });
+      orph.push(name);
+    }
   }));
   projects = recs.sort((a,b)=> (b.created||"") < (a.created||"") ? -1 : 1);
   orphanFolders = orph.sort();
+  if(loadErrors.length) console.warn("Project load issues:", loadErrors);
+}
+/* Normalise a project record so later renderers can trust its shape. */
+function safeProjectShape(p){
+  const out = Object.assign({}, p);
+  if(!Array.isArray(out.baselines)) out.baselines = [];
+  if(!Array.isArray(out.cos))       out.cos = [];
+  // Schedule: null / missing / wrong-typed → start fresh.
+  if(!out.schedule || typeof out.schedule !== "object" || Array.isArray(out.schedule)){
+    out.schedule = { tasks: [] };
+  }
+  if(!Array.isArray(out.schedule.tasks)) out.schedule.tasks = [];
+  // Repair each task defensively.
+  const seen = new Set(), fixed = [];
+  out.schedule.tasks.forEach((t,i)=>{
+    if(!t || typeof t !== "object") return;             // drop junk
+    const u = t.uid || ("t_"+Math.random().toString(36).slice(2,10));
+    if(seen.has(u)) return;                              // drop duplicates
+    seen.add(u);
+    fixed.push({
+      uid: u,
+      parentId: typeof t.parentId === "string" ? t.parentId : null,
+      name: (t.name==null?"":String(t.name)).slice(0,200),
+      start: validIsoDate(t.start) ? t.start : "",
+      end:   validIsoDate(t.end)   ? t.end   : "",
+      pct:   Number.isFinite(+t.pct) ? Math.max(0,Math.min(100,+t.pct)) : 0,
+      owner: typeof t.owner === "string" ? t.owner : "",
+      trade: typeof t.trade === "string" ? t.trade : "",
+      building: typeof t.building === "string" ? t.building : "",
+      milestone: !!t.milestone,
+      deps: Array.isArray(t.deps) ? t.deps.filter(d=>typeof d==="string") : [],
+      notes: typeof t.notes === "string" ? t.notes : "",
+      ord: Number.isFinite(+t.ord) ? +t.ord : i
+    });
+  });
+  // Drop deps pointing to tasks that no longer exist, and parentIds pointing nowhere.
+  const uids = new Set(fixed.map(t=>t.uid));
+  fixed.forEach(t=>{
+    t.deps = t.deps.filter(d=>uids.has(d) && d !== t.uid);
+    if(t.parentId && !uids.has(t.parentId)) t.parentId = null;
+  });
+  // Break any dependency cycles (defensive): if adding a dep would reach back to the task, drop it.
+  fixed.forEach(t=>{
+    t.deps = t.deps.filter(d=>!dependsOn(d, t.uid, fixed));
+  });
+  out.schedule.tasks = fixed;
+  return out;
+}
+function validIsoDate(s){
+  if(typeof s !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  const d = new Date(s + "T00:00");
+  return !isNaN(d.getTime());
+}
+function dependsOn(from, target, tasks){
+  // Does `from` (directly or transitively) depend on `target`?
+  const byUid = Object.fromEntries(tasks.map(t=>[t.uid,t]));
+  const stack = [from], seen = new Set();
+  while(stack.length){
+    const n = stack.pop(); if(n===target) return true;
+    if(seen.has(n)) continue; seen.add(n);
+    (byUid[n]?.deps||[]).forEach(d=>stack.push(d));
+  }
+  return false;
 }
 function setProj(p){
   const i = projects.findIndex(x=>x.id===p.id);
@@ -2520,7 +2779,12 @@ function renderProjects(){
             <button class="btn sm primary" onclick="openAward(${i})">Award</button></span></div>`; }).join("")}
       </div>
     </details>` : "") +
-    (orphanFolders.length && signedIn() ? `<p class="hint" style="margin:0 0 14px">${orphanFolders.length} folder${orphanFolders.length===1?"":"s"} under Projects ${orphanFolders.length===1?"has":"have"} no project record yet (${orphanFolders.map(esc).join(", ")}). Pick ${orphanFolders.length===1?"it":"them"} when you award the matching job so nothing is duplicated.</p>` : "");
+    (orphanFolders.length && signedIn() ? `<p class="hint" style="margin:0 0 14px">${orphanFolders.length} folder${orphanFolders.length===1?"":"s"} under Projects ${orphanFolders.length===1?"has":"have"} no project record yet (${orphanFolders.map(esc).join(", ")}). Pick ${orphanFolders.length===1?"it":"them"} when you award the matching job so nothing is duplicated.</p>` : "") +
+    (loadErrors && loadErrors.length ? `<div class="co-impact" style="background:var(--urgent-bg);color:var(--urgent);margin:0 0 14px">
+       <span><b>${loadErrors.length}</b> project folder${loadErrors.length===1?"":"s"} couldn't be loaded cleanly:</span>
+       <span>${loadErrors.slice(0,6).map(e=>`<code>${esc(e.name)}</code> <span style="opacity:.7">(${esc(e.reason||"")})</span>`).join(" &nbsp;·&nbsp; ")}${loadErrors.length>6?` &nbsp;…and ${loadErrors.length-6} more.`:""}</span>
+       <span class="hint" style="color:inherit;opacity:.9">The dashboard kept running — those folders are shown as orphans until the file is fixed on SharePoint.</span>
+     </div>` : "");
 
   const tot = list.reduce((s,p)=>s+calcProject(p,[]).revContract, 0);
   const open = list.reduce((s,p)=>s+calcProject(p,[]).pendN, 0);
@@ -2573,7 +2837,7 @@ function renderProject(){
   const p = getProj(curPid);
   if(!p){ go("projects"); return; }
   if(pjTab==="costing" && !canCost()) pjTab = "overview";
-  const tabs = [["overview","Overview"]].concat(canCost()?[["costing","Costing"]]:[]).concat([["cos","Change orders"]]);
+  const tabs = [["overview","Overview"],["schedule","Schedule"]].concat(canCost()?[["costing","Costing"]]:[]).concat([["cos","Change orders"]]);
   const l = leadFor(p);
   root.innerHTML = `
     <button class="btn sm" onclick="go('projects')">← All projects</button>
@@ -2586,7 +2850,12 @@ function renderProject(){
     </div>
     <div class="tabs" role="tablist">${tabs.map(([k,t])=>
       `<button role="tab" aria-current="${pjTab===k}" onclick="setTab('${k}')">${t}</button>`).join("")}</div>
-    <div id="pjBody">${pjTab==="costing" ? costingTab(p) : pjTab==="cos" ? cosTab(p) : overviewTab(p, l)}</div>`;
+    <div id="pjBody">${
+      pjTab==="costing" ? costingTab(p) :
+      pjTab==="cos"     ? cosTab(p) :
+      pjTab==="schedule"? scheduleTab(p, /*compact*/false) :
+                          overviewTab(p, l)
+    }</div>`;
 }
 
 function overviewTab(p, l){
@@ -2853,18 +3122,22 @@ function coCancel(){ coFormOpen = false; coEditing = null; renderProject(); }
 function coForm(p, mg){
   const c = coEditing ? (p.cos||[]).find(x=>x.uid===coEditing) : null;
   const v = f => esc(c && c[f] != null ? c[f] : "");
+  const subOpts = (typeof MOCK_SUBS!=="undefined" ? MOCK_SUBS : [])
+    .map(s=>`<option value="${s.id}" ${c&&c.subId===s.id?"selected":""}>${esc(s.name)} · ${esc(s.trade)}</option>`).join("");
   return `<div class="card sec">
     <h3>${c?`Edit ${esc(coNum(c))}`:"New change order"}</h3>
     <div class="fgrid">
       <div style="grid-column:1/-1"><label for="co_title">Title</label><input id="co_title" value="${v("title")}" placeholder="e.g. Replace rotted sheathing, Bldg 3 rear"></div>
       <div><label for="co_building">Building / area</label><input id="co_building" value="${v("building")}"></div>
       <div><label for="co_trade">Trade</label><select id="co_trade"><option value=""></option>${TRADES.map(t=>`<option ${c&&c.trade===t?"selected":""}>${t}</option>`).join("")}</select></div>
+      <div><label for="co_sub">Subcontractor doing the work</label><select id="co_sub"><option value="">— none picked —</option>${subOpts}</select></div>
       <div><label for="co_reason">Reason</label><select id="co_reason"><option value=""></option>${CO_REASONS.map(t=>`<option ${c&&c.reason===t?"selected":""}>${esc(t)}</option>`).join("")}</select></div>
       <div><label for="co_sell">Price to the client ($)</label><input id="co_sell" inputmode="decimal" value="${c&&c.sell?esc(c.sell):""}"></div>
       <div style="grid-column:1/-1"><label for="co_desc">What changed and why</label><textarea id="co_desc" rows="3">${v("desc")}</textarea></div>
     </div>
     ${mg ? `<h4 style="margin:14px 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.02em">Our cost by category (managers)</h4>
       <div class="fgrid">${CATS.map((k,i)=>`<div><label for="co_c${i}">${esc(k)} ($)</label><input id="co_c${i}" inputmode="decimal" value="${c&&c.cost&&c.cost[k]?esc(c.cost[k]):""}"></div>`).join("")}</div>` : ""}
+    <p class="hint" style="margin:12px 0 2px">When approved, the <b>sell price</b> is added to the contract and the <b>cost total</b> is added to the budget automatically. If you pick a sub above, this CO appears as an addendum row on the <b>Subs &amp; Agreements</b> tab until the signed addendum is uploaded there.</p>
     <div style="display:flex;gap:8px;margin-top:14px">
       <button class="btn primary" onclick="coSave()">${c?"Save changes":"Save as draft"}</button>
       <button class="btn" onclick="coCancel()">Cancel</button>
@@ -2873,7 +3146,9 @@ function coForm(p, mg){
 async function coSave(){
   const title = byId("co_title").value.trim();
   if(!title){ toast("Give the change order a title"); byId("co_title").focus(); return; }
-  const rec = { title, building:byId("co_building").value.trim(), trade:byId("co_trade").value, reason:byId("co_reason").value,
+  const rec = { title, building:byId("co_building").value.trim(), trade:byId("co_trade").value,
+                subId: byId("co_sub") ? byId("co_sub").value : "",
+                reason:byId("co_reason").value,
                 desc:byId("co_desc").value.trim(), sell:round2(num(byId("co_sell").value)) };
   let cost = null;
   if(canCost()){ cost = {}; CATS.forEach((k,i)=>{ const x = round2(num(byId("co_c"+i).value)); if(x) cost[k] = x; }); }
@@ -2883,9 +3158,13 @@ async function coSave(){
       if(wasEditing){
         const co = q.cos.find(x=>x.uid===wasEditing); if(!co) return;
         Object.assign(co, rec); if(cost) co.cost = cost; co.upd = nowISO();
+        // if sub was cleared, keep any already-uploaded addendum but drop pending state
+        if(!rec.subId){ co.agreementStatus = ""; }
+        else if(!co.agreementStatus) co.agreementStatus = "pending";
       }else{
         const n = Math.max(0, ...q.cos.map(x=>x.n||0)) + 1;
-        q.cos.push(Object.assign({ uid:uid(), n, status:"Draft", created:nowISO(), createdBy:ME.id, upd:nowISO(), cost:cost||{} }, rec));
+        q.cos.push(Object.assign({ uid:uid(), n, status:"Draft", created:nowISO(), createdBy:ME.id, upd:nowISO(), cost:cost||{},
+                                   agreementStatus: rec.subId ? "pending" : "", agreementFile:null }, rec));
       }
     });
     coFormOpen = false; coEditing = null;
@@ -3438,11 +3717,24 @@ function buildActionInbox(){
       items.push({
         sev: co.status==="Submitted" ? "w" : "p",
         kind:"co", pid:p.id, pm,
-        title: `Approve change order #${co.num} — ${co.title}`,
+        title: `Approve change order #${co.n} — ${co.title}`,
         meta: `${p.property} · ${p.id} · ${money(num(co.sell))}`,
         cta:"Review",
         action:`openProjectDrawer('${esc(p.id)}','cos')`,
         tab:"cos"
+      });
+    });
+    // CO addendum not signed — surfaces the sub-side agreement on approved COs with a sub picked
+    (p.cos||[]).filter(co=>!co.del && co.subId && co.status==="Approved" && !co.agreementFile).forEach(co=>{
+      const sub = MOCK_SUBS.find(s=>s.id===co.subId);
+      const since = co.approved ? daysSince(co.approved) : 0;
+      items.push({
+        sev: since>=5?"u":"p", kind:"agreement", pid:p.id, pm,
+        title:`Upload signed addendum — ${sub?sub.name:co.subId} · ${coNum(co)}`,
+        meta: `${p.property} · ${p.id} · approved ${since}d ago`,
+        cta:"Open Subs",
+        action:`openProjectDrawer('${esc(p.id)}','subs')`,
+        tab:"subs"
       });
     });
     // COI expired / missing for an assigned sub
@@ -3538,12 +3830,15 @@ function setPmView(v){
 function projectBadges(p){
   const out = [];
   const stage = derivedStage(p);
-  // Agreement
+  // Agreement — base assignments + any approved CO whose addendum isn't on file yet
   const asgs = MOCK_PROJECT_SUBS[p.id]||[];
-  const overdueAgr = asgs.filter(a=>a.agreementStatus==="sent" && a.assignedDaysAgo>=5);
-  const warnAgr   = asgs.filter(a=>a.agreementStatus==="sent" && a.assignedDaysAgo>=3 && a.assignedDaysAgo<5);
-  if(overdueAgr.length)   out.push({tone:"u", label:`Agreement · ${overdueAgr.length}`, tab:"subs", title:`${overdueAgr.length} unsigned ≥5d`});
-  else if(warnAgr.length) out.push({tone:"p", label:`Agreement · ${warnAgr.length}`, tab:"subs", title:`${warnAgr.length} unsigned ≥3d`});
+  const openCO = (p.cos||[]).filter(co=>!co.del && co.subId && co.status==="Approved" && !co.agreementFile);
+  const openCOold = openCO.filter(co=> (co.approved ? daysSince(co.approved) : 0) >= 5);
+  const openCOmid = openCO.filter(co=> { const d = co.approved?daysSince(co.approved):0; return d>=3 && d<5; });
+  const overdueAgr = asgs.filter(a=>a.agreementStatus==="sent" && a.assignedDaysAgo>=5).length + openCOold.length;
+  const warnAgr    = asgs.filter(a=>a.agreementStatus==="sent" && a.assignedDaysAgo>=3 && a.assignedDaysAgo<5).length + openCOmid.length;
+  if(overdueAgr)   out.push({tone:"u", label:`Agreement · ${overdueAgr}`, tab:"subs", title:`${overdueAgr} unsigned ≥5d (incl. CO addendums)`});
+  else if(warnAgr) out.push({tone:"p", label:`Agreement · ${warnAgr}`, tab:"subs", title:`${warnAgr} unsigned ≥3d`});
   // COI
   const badCoi = asgs.filter(a=>{ const s=MOCK_SUBS.find(x=>x.id===a.subId); return s && (s.coi.status==="expired"||s.coi.status==="missing"); });
   if(badCoi.length) out.push({tone:"u", label:`COI`, tab:"subs", title:`${badCoi.length} COI issue${badCoi.length===1?"":"s"}`});
@@ -3734,6 +4029,7 @@ function setPdTab(k){ pdTab = k; renderProjectDrawer(); byId("pdBody").scrollTop
 const PD_TABS = [
   ["overview",   "Overview"],
   ["scope",      "Scope & Buildings"],
+  ["schedule",   "Schedule"],
   ["subs",       "Subs & Agreements"],
   ["costing",    "Costing"],
   ["cos",        "Change Orders"],
@@ -3778,6 +4074,7 @@ function renderProjectDrawer(){
   const body = byId("pdBody");
   if(pdTab==="overview")         body.innerHTML = pdOverview(p, l, c, stage);
   else if(pdTab==="scope")       body.innerHTML = pdScope(p);
+  else if(pdTab==="schedule")    body.innerHTML = scheduleTab(p, /*compact*/true);
   else if(pdTab==="subs")        body.innerHTML = pdSubs(p);
   else if(pdTab==="costing")     body.innerHTML = pdCosting(p);
   else if(pdTab==="cos")         body.innerHTML = pdCos(p);
@@ -3861,38 +4158,77 @@ function markTradeStatus(pid, tid, status){
 }
 
 /* ---------- Tab: Subs & Agreements ---------- */
+let subsGroupBy = "trade";                        // "trade" or "building"
+function setSubsGroup(k){ subsGroupBy = k; renderProjectDrawer(); }
+
+/* Pull together the rows that show on this tab:
+   base assignments (MOCK_PROJECT_SUBS) + one row per change order
+   that has a subcontractor picked, so a CO addendum lives next to the
+   original agreement in the same group. */
+function subsRowsFor(p){
+  const base = (MOCK_PROJECT_SUBS[p.id]||[]).map(a=>({ kind:"base", ...a, agreementFile: a.agreementFile || null, scope: a.scope || "" }));
+  const coRows = (p.cos||[]).filter(co=>!co.del && co.subId).map(co=>{
+    const sub = MOCK_SUBS.find(s=>s.id===co.subId); if(!sub) return null;
+    const since = co.approved ? daysSince(co.approved) : (co.created ? daysSince(co.created) : 0);
+    return {
+      kind: "co",
+      id: "co_"+co.uid,
+      subId: co.subId,
+      bldg: co.building || "—",
+      trade: co.trade || sub.trade,
+      scope: co.title || "",
+      coUid: co.uid,
+      coNum: coNum(co),
+      coStatus: co.status,
+      coSell: num(co.sell),
+      coCost: coCostTotal(co),
+      agreementStatus: co.agreementStatus || (co.agreementFile ? "signed" : "pending"),
+      agreementFile: co.agreementFile || null,
+      assignedDaysAgo: since
+    };
+  }).filter(Boolean);
+  return base.concat(coRows);
+}
+
 function pdSubs(p){
-  const asgs = MOCK_PROJECT_SUBS[p.id]||[];
+  const rows = subsRowsFor(p);
   const addable = MOCK_SUBS.map(s=>`<option value="${s.id}">${esc(s.name)} · ${esc(s.trade)}</option>`).join("");
-  const rows = asgs.map(a=>{
-    const sub = MOCK_SUBS.find(s=>s.id===a.subId);
-    if(!sub) return "";
-    const coiCls = sub.coi.status==="valid"?"ok":sub.coi.status==="expired"?"err":"err";
-    const coiLab = sub.coi.status==="valid"?`COI valid to ${fmtDate(sub.coi.until)}`:sub.coi.status==="expired"?`COI expired ${fmtDate(sub.coi.until)}`:"COI missing";
-    const agrCls = a.agreementStatus==="signed"?"ok":(a.assignedDaysAgo>=5?"err":"warn");
-    const agrLab = a.agreementStatus==="signed"?"Agreement signed":`Agreement sent · ${a.assignedDaysAgo}d`;
-    const w9 = sub.w9?`<span class="chip-tag ok">W-9</span>`:`<span class="chip-tag err">W-9 missing</span>`;
-    return `<div class="sub-row">
-      <span class="avatar">${esc(sub.name.split(/\s+/).slice(0,2).map(x=>x[0]).join(""))}</span>
-      <div class="info">
-        <div class="n">${esc(sub.name)} <span class="hint" style="font-weight:400">· ${esc(a.bldg)} · ${esc(a.trade)}</span></div>
-        <div class="m">
-          <span class="chip-tag ${agrCls}">${esc(agrLab)}</span>
-          <span class="chip-tag ${coiCls}">${esc(coiLab)}</span>
-          ${w9}
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
-        ${a.agreementStatus==="sent"?`<button class="btn sm primary" onclick="sendAgreementReminder('${esc(p.id)}','${esc(a.id)}')">Send reminder</button>`:""}
-        ${a.agreementStatus==="pending"?`<button class="btn sm primary" onclick="sendAgreement('${esc(p.id)}','${esc(a.id)}')">Send agreement</button>`:""}
-        ${sub.coi.status!=="valid"?`<button class="btn sm" onclick="requestCoi('${esc(sub.id)}')">Request COI</button>`:""}
-      </div>
-    </div>`;
-  }).join("");
+
+  // Approved CO roll-up — same math calcProject does, surfaced here so it's obvious
+  // the change orders are flowing into contract + budget.
+  const apprCO = (p.cos||[]).filter(c=>!c.del && c.status==="Approved");
+  const coSellTot = apprCO.reduce((s,c)=>s+num(c.sell),0);
+  const coCostTot = apprCO.reduce((s,c)=>s+coCostTotal(c),0);
+  const pendCO = (p.cos||[]).filter(c=>!c.del && (c.status==="Draft"||c.status==="Submitted")).length;
+
+  // Build groups
+  const groups = {};
+  const keyOf = r => subsGroupBy==="building" ? (r.bldg||"—") : (r.trade||"—");
+  rows.forEach(r=>{ const k = keyOf(r); (groups[k] = groups[k]||[]).push(r); });
+  const sortedKeys = Object.keys(groups).sort((a,b)=>a.localeCompare(b));
+
+  const impactLine = (apprCO.length||pendCO) ? `
+    <div class="co-impact">
+      <span>Change orders rolled in:</span>
+      <span><b>${apprCO.length}</b> approved · <b>+${money(coSellTot)}</b> to contract · <b>+${money(coCostTot)}</b> to budget</span>
+      ${pendCO ? `<span class="chip-tag warn">${pendCO} pending</span>` : ""}
+    </div>` : "";
+
   return `
     <div class="pd-section">
-      <h4>Assigned subcontractors</h4>
-      ${asgs.length ? rows : `<p class="hint">No subs assigned yet. Add one below.</p>`}
+      <div class="subs-toolbar">
+        <span class="pmbarlab">Group by</span>
+        <div class="seg2" role="tablist">
+          <button role="tab" aria-pressed="${subsGroupBy==='trade'}"    onclick="setSubsGroup('trade')">Trade</button>
+          <button role="tab" aria-pressed="${subsGroupBy==='building'}" onclick="setSubsGroup('building')">Building</button>
+        </div>
+        <div class="spacer"></div>
+        <span class="hint">${rows.length} assignment${rows.length===1?"":"s"}</span>
+      </div>
+      ${impactLine}
+      ${rows.length
+        ? sortedKeys.map(k=>renderSubGroup(p, k, groups[k])).join("")
+        : `<p class="hint">No subs assigned yet. Add one below.</p>`}
     </div>
     <div class="pd-section">
       <h4>Assign a sub</h4>
@@ -3900,12 +4236,172 @@ function pdSubs(p){
         <select id="subPick" style="flex:1;min-width:160px;padding:7px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px">
           <option value="">Pick a sub…</option>${addable}
         </select>
-        <input id="subBldg" placeholder="Building (e.g. Building 1)" style="flex:1;min-width:140px;padding:7px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px">
+        <input id="subBldg"  placeholder="Building (e.g. Building 1)" style="flex:1;min-width:130px;padding:7px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px">
+        <input id="subScope" placeholder="Scope (e.g. Reroof A-wing, 45 sq)" style="flex:2;min-width:180px;padding:7px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px">
         <button class="btn primary" onclick="assignSub('${esc(p.id)}')">Assign</button>
       </div>
-      <p class="hint" style="margin-top:8px">Picks from the approved sub database. New subs get added through the Subcontractor Documentation module (coming).</p>
+      <p class="hint" style="margin-top:8px">Picks from the approved sub database. New subs get added through the Subcontractor Documentation module (coming). To add work on an existing sub as extras, raise a <b>Change order</b> and pick the sub there — it will appear here as an addendum row.</p>
     </div>`;
 }
+
+function renderSubGroup(p, groupName, rows){
+  // Sort: base first, then COs; signed → sent → pending → signed-CO
+  rows.sort((a,b)=>{
+    if(a.kind!==b.kind) return a.kind==="base" ? -1 : 1;
+    const rank = s => ({pending:0, sent:1, signed:2}[s] ?? 3);
+    return rank(a.agreementStatus) - rank(b.agreementStatus);
+  });
+  const signedN = rows.filter(r=>r.agreementStatus==="signed").length;
+  return `<div class="pd-section" style="margin-top:14px">
+    <div class="sub-group-head">
+      <h4>${esc(groupName)}</h4>
+      <span class="ct">${signedN}/${rows.length} signed</span>
+    </div>
+    ${rows.map(r=>subRowHtml(p, r)).join("")}
+  </div>`;
+}
+
+function subRowHtml(p, r){
+  const sub = MOCK_SUBS.find(s=>s.id===r.subId); if(!sub) return "";
+  const isCO = r.kind==="co";
+  const agrSigned = r.agreementStatus==="signed";
+  const agrOverdue = r.agreementStatus==="sent" && r.assignedDaysAgo>=5;
+  const agrCls = agrSigned?"ok":(r.agreementStatus==="sent"?(agrOverdue?"err":"warn"):"gray");
+  const agrLab = agrSigned ? "Agreement signed"
+               : r.agreementStatus==="sent" ? `Agreement sent · ${r.assignedDaysAgo}d`
+               : (isCO ? "Addendum not yet signed" : "No agreement yet");
+  const coiCls = sub.coi.status==="valid"?"ok":"err";
+  const coiLab = sub.coi.status==="valid" ? `COI valid to ${fmtDate(sub.coi.until)}`
+               : sub.coi.status==="expired" ? `COI expired ${fmtDate(sub.coi.until)}` : "COI missing";
+  const w9 = sub.w9 ? `<span class="chip-tag ok">W-9</span>` : `<span class="chip-tag err">W-9 missing</span>`;
+  const metaLine = subsGroupBy==="trade" ? `· ${esc(r.bldg||"—")}` : `· ${esc(r.trade||"—")}`;
+  const kindTag = isCO
+    ? `<span class="chip-tag co" title="Change order addendum">${esc(r.coNum)}${r.coStatus && r.coStatus!=="Approved"?` · ${esc(r.coStatus)}`:""}</span>`
+    : "";
+  const scopeLine = (() => {
+    if(isCO){
+      const money1 = r.coSell ? ` · ${money(r.coSell)}` : "";
+      const money2 = (r.coCost && canCost()) ? ` <span class="hint">(cost ${money(r.coCost)})</span>` : "";
+      return `${esc(r.scope||"")}${money1}${money2}`;
+    }
+    return r.scope ? esc(r.scope) : "";
+  })();
+  const agrFile = r.agreementFile
+    ? `<a class="file-chip" href="${esc(r.agreementFile.url)}" target="_blank" rel="noopener" title="Open signed agreement">${esc(r.agreementFile.name)}</a>`
+    : `<span class="hint">no file yet</span>`;
+  const coiFile = sub.coi.file
+    ? `<a class="file-chip" href="${esc(sub.coi.file.url)}" target="_blank" rel="noopener" title="Open COI">${esc(sub.coi.file.name)}</a>`
+    : `<span class="hint">no file</span>`;
+
+  // Row action buttons
+  const parts = [];
+  if(r.agreementFile){
+    parts.push(`<button class="btn sm" onclick="viewFile('${esc(r.agreementFile.url)}')">View</button>`);
+  }
+  parts.push(`<label class="btn sm uplbtn">${r.agreementFile?"Replace":"Upload"}<input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="uploadAgreementFile('${esc(p.id)}','${esc(r.id)}','${esc(r.kind)}',this)"></label>`);
+  if(!isCO && r.agreementStatus==="pending" && !r.agreementFile){
+    parts.push(`<button class="btn sm primary" onclick="sendAgreement('${esc(p.id)}','${esc(r.id)}')">Send</button>`);
+  }
+  if(!isCO && r.agreementStatus==="sent" && !r.agreementFile){
+    parts.push(`<button class="btn sm" onclick="sendAgreementReminder('${esc(p.id)}','${esc(r.id)}')">Remind</button>`);
+  }
+  if(sub.coi.status!=="valid"){
+    parts.push(`<label class="btn sm uplbtn">Upload COI<input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="uploadCoiFile('${esc(sub.id)}','${esc(p.id)}',this)"></label>`);
+  }
+
+  return `<div class="sub-row ${isCO?"co":""}">
+    <span class="avatar">${esc(sub.name.split(/\s+/).slice(0,2).map(x=>x[0]).join(""))}</span>
+    <div class="info">
+      <div class="n">${esc(sub.name)} ${kindTag} <span class="hint" style="font-weight:400">${metaLine}</span></div>
+      ${scopeLine?`<div class="scope-line">${scopeLine}</div>`:""}
+      <div class="m">
+        <span class="chip-tag ${agrCls}">${esc(agrLab)}</span>
+        <span class="chip-tag ${coiCls}">${esc(coiLab)}</span>
+        ${w9}
+      </div>
+      <div class="sub-files">
+        <span class="file-lab">Agreement</span>${agrFile}
+        <span class="file-lab">COI</span>${coiFile}
+      </div>
+    </div>
+    <div class="sub-row-actions">
+      ${parts.join("")}
+    </div>
+  </div>`;
+}
+
+/* ---------- Upload helpers ---------- */
+function viewFile(url){ if(url) window.open(url, "_blank", "noopener"); }
+
+/* Make a safe folder name for a sub inside the project's Subcontractors/ dir. */
+function subFolderName(sub){ return (sub && sub.name ? sub.name : "Unknown").replace(/[^\w .\-]+/g, "_"); }
+
+async function uploadAgreementFile(pid, rowId, kind, inp){
+  const f = inp.files && inp.files[0]; try{ inp.value = ""; } catch(_){}
+  if(!f) return;
+  const p = getProj(pid); if(!p){ toast("Project not found"); return; }
+  try{
+    // Who is this row attached to?
+    let subId = null, label = "Agreement";
+    if(kind === "co"){
+      const uidV = rowId.replace(/^co_/,"");
+      const co = (p.cos||[]).find(x=>x.uid===uidV);
+      if(!co){ toast("Change order not found"); return; }
+      subId = co.subId; label = coNum(co);
+    }else{
+      const asg = (MOCK_PROJECT_SUBS[pid]||[]).find(a=>a.id===rowId);
+      if(!asg){ toast("Assignment not found"); return; }
+      subId = asg.subId;
+    }
+    const sub = MOCK_SUBS.find(s=>s.id===subId);
+
+    // Produce {name,url} either from SharePoint or an in-browser blob url
+    let info;
+    if(localMode()){
+      info = { name: f.name, url: URL.createObjectURL(f), uploaded: nowISO(), by: ME?ME.id:"preview" };
+    }else{
+      if(f.size > 10*1024*1024) throw new Error("Agreement file must be under 10 MB");
+      const dir  = projPath(pid) + "/Subcontractors/" + subFolderName(sub);
+      const name = `${label}-${todayStr()}-${f.name}`;
+      const m = await spUploadFile(dir, name, f);
+      info = { name: m.name, url: m.webUrl, uploaded: nowISO(), by: ME.id };
+    }
+
+    if(kind === "co"){
+      const uidV = rowId.replace(/^co_/,"");
+      await mutateProject(pid, q=>{
+        const c = (q.cos||[]).find(x=>x.uid===uidV); if(!c) return;
+        c.agreementFile = info; c.agreementStatus = "signed"; c.upd = nowISO();
+      });
+    }else{
+      const asg = (MOCK_PROJECT_SUBS[pid]||[]).find(a=>a.id===rowId);
+      if(asg){ asg.agreementFile = info; asg.agreementStatus = "signed"; }
+    }
+    toast("Agreement uploaded"); renderProjectDrawer(); renderActionInbox();
+  }catch(e){ fail(e); }
+}
+
+async function uploadCoiFile(subId, pid, inp){
+  const f = inp.files && inp.files[0]; try{ inp.value = ""; }catch(_){}
+  if(!f) return;
+  const sub = MOCK_SUBS.find(s=>s.id===subId); if(!sub){ toast("Sub not found"); return; }
+  try{
+    let info;
+    if(localMode()){
+      info = { name: f.name, url: URL.createObjectURL(f), uploaded: nowISO(), by: ME?ME.id:"preview" };
+    }else{
+      if(f.size > 10*1024*1024) throw new Error("COI file must be under 10 MB");
+      const dir  = projPath(pid) + "/Subcontractors/" + subFolderName(sub);
+      const name = `COI-${todayStr()}-${f.name}`;
+      const m = await spUploadFile(dir, name, f);
+      info = { name: m.name, url: m.webUrl, uploaded: nowISO(), by: ME.id };
+    }
+    const d = new Date(); d.setFullYear(d.getFullYear()+1);
+    sub.coi = { status:"valid", until: d.toISOString().slice(0,10), file: info };
+    toast("COI uploaded"); renderProjectDrawer(); renderActionInbox();
+  }catch(e){ fail(e); }
+}
+
 function sendAgreement(pid, aid){
   const asgs = MOCK_PROJECT_SUBS[pid]||[];
   const a = asgs.find(x=>x.id===aid); if(!a) return;
@@ -3922,11 +4418,13 @@ function requestCoi(subId){
   toast(`COI request sent to ${s.name}`);
 }
 function assignSub(pid){
-  const sel = byId("subPick"), bldg = byId("subBldg");
+  const sel = byId("subPick"), bldg = byId("subBldg"), scope = byId("subScope");
   if(!sel.value){ toast("Pick a sub first"); return; }
   const sub = MOCK_SUBS.find(s=>s.id===sel.value);
   const list = MOCK_PROJECT_SUBS[pid] = MOCK_PROJECT_SUBS[pid]||[];
-  list.push({ subId:sub.id, bldg: bldg.value||"Primary", trade:sub.trade,
+  list.push({ subId:sub.id, bldg: (bldg&&bldg.value)||"Primary", trade:sub.trade,
+              scope: scope ? scope.value.trim() : "",
+              agreementFile: null,
               assignedDaysAgo:0, agreementStatus:"pending",
               id:`${pid}-${sub.id}-${Date.now().toString(36)}` });
   toast(`${sub.name} assigned`);
@@ -3943,6 +4441,923 @@ function pdCosting(p){
   </div>`;
 }
 
+/* ============================================================
+   SCHEDULE / GANTT MODULE
+   ------------------------------------------------------------
+   Per-project tree of tasks. Each task has start/end dates,
+   % complete, owner, trade/building, dependencies on other
+   tasks, and can have children for arbitrary depth. Rendering
+   is a left-side editable tree + a right-side SVG Gantt with
+   CPM-based critical path highlighting.
+   ============================================================ */
+
+/* Module-level state (one project edited at a time) */
+let schedView   = "weeks";      // "days" | "weeks" | "months"
+let schedGroup  = "building";   // "none" | "trade" | "building" — swimlane mode on the Gantt
+let schedSel    = null;         // currently selected task uid
+let schedCollapsed = {};        // pid -> {taskId:true}
+
+/* --- Workday helpers (skip Sat/Sun) --- */
+function isWeekend(iso){ const d = new Date(iso + "T00:00"); return d.getDay()===0 || d.getDay()===6; }
+function nextWorkday(iso){ let x = iso; while(isWeekend(x)) x = schedAddDays(x, 1); return x; }
+function addWorkdays(iso, n){
+  let x = nextWorkday(iso);
+  let left = n;
+  while(left > 0){ x = schedAddDays(x, 1); if(!isWeekend(x)) left--; }
+  return x;
+}
+
+function schedDays(a,b){ return Math.round((new Date(b) - new Date(a))/86400000); }
+function schedToDate(s){ return s ? new Date(s + (s.length===10?"T00:00":"")) : null; }
+function schedISO(d){ return new Date(d).toISOString().slice(0,10); }
+function schedAddDays(iso, n){ const d = new Date(iso + "T00:00"); d.setDate(d.getDate()+n); return schedISO(d); }
+
+/* Last-ditch repair for anything that slipped past safeProjectShape.
+   Returns a count of repairs made so the UI can show a notice. */
+function ensureSchedule(p){
+  let repairs = 0;
+  if(!p.schedule || typeof p.schedule !== "object" || Array.isArray(p.schedule)){
+    p.schedule = { tasks: [] }; repairs++;
+  }
+  if(!Array.isArray(p.schedule.tasks)){ p.schedule.tasks = []; repairs++; }
+  const seen = new Set();
+  p.schedule.tasks = p.schedule.tasks.filter(t=>{
+    if(!t || typeof t !== "object"){ repairs++; return false; }
+    if(!t.uid){ t.uid = "t_"+uid(); repairs++; }
+    if(seen.has(t.uid)){ repairs++; return false; }
+    seen.add(t.uid);
+    if(!Array.isArray(t.deps)){ t.deps = []; repairs++; }
+    if(!("ord" in t)){ t.ord = 0; repairs++; }
+    if(typeof t.name !== "string"){ t.name = String(t.name||""); repairs++; }
+    if(!(Number.isFinite(+t.pct))){ t.pct = 0; repairs++; }
+    if(t.start && !validIsoDate(t.start)){ t.start = ""; repairs++; }
+    if(t.end   && !validIsoDate(t.end  )){ t.end   = ""; repairs++; }
+    return true;
+  });
+  const uids = new Set(p.schedule.tasks.map(t=>t.uid));
+  p.schedule.tasks.forEach(t=>{
+    if(t.parentId && !uids.has(t.parentId)){ t.parentId = null; repairs++; }
+    const kept = t.deps.filter(d=>uids.has(d) && d!==t.uid);
+    if(kept.length !== t.deps.length){ t.deps = kept; repairs++; }
+  });
+  p.schedule._repairs = (p.schedule._repairs||0) + repairs;
+  return repairs;
+}
+
+/* Flatten the task list in display (tree) order. */
+function schedFlatten(p){
+  ensureSchedule(p);
+  const all = p.schedule.tasks.slice().sort((a,b)=>(a.ord||0)-(b.ord||0));
+  const byParent = {};
+  all.forEach(t=>{ (byParent[t.parentId||""] = byParent[t.parentId||""] || []).push(t); });
+  const out = [];
+  function walk(pid, depth){
+    (byParent[pid]||[]).forEach(t=>{
+      out.push({ t, depth });
+      walk(t.uid, depth+1);
+    });
+  }
+  walk("", 0);
+  return out;
+}
+
+/* ---- Critical Path (CPM) over leaves ----
+   For each LEAF task, compute dur = max(1, end-start). ES = given
+   start; EF = ES + dur. If a task has deps and no start, pin ES to
+   max(EF of predecessors). Project end = max(EF). Then backward
+   pass: terminals get LF = projectEnd. Others: LF = min(LS of
+   successors). LS = LF - dur. Slack = LS - ES. Critical when
+   slack === 0.
+*/
+function schedCPM(p){
+  ensureSchedule(p);
+  const tasks = p.schedule.tasks;
+  const byUid = Object.fromEntries(tasks.map(t=>[t.uid, t]));
+  const isParent = {}; tasks.forEach(t=>{ if(t.parentId) isParent[t.parentId] = true; });
+  const leaves = tasks.filter(t=> !isParent[t.uid]);
+
+  // Build predecessor map (deps) and successor map
+  const preds = {}, succs = {};
+  leaves.forEach(l=>{
+    preds[l.uid] = (l.deps||[]).filter(d=>byUid[d] && !isParent[d]);
+    preds[l.uid].forEach(d=>{ (succs[d] = succs[d]||[]).push(l.uid); });
+    if(!succs[l.uid]) succs[l.uid] = [];
+  });
+
+  // Durations
+  const dur = {};
+  leaves.forEach(l=>{
+    if(l.milestone){ dur[l.uid] = 0; return; }
+    if(l.start && l.end){ dur[l.uid] = Math.max(1, schedDays(l.start, l.end) + 1); return; }
+    dur[l.uid] = 1;
+  });
+
+  // Topological sort by preds
+  const indeg = Object.fromEntries(leaves.map(l=>[l.uid, (preds[l.uid]||[]).length]));
+  const queue = leaves.filter(l=>indeg[l.uid]===0).map(l=>l.uid);
+  const topo = [];
+  while(queue.length){
+    const n = queue.shift(); topo.push(n);
+    (succs[n]||[]).forEach(m=>{ if(--indeg[m]===0) queue.push(m); });
+  }
+  // Cycle fallback — if we didn't visit all, append missing ones (CPM is best-effort)
+  leaves.forEach(l=>{ if(!topo.includes(l.uid)) topo.push(l.uid); });
+
+  // Forward pass — work in whole days (ES/EF as integer day numbers from a reference)
+  const refIso = tasks.map(t=>t.start).filter(Boolean).concat(tasks.map(t=>t.end).filter(Boolean)).sort()[0] || schedISO(new Date());
+  const asDay = iso => iso ? schedDays(refIso, iso) : null;
+  const toIso = d => schedAddDays(refIso, d);
+  const es={}, ef={};
+  topo.forEach(uid=>{
+    const t = byUid[uid];
+    let myES = null;
+    if(preds[uid].length){
+      myES = Math.max(...preds[uid].map(d=> ef[d] ?? 0));
+      // if user set a start, respect the later of the two
+      if(t.start){ myES = Math.max(myES, asDay(t.start)); }
+    } else {
+      myES = t.start ? asDay(t.start) : 0;
+    }
+    es[uid] = myES;
+    ef[uid] = myES + dur[uid];
+  });
+
+  const projectEnd = Math.max(0, ...Object.values(ef));
+
+  // Backward pass
+  const ls={}, lf={};
+  for(let i=topo.length-1;i>=0;i--){
+    const u = topo[i];
+    const outs = succs[u]||[];
+    let myLF;
+    if(outs.length){
+      myLF = Math.min(...outs.map(s=> ls[s] ?? projectEnd));
+    } else {
+      myLF = projectEnd;
+    }
+    lf[u] = myLF;
+    ls[u] = myLF - dur[u];
+  }
+
+  // Slack + critical. Pick ONE longest-path chain from end back to a 0-ES root for the critical bar styling,
+  // but we also flag any task with slack==0 as critical.
+  const slack = {}, critical = {};
+  leaves.forEach(l=>{
+    const s = (ls[l.uid]||0) - (es[l.uid]||0);
+    slack[l.uid] = s;
+    critical[l.uid] = s <= 0;
+  });
+
+  return { leaves, byUid, es, ef, ls, lf, slack, critical, projectEnd, refIso, toIso, dur, succs, preds };
+}
+
+/* ---- Rendering ---- */
+function scheduleTab(p, compact){
+  const repairs = ensureSchedule(p);
+  let cpm, flat, cpmError = null;
+  try{ cpm = schedCPM(p); flat = schedFlatten(p); }
+  catch(e){
+    console.error("Schedule render failed, falling back to empty:", e);
+    p.schedule = { tasks: [] };
+    cpm = schedCPM(p); flat = []; cpmError = e && e.message ? e.message : String(e);
+  }
+  const critN = Object.values(cpm.critical).filter(Boolean).length;
+  const totalN = cpm.leaves.length;
+  const projDays = cpm.projectEnd;
+
+  const warn =
+    (cpmError
+      ? `<div class="co-impact" style="background:var(--urgent-bg);color:var(--urgent)">
+           Could not read this project's schedule (${esc(cpmError)}). Started a fresh one so you can rebuild it. The old data is still in <code>project.json</code> on SharePoint.
+         </div>`
+      : (repairs
+        ? `<div class="co-impact" style="background:var(--progress-bg);color:var(--progress)">
+             Fixed ${repairs} issue${repairs===1?"":"s"} in this project's schedule on load (bad dates, missing fields, dangling links). Your next edit will save the cleaned-up version.
+           </div>`
+        : "")
+    );
+
+  const toolbar = `
+    <div class="sched-toolbar">
+      <span class="pmbarlab" style="font-size:12px;color:var(--muted);font-weight:600">Zoom</span>
+      <div class="seg2" role="tablist">
+        <button role="tab" aria-pressed="${schedView==='days'}"   onclick="setSchedView('days')">Days</button>
+        <button role="tab" aria-pressed="${schedView==='weeks'}"  onclick="setSchedView('weeks')">Weeks</button>
+        <button role="tab" aria-pressed="${schedView==='months'}" onclick="setSchedView('months')">Months</button>
+      </div>
+      <span class="pmbarlab" style="font-size:12px;color:var(--muted);font-weight:600;margin-left:4px">Group by</span>
+      <div class="seg2" role="tablist">
+        <button role="tab" aria-pressed="${schedGroup==='none'}"     onclick="setSchedGroup('none')">None</button>
+        <button role="tab" aria-pressed="${schedGroup==='trade'}"    onclick="setSchedGroup('trade')">Trade</button>
+        <button role="tab" aria-pressed="${schedGroup==='building'}" onclick="setSchedGroup('building')">Building</button>
+      </div>
+      ${compact ? "" : `
+      <div class="spacer"></div>
+      <button class="btn sm" title="Cascade all dates from a chosen start, respecting dependencies and skipping weekends" onclick="schedAutoSchedule('${esc(p.id)}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12l6 6L20 6"/></svg>
+        Auto-schedule
+      </button>
+      <button class="btn sm" title="Shift every task forward 7 days" onclick="schedShift('${esc(p.id)}',7)">+1 wk</button>
+      <button class="btn sm" title="Shift every task back 7 days" onclick="schedShift('${esc(p.id)}',-7)">−1 wk</button>
+      <button class="btn sm" title="Make each sibling depend on the one before it" onclick="schedChainAll('${esc(p.id)}')">Chain siblings</button>
+      `}
+      <div class="sched-stats" style="margin-left:auto">
+        <span><b>${totalN}</b> leaf task${totalN===1?"":"s"}</span>
+        ${critN?`<span class="crit">${critN} on critical path</span>`:""}
+        <span>${projDays?`<b>${projDays}</b> day span`:""}</span>
+        ${compact?`<button class="btn sm" onclick="openProject('${esc(p.id)}');closeProjectDrawer()">Full editor →</button>`:""}
+      </div>
+    </div>
+    ${warn}`;
+
+  if(compact){
+    // Drawer: read-only Gantt only
+    return `<div class="pd-section">
+      ${toolbar}
+      ${flat.length ? ganttSvg(p, cpm, flat, /*mini*/true) :
+        `<p class="hint">No tasks yet. Open the full editor to build or auto-generate the schedule.</p>`}
+    </div>`;
+  }
+
+  // Empty-state hero — the big call to action for lazy managers
+  if(!flat.length){
+    const trades = inferTradesFromProject(p);
+    return `
+      ${toolbar}
+      <div class="sched-hero">
+        <div class="sched-hero-top">
+          <div class="sched-hero-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h3M14 14h3M8 18h3M14 18h3"/></svg>
+          </div>
+          <div>
+            <h3 style="margin:0 0 4px">Let the program build this schedule for you</h3>
+            <p class="sub" style="margin:0">Based on what's on this project (${esc(trades.slice(0,6).join(", "))}${trades.length>6?", …":""}), it will lay out tasks per building, string together the dependencies, and lay out dates on workdays only.</p>
+          </div>
+        </div>
+        <div class="sched-hero-actions">
+          <button class="btn primary" onclick="schedGenerateFromScope('${esc(p.id)}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 14.6 7.1 17.2 8 11.7 4 7.8 9.5 7z"/></svg>
+            Generate from scope
+          </button>
+          <button class="btn" onclick="schedAdd('${esc(p.id)}',null)">Start from scratch</button>
+        </div>
+        <div class="sched-hero-steps">
+          <div><b>1.</b> Click <b>Generate from scope</b>.</div>
+          <div><b>2.</b> Tweak the dates on the few things that matter.</div>
+          <div><b>3.</b> Hit <b>Auto-schedule</b> any time deps change — the rest cascades.</div>
+        </div>
+      </div>`;
+  }
+
+  // Full page: editor + Gantt
+  const sel = schedSel && (p.schedule.tasks.find(t=>t.uid===schedSel) ? schedSel : null);
+  return `
+    ${toolbar}
+    <div class="sched-wrap">
+      <div>
+        ${schedTreeHtml(p, flat, cpm, sel)}
+        ${sel ? schedEditorHtml(p, p.schedule.tasks.find(t=>t.uid===sel), cpm) : ""}
+      </div>
+      <div class="gantt-scroll">
+        ${ganttSvg(p, cpm, flat, /*mini*/false)}
+        <div class="legend">
+          <span><span class="sw b"></span>Task</span>
+          <span><span class="sw c"></span>Critical</span>
+          <span><span class="sw d"></span>Parent summary</span>
+          <span><span class="sw m"></span>Milestone</span>
+          <span style="margin-left:auto">Dashed vertical = today</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function schedTreeHtml(p, flat, cpm, selUid){
+  const rows = flat.map(({t,depth})=>{
+    const crit = cpm.critical[t.uid];
+    const isParent = flat.some(x=>x.t.parentId===t.uid);
+    const indent = 10 + depth*14;
+    const dur = (t.start && t.end) ? (schedDays(t.start, t.end)+1) : "";
+    return `<div class="sched-task ${selUid===t.uid?"sel":""} ${crit?"crit":""} ${t.milestone?"milestone":""}"
+                 onclick="schedSelect('${esc(t.uid)}')">
+      <div class="nm" style="padding-left:${indent}px">
+        <input class="inline-name" value="${esc(t.name||"")}"
+               onclick="event.stopPropagation()"
+               onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{name:this.value})"
+               onkeydown="if(event.key==='Enter'){this.blur()}">
+      </div>
+      <div class="dt">${esc(t.start||"—")}</div>
+      <div class="dt">${esc(t.end||"—")}</div>
+      <div class="dur">${dur||(t.milestone?"◆":"—")}</div>
+      <button class="add-child" title="Add subtask" onclick="event.stopPropagation();schedAdd('${esc(p.id)}','${esc(t.uid)}')">+</button>
+    </div>`;
+  }).join("");
+  return `<div class="sched-tree" style="margin-bottom:12px">
+    <div class="sched-tree-head">
+      <span style="flex:1">Task</span>
+      <span style="width:94px;text-align:right">Start</span>
+      <span style="width:94px;text-align:right">End</span>
+      <span style="width:46px;text-align:right">Days</span>
+      <span style="width:24px"></span>
+    </div>
+    <div class="sched-tree-body">
+      ${rows || `<div class="sched-empty">Add your first task below.</div>`}
+    </div>
+    <div class="sched-add">
+      <input id="newTaskName" placeholder="New top-level task name…" onkeydown="if(event.key==='Enter'){schedAdd('${esc(p.id)}',null)}">
+      <button class="btn primary" onclick="schedAdd('${esc(p.id)}',null)">Add</button>
+    </div>
+  </div>`;
+}
+
+function schedEditorHtml(p, t, cpm){
+  const depOpts = p.schedule.tasks
+    .filter(x=> x.uid !== t.uid && x.parentId !== t.uid)
+    .sort((a,b)=> (a.name||"").localeCompare(b.name||""))
+    .map(x=>`<option value="${esc(x.uid)}">${esc(x.name||"(untitled)")}</option>`).join("");
+  const dep = (t.deps||[]).map(d=>{
+    const dt = p.schedule.tasks.find(x=>x.uid===d);
+    return dt ? `<span class="dep">${esc(dt.name||"(?)")}<button title="Remove" onclick="schedRemoveDep('${esc(p.id)}','${esc(t.uid)}','${esc(d)}')">×</button></span>` : "";
+  }).join("");
+  const slack = cpm.slack[t.uid]!=null ? cpm.slack[t.uid] : null;
+  const crit  = cpm.critical[t.uid];
+  const parentOpts = `<option value="">(top-level)</option>` + p.schedule.tasks
+      .filter(x=> x.uid !== t.uid && x.parentId !== t.uid)
+      .sort((a,b)=>(a.name||"").localeCompare(b.name||""))
+      .map(x=>`<option value="${esc(x.uid)}" ${t.parentId===x.uid?"selected":""}>${esc(x.name||"(untitled)")}</option>`).join("");
+  const buildingOpts = (p._buildings||[]).map(b=>`<option value="${esc(b.name)}" ${t.building===b.name?"selected":""}>${esc(b.name)}</option>`).join("");
+
+  return `<div class="sched-edit">
+    <h4>Edit task <span class="hint" style="font-weight:400">${esc(t.name||"(untitled)")}</span>
+      ${crit?`<span class="chip-tag err" style="margin-left:6px">Critical</span>`:slack!=null?`<span class="chip-tag gray" style="margin-left:6px">${slack}d slack</span>`:""}
+    </h4>
+    <div class="fgrid-s">
+      <div style="grid-column:1/-1"><label>Name</label>
+        <input value="${esc(t.name||"")}" onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{name:this.value})"></div>
+      <div><label>Start date</label>
+        <input type="date" value="${esc(t.start||"")}" onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{start:this.value})"></div>
+      <div><label>End date</label>
+        <input type="date" value="${esc(t.end||"")}" onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{end:this.value})"></div>
+      <div><label>% complete</label>
+        <input type="number" min="0" max="100" value="${esc(String(t.pct||0))}" onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{pct:Math.max(0,Math.min(100,parseInt(this.value||'0',10)))})"></div>
+      <div><label>Owner / PM</label>
+        <input value="${esc(t.owner||"")}" placeholder="e.g. SR, Will" onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{owner:this.value})"></div>
+      <div><label>Trade</label>
+        <select onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{trade:this.value})"><option value="">—</option>${TRADES.map(x=>`<option ${t.trade===x?"selected":""}>${x}</option>`).join("")}</select></div>
+      <div><label>Building</label>
+        ${buildingOpts ? `<select onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{building:this.value})"><option value="">—</option>${buildingOpts}</select>` : `<input value="${esc(t.building||"")}" onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{building:this.value})">`}</div>
+      <div><label>Parent task</label>
+        <select onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{parentId:this.value||null})">${parentOpts}</select></div>
+      <div style="grid-column:1/-1"><label>Milestone (zero-duration marker)</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink);text-transform:none;font-weight:400">
+          <input type="checkbox" ${t.milestone?"checked":""} style="width:auto" onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{milestone:this.checked})">
+          Treat as milestone (shown as a diamond, no duration)
+        </label></div>
+      <div style="grid-column:1/-1"><label>Depends on (predecessors)</label>
+        <div class="depbox">${dep || `<span class="hint">No predecessors yet.</span>`}</div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <select id="depPick" style="flex:1"><option value="">Add a predecessor…</option>${depOpts}</select>
+          <button class="btn sm" onclick="schedAddDep('${esc(p.id)}','${esc(t.uid)}')">Add</button>
+        </div></div>
+      <div style="grid-column:1/-1"><label>Notes</label>
+        <textarea onchange="schedPatch('${esc(p.id)}','${esc(t.uid)}',{notes:this.value})">${esc(t.notes||"")}</textarea></div>
+    </div>
+    <div class="row-btns">
+      <button class="btn" onclick="schedAdd('${esc(p.id)}','${esc(t.uid)}')">+ Subtask</button>
+      <button class="btn" onclick="schedMove('${esc(p.id)}','${esc(t.uid)}','up')">↑ Up</button>
+      <button class="btn" onclick="schedMove('${esc(p.id)}','${esc(t.uid)}','down')">↓ Down</button>
+      <button class="btn danger" onclick="schedDel('${esc(p.id)}','${esc(t.uid)}')">Delete</button>
+    </div>
+  </div>`;
+}
+
+/* --- Gantt SVG ---
+   Supports swimlane grouping (schedGroup = "trade" | "building" | "none").
+   Bars are colored from TRADE_LIB and get an inner % completion fill, owner
+   avatar at the right end, and a title inside when the bar is wide enough.
+*/
+function ganttSvg(p, cpm, flat, mini){
+  // Pixel widths per unit
+  const unitPx = schedView==="days" ? 30 : schedView==="weeks" ? 13 : 4.5;
+  const rowH = mini ? 24 : 30;
+  const laneHdrH = 22;
+  const headerH = 46;
+  const leftW = mini ? 170 : 240;
+
+  // Decide swimlane rows. In "none" mode this is just one unnamed lane.
+  const laneKey = ({t,depth}) => {
+    if(schedGroup==="trade")    return t.trade || "—";
+    if(schedGroup==="building") return t.building || (t.parentId ? "—" : (t.name||"—"));
+    return "__all__";
+  };
+  const lanes = [];        // [{ name, rows:[{t,depth}] }]
+  const laneByKey = {};
+  flat.forEach(entry=>{
+    const k = laneKey(entry);
+    if(!laneByKey[k]){ const o = { key:k, name:(k==="__all__"?"":k), rows:[] }; laneByKey[k] = o; lanes.push(o); }
+    laneByKey[k].rows.push(entry);
+  });
+  if(schedGroup!=="none"){ lanes.sort((a,b)=> (a.name||"").localeCompare(b.name||"")); }
+  const showLanes = schedGroup!=="none";
+
+  // Compute date range: use any date on tasks + today, pad a bit on each side.
+  const dates = [];
+  flat.forEach(({t})=>{ if(t.start) dates.push(t.start); if(t.end) dates.push(t.end); });
+  const today = schedISO(new Date());
+  dates.push(today);
+  dates.sort();
+  let from = dates[0] || today;
+  let to   = dates[dates.length-1] || today;
+  from = schedAddDays(from, -2);
+  to   = schedAddDays(to,   +3);
+  const totalDays = Math.max(1, schedDays(from, to)+1);
+  const bodyW = totalDays * unitPx;
+  const svgW  = leftW + bodyW + 24;
+  // Height accounts for lane headers in swimlane modes
+  const svgH  = headerH + lanes.reduce((s,l)=> s + (showLanes?laneHdrH:0) + l.rows.length*rowH, 0) + 12;
+
+  // Parent uids
+  const isParent = {}; flat.forEach(({t})=>{ if(t.parentId) isParent[t.parentId]=true; });
+
+  // y position lookup — walks lanes in order, honoring lane headers if any.
+  const posByUid = {};
+  {
+    let y = headerH;
+    lanes.forEach(l=>{
+      if(showLanes) y += laneHdrH;
+      l.rows.forEach(entry=>{
+        posByUid[entry.t.uid] = y;
+        y += rowH;
+      });
+    });
+  }
+  const rowY = uidOrIdx => (typeof uidOrIdx==="string") ? posByUid[uidOrIdx] : flat[uidOrIdx] ? posByUid[flat[uidOrIdx].t.uid] : headerH;
+
+  // Weekend shading (full chart height below header)
+  const chartBodyH = svgH - headerH - 10;
+  let weekendRects = "";
+  for(let d=0; d<totalDays; d++){
+    const dt = new Date(from + "T00:00"); dt.setDate(dt.getDate()+d);
+    const dow = dt.getDay();
+    if(dow===0 || dow===6){
+      weekendRects += `<rect class="wkd" x="${leftW + d*unitPx}" y="${headerH}" width="${unitPx}" height="${chartBodyH}" />`;
+    }
+  }
+
+  // Header (months row + days/weeks row)
+  let header = "";
+  let dayTicks = "";
+  if(schedView==="days"){
+    for(let d=0; d<totalDays; d++){
+      const dt = new Date(from + "T00:00"); dt.setDate(dt.getDate()+d);
+      const x = leftW + d*unitPx + unitPx/2;
+      dayTicks += `<text class="lbl-x" x="${x}" y="${headerH-6}" text-anchor="middle">${dt.getDate()}</text>`;
+      if(dt.getDate()===1 || d===0){
+        dayTicks += `<text class="lbl-x-month" x="${leftW + d*unitPx + 4}" y="${headerH-22}">${dt.toLocaleString("en-US",{month:"short",year:"2-digit"})}</text>`;
+      }
+    }
+  } else if(schedView==="weeks"){
+    const dt = new Date(from + "T00:00");
+    for(let d=0; d<totalDays; d++){
+      const curDate = new Date(from + "T00:00"); curDate.setDate(curDate.getDate()+d);
+      if(curDate.getDay()===1 || d===0){
+        const x = leftW + d*unitPx;
+        dayTicks += `<text class="lbl-x" x="${x+4}" y="${headerH-6}">W${weekNo(curDate)}</text>`;
+        dayTicks += `<line class="grid" x1="${x}" y1="${headerH-18}" x2="${x}" y2="${headerH-10}" />`;
+      }
+      if(curDate.getDate()===1 || d===0){
+        dayTicks += `<text class="lbl-x-month" x="${leftW + d*unitPx + 4}" y="${headerH-24}">${curDate.toLocaleString("en-US",{month:"short",year:"numeric"})}</text>`;
+      }
+    }
+  } else {
+    for(let d=0; d<totalDays; d++){
+      const curDate = new Date(from + "T00:00"); curDate.setDate(curDate.getDate()+d);
+      if(curDate.getDate()===1 || d===0){
+        const x = leftW + d*unitPx;
+        dayTicks += `<text class="lbl-x-month" x="${x+4}" y="${headerH-10}">${curDate.toLocaleString("en-US",{month:"short",year:"2-digit"})}</text>`;
+        dayTicks += `<line class="grid" x1="${x}" y1="${headerH-24}" x2="${x}" y2="${headerH-6}" />`;
+      }
+    }
+  }
+
+  // Row backgrounds + y-axis labels (laid out via posByUid)
+  const dayX = iso => leftW + schedDays(from, iso) * unitPx;
+  const rowBg = flat.map(({t})=>{
+    const y = posByUid[t.uid];
+    return `<rect class="row" x="0" y="${y}" width="${svgW}" height="${rowH}" />`;
+  }).join("");
+  const rowSep = flat.map(({t})=>{
+    const y = posByUid[t.uid] + rowH;
+    return `<line class="lane-sep" x1="0" y1="${y}" x2="${svgW}" y2="${y}" />`;
+  }).join("");
+  // Lane headers
+  let laneHdrs = "";
+  if(showLanes){
+    let y = headerH;
+    lanes.forEach(l=>{
+      laneHdrs += `<rect class="lane-hdr-bg" x="0" y="${y}" width="${svgW}" height="${laneHdrH}" />
+                   <text class="lane-hdr" x="10" y="${y + laneHdrH/2}">${esc(l.name||"—")}</text>
+                   <text class="lane-hdr-ct" x="${leftW-10}" y="${y + laneHdrH/2}" text-anchor="end">${l.rows.length} task${l.rows.length===1?"":"s"}</text>`;
+      y += laneHdrH + l.rows.length*rowH;
+    });
+  }
+  const yLabels = flat.map(({t,depth})=>{
+    const y = posByUid[t.uid];
+    const txt = (depth?"  ".repeat(depth):"") + (t.name||"(untitled)");
+    const isP = isParent[t.uid];
+    const crit = cpm.critical[t.uid];
+    const tInfo = tradeInfo(t.trade);
+    const swatch = t.trade ? `<rect x="4" y="${y + rowH/2 - 5}" width="4" height="10" rx="2" fill="${tInfo.color}" />` : "";
+    return `${swatch}<text class="lbl-y ${isP?"parent":""} ${crit?"crit":""}" x="${t.trade?14:10}" y="${y + rowH/2}">${esc(txt.slice(0,34))}${txt.length>34?"…":""}</text>`;
+  }).join("");
+
+  // Bars + milestones
+  const bars = flat.map(({t,depth})=>{
+    const crit = cpm.critical[t.uid];
+    const isP = isParent[t.uid];
+    const yTop = posByUid[t.uid];
+    const y = yTop + 6, h = rowH - 12;
+
+    if(isP){
+      const kids = flat.filter(x=>x.t.parentId===t.uid).map(x=>x.t);
+      const starts = kids.map(k=>k.start).filter(Boolean);
+      const ends   = kids.map(k=>k.end).filter(Boolean).concat(kids.map(k=>k.start).filter(Boolean));
+      if(!starts.length || !ends.length) return "";
+      const x1 = dayX(starts.sort()[0]), x2 = dayX(ends.sort().slice(-1)[0]) + unitPx;
+      return `<rect class="parent-bar" x="${x1}" y="${yTop + rowH/2 - 3}" width="${Math.max(2,x2-x1)}" height="6"></rect>
+              <polygon class="parent-cap" points="${x1},${yTop+rowH/2+3} ${x1-5},${yTop+rowH/2+10} ${x1+5},${yTop+rowH/2+10}"/>
+              <polygon class="parent-cap" points="${x2},${yTop+rowH/2+3} ${x2-5},${yTop+rowH/2+10} ${x2+5},${yTop+rowH/2+10}"/>`;
+    }
+
+    if(t.milestone){
+      const anchor = t.start || t.end;
+      if(!anchor) return "";
+      const x = dayX(anchor) + unitPx/2;
+      const yc = yTop + rowH/2;
+      const sz = 8;
+      const fill = crit ? "var(--urgent)" : "var(--brand)";
+      return `<polygon class="milestone ${crit?"crit":""}" points="${x},${yc-sz} ${x+sz},${yc} ${x},${yc+sz} ${x-sz},${yc}" fill="${fill}" onclick="schedSelect('${esc(t.uid)}')">
+                <title>${esc(t.name)} · ${esc(anchor)}</title></polygon>`;
+    }
+
+    if(!t.start || !t.end) return "";
+    const x = dayX(t.start);
+    const w = Math.max(unitPx*0.6, dayX(t.end) + unitPx - x);
+    const pct = Math.max(0, Math.min(100, t.pct||0));
+    const pctW = w * (pct/100);
+    const info = tradeInfo(t.trade);
+    const barFill = crit ? "var(--urgent-bg)" : info.color + "26";    // ~15% alpha hex
+    const barStroke = crit ? "var(--urgent)" : info.color;
+    const pctFill  = crit ? "var(--urgent)" : info.color;
+    const title = `${t.name}\n${t.start} → ${t.end} (${schedDays(t.start,t.end)+1}d)${pct?`\n${pct}% complete`:""}${t.owner?`\nOwner: ${t.owner}`:""}${t.trade?`\nTrade: ${t.trade}`:""}${crit?"\nCRITICAL":""}`;
+    // Inline label if there's room
+    const canLabel = w >= 56;
+    const labelText = canLabel ? `<text class="bar-label" x="${x+8}" y="${y+h/2}" dominant-baseline="middle" style="fill:#fff;font:600 11px system-ui,-apple-system,'Segoe UI',sans-serif;pointer-events:none">${esc((t.name||"").slice(0,Math.floor(w/7)-1))}</text>` : "";
+    // Owner avatar (initials) at right end
+    const initials = (t.owner||"").split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
+    const avatar = initials ? `
+      <g transform="translate(${x+w-18},${y+h/2-9})" pointer-events="none">
+        <circle cx="9" cy="9" r="9" fill="${barStroke}" />
+        <text x="9" y="9" text-anchor="middle" dominant-baseline="central" style="fill:#fff;font:700 9.5px system-ui;letter-spacing:.02em">${esc(initials)}</text>
+      </g>` : "";
+    return `<g><rect class="bar ${crit?"crit":""} ${pct>=100?"done":""}" x="${x}" y="${y}" width="${w}" height="${h}" rx="4" ry="4"
+                 fill="${barFill}" stroke="${barStroke}" stroke-width="1.2"
+                 onclick="schedSelect('${esc(t.uid)}')">
+      <title>${esc(title)}</title>
+    </rect>
+    ${pctW>0 ? `<rect class="bar-pct" x="${x+1}" y="${y+1}" width="${Math.max(0,pctW-2)}" height="${h-2}" fill="${pctFill}" opacity="0.28" rx="3" ry="3" pointer-events="none" />` : ""}
+    ${labelText}
+    ${avatar}
+    </g>`;
+  }).join("");
+
+  // Dependency arrows
+  const deps = cpm.leaves.map(l=>{
+    return (l.deps||[]).map(d=>{
+      const prev = cpm.byUid[d]; if(!prev || (prev.milestone && !prev.start)) return "";
+      if(posByUid[d]==null || posByUid[l.uid]==null) return "";
+      const anchor = prev.end || prev.start; if(!anchor || !l.start) return "";
+      const x1 = dayX(anchor) + unitPx;
+      const y1 = posByUid[d] + rowH/2;
+      const x2 = dayX(l.start);
+      const y2 = posByUid[l.uid] + rowH/2;
+      const critDep = cpm.critical[l.uid] && cpm.critical[d];
+      const mid = x1 + 8;
+      const path = `M ${x1} ${y1} L ${mid} ${y1} L ${mid} ${y2} L ${x2-3} ${y2}`;
+      return `<path class="dep ${critDep?"crit":""}" d="${path}" />`;
+    }).join("");
+  }).join("");
+
+  // Today line
+  const tx = dayX(today) + unitPx/2;
+  const todayLine = `<line class="today" x1="${tx}" y1="${headerH-28}" x2="${tx}" y2="${svgH-6}" />
+                     <text class="lbl-x" x="${tx+4}" y="${headerH-30}" style="fill:var(--brand);font-weight:700">TODAY</text>`;
+
+  return `<div class="gantt"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgW} ${svgH}" width="${svgW}" height="${svgH}">
+    <defs><marker id="arrh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" style="color:var(--muted)"/>
+    </marker></defs>
+    ${rowBg}${weekendRects}${laneHdrs}${rowSep}
+    ${dayTicks}
+    <line class="grid" x1="${leftW}" y1="${headerH}" x2="${leftW}" y2="${svgH-6}" />
+    ${yLabels}
+    ${deps}
+    ${bars}
+    ${todayLine}
+  </svg></div>`;
+}
+function weekNo(d){ const dt=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const dow=dt.getUTCDay()||7; dt.setUTCDate(dt.getUTCDate()+4-dow); const yr=new Date(Date.UTC(dt.getUTCFullYear(),0,1)); return Math.ceil((((dt-yr)/86400000)+1)/7); }
+
+/* --- CRUD + handlers --- */
+function setSchedView(v){ schedView = v; schedRerender(); }
+function schedSelect(uid){ schedSel = uid; schedRerender(); }
+
+function schedRerender(){
+  if(curPid && pjTab==="schedule") renderProject();
+  else if(pdPid && pdTab==="schedule") renderProjectDrawer();
+}
+
+async function schedAdd(pid, parentId){
+  const nameInp = byId("newTaskName");
+  const nm = parentId
+    ? "New subtask"
+    : (nameInp && nameInp.value ? nameInp.value.trim() : "New task");
+  if(nameInp && !parentId) nameInp.value = "";
+  const todayIso = schedISO(new Date());
+  try{
+    await mutateProject(pid, q=>{
+      ensureSchedule(q);
+      const nextOrd = (q.schedule.tasks.reduce((m,t)=>Math.max(m,t.ord||0), 0) + 1);
+      // Smart default: if any task is already on this project, start the new one the next
+      // workday after the latest existing end, and give it a trade-library default duration
+      // if the name matches a known trade.
+      const existing = q.schedule.tasks.filter(t=>t.end);
+      const latestEnd = existing.length ? existing.map(t=>t.end).sort().slice(-1)[0] : null;
+      const guessTrade = (TRADE_LIB[nm] ? nm : "");
+      const info = tradeInfo(guessTrade || "Other");
+      const startIso = latestEnd ? nextWorkday(schedAddDays(latestEnd, 1)) : nextWorkday(todayIso);
+      const endIso   = addWorkdays(startIso, info.days - 1);
+      const newT = { uid: "t_"+uid(), name:nm, parentId: parentId||null,
+                     start: startIso, end: endIso,
+                     pct:0, owner:"", trade: guessTrade, building:"", milestone:false, deps:[], ord: nextOrd };
+      q.schedule.tasks.push(newT);
+      schedSel = newT.uid;
+    });
+    toast("Task added"); schedRerender();
+  }catch(e){ fail(e); }
+}
+
+/* ---- Auto-generate a schedule from the project's scope ----
+   Reads `p._buildings` (added by renderPmProjectCards for mocks, and by the
+   full-page scope editor for real ones). For each building, generates one
+   task per listed trade, orders them using TRADE_LIB.after (demo → carpentry
+   → roofing, etc.), chains them with deps, and lays out dates. If there are
+   no buildings, falls back to one task per unique trade on the project. */
+function buildScheduleFromScope(p, startIso){
+  const anchor = nextWorkday(startIso || schedISO(new Date()));
+  const tasks = [];
+  const ord = { n: 0 };
+  const buildings = (p._buildings && p._buildings.length) ? p._buildings
+                  : [{ id:"b_default", name:"Project", trades: inferTradesFromProject(p).map(t=>({ trade:t })) }];
+  buildings.forEach((b, bi)=>{
+    // Parent summary task per building
+    const parent = { uid: "t_"+uid(), parentId: null, name: b.name || `Building ${bi+1}`,
+                     start:"", end:"", pct:0, owner:"", trade:"", building: b.name||"",
+                     milestone:false, deps:[], ord: ord.n++ };
+    tasks.push(parent);
+    // Order this building's trades by typical sequence
+    const tradeList = (b.trades||[]).map(x=>x.trade).filter(Boolean);
+    const ordered = orderTradesByDeps(tradeList);
+    const addedByTrade = {}; let cursor = anchor;
+    ordered.forEach(tn=>{
+      const info = tradeInfo(tn);
+      // Resolve predecessors: any trade in TRADE_LIB.after already added here, or on prior building
+      const preds = [];
+      (info.after||[]).forEach(aft=>{ if(addedByTrade[aft]) preds.push(addedByTrade[aft]); });
+      const start = preds.length
+        ? nextWorkday(schedAddDays(
+            preds.map(uid=> tasks.find(t=>t.uid===uid).end).sort().slice(-1)[0], 1))
+        : nextWorkday(cursor);
+      const end = addWorkdays(start, Math.max(1, info.days) - 1);
+      const t = { uid: "t_"+uid(), parentId: parent.uid, name: tn,
+                  start, end, pct:0, owner:"", trade: tn, building: b.name||"",
+                  milestone:false, deps: preds.slice(), ord: ord.n++ };
+      tasks.push(t);
+      addedByTrade[tn] = t.uid;
+      if(end > cursor) cursor = end;
+    });
+    // Milestone at building completion
+    const buildTasks = tasks.filter(x=>x.parentId===parent.uid);
+    const lastEnd = buildTasks.length ? buildTasks.map(x=>x.end).sort().slice(-1)[0] : anchor;
+    tasks.push({ uid:"t_"+uid(), parentId: parent.uid, name: `${b.name||"Building"} complete`,
+                 start:lastEnd, end:lastEnd, pct:0, owner:"", trade:"", building:b.name||"",
+                 milestone:true, deps: buildTasks.map(x=>x.uid), ord: ord.n++ });
+  });
+  return tasks;
+}
+function inferTradesFromProject(p){
+  // Pull any trades mentioned on the lead scope + CO trades + sub trades.
+  const set = new Set();
+  const l = leadFor(p);
+  const txt = ((l?l.t:"")+" "+(l?l.ty:"")+" "+(p.scope||"")).toLowerCase();
+  Object.keys(TRADE_LIB).forEach(k=>{ if(txt.includes(k.toLowerCase())) set.add(k); });
+  (p.cos||[]).forEach(co=>{ if(co.trade) set.add(co.trade); });
+  (MOCK_PROJECT_SUBS[p.id]||[]).forEach(a=>{ if(a.trade) set.add(a.trade); });
+  if(!set.size) ["Demo","Carpentry","Roofing","Painting"].forEach(k=>set.add(k));
+  return orderTradesByDeps([...set]);
+}
+function orderTradesByDeps(tradeList){
+  // Topological-ish ordering using TRADE_LIB.after; stable fallback by original order.
+  const inSet = new Set(tradeList);
+  const out = [];
+  const visited = new Set();
+  function visit(t){
+    if(visited.has(t) || !inSet.has(t)) return;
+    visited.add(t);
+    (TRADE_LIB[t]?.after||[]).forEach(dep=> visit(dep));
+    out.push(t);
+  }
+  tradeList.forEach(visit);
+  return out;
+}
+
+/* Push the Generate button on the empty-state toward real data. */
+async function schedGenerateFromScope(pid){
+  const p = getProj(pid); if(!p) return;
+  const start = window.prompt("Start the schedule on which date? (YYYY-MM-DD)", schedISO(new Date()));
+  if(!start) return;
+  if(!validIsoDate(start)){ toast("Enter a date like 2026-10-28"); return; }
+  try{
+    await mutateProject(pid, q=>{
+      ensureSchedule(q);
+      q.schedule.tasks = buildScheduleFromScope(q, start);
+    });
+    toast("Schedule generated — adjust as needed"); schedRerender();
+  }catch(e){ fail(e); }
+}
+
+/* Cascade dates respecting dependencies and skipping weekends.
+   Each task's start = max(user-pinned start, max(predecessor.end + 1 workday)).
+   Length preserved from the task's current duration (or trade default). */
+async function schedAutoSchedule(pid){
+  const p = getProj(pid); if(!p) return;
+  const start = window.prompt("Anchor the schedule to which start date? (YYYY-MM-DD)\n(Earliest unpinned task will start here; weekends are skipped.)", schedISO(new Date()));
+  if(!start) return;
+  if(!validIsoDate(start)){ toast("Enter a date like 2026-10-28"); return; }
+  try{
+    await mutateProject(pid, q=>{
+      ensureSchedule(q);
+      const tasks = q.schedule.tasks;
+      const byUid = Object.fromEntries(tasks.map(t=>[t.uid, t]));
+      const isParent = {}; tasks.forEach(t=>{ if(t.parentId) isParent[t.parentId]=true; });
+      const leaves = tasks.filter(t=>!isParent[t.uid]);
+      // Topo order by deps
+      const indeg = {}; leaves.forEach(l=>{ indeg[l.uid] = (l.deps||[]).filter(d=>byUid[d] && !isParent[d]).length; });
+      const succ = {}; leaves.forEach(l=> (l.deps||[]).forEach(d=>{ (succ[d]=succ[d]||[]).push(l.uid); }));
+      const q0 = leaves.filter(l=>indeg[l.uid]===0).map(l=>l.uid);
+      const topo = [];
+      while(q0.length){ const n = q0.shift(); topo.push(n); (succ[n]||[]).forEach(m=>{ if(--indeg[m]===0) q0.push(m); }); }
+      leaves.forEach(l=>{ if(!topo.includes(l.uid)) topo.push(l.uid); });
+      // Lay out
+      const anchor = nextWorkday(start);
+      topo.forEach(id=>{
+        const t = byUid[id];
+        if(t.milestone){
+          // Pin a milestone to the max end of its deps if any, else anchor
+          const preds = (t.deps||[]).map(d=>byUid[d]).filter(Boolean);
+          const dateAfter = preds.length ? preds.map(x=>x.end||x.start).sort().slice(-1)[0] : anchor;
+          t.start = dateAfter; t.end = dateAfter;
+          return;
+        }
+        const dur = (t.start && t.end) ? Math.max(1, schedDays(t.start, t.end)+1)
+                  : Math.max(1, tradeInfo(t.trade).days);
+        const preds = (t.deps||[]).map(d=>byUid[d]).filter(Boolean);
+        const after = preds.length
+          ? nextWorkday(schedAddDays(preds.map(x=>x.end||x.start).sort().slice(-1)[0], 1))
+          : anchor;
+        t.start = after;
+        t.end   = addWorkdays(after, dur-1);
+      });
+    });
+    toast("Dates cascaded"); schedRerender();
+  }catch(e){ fail(e); }
+}
+
+/* Chain selected siblings in order so each depends on the one before. */
+async function schedChainAll(pid){
+  const p = getProj(pid); if(!p) return;
+  if(!confirm("Chain every top-level sibling in order, so each starts after the previous ends?")) return;
+  try{
+    await mutateProject(pid, q=>{
+      ensureSchedule(q);
+      // Walk per parent group in order
+      const byParent = {};
+      q.schedule.tasks.slice().sort((a,b)=>(a.ord||0)-(b.ord||0)).forEach(t=>{
+        (byParent[t.parentId||""] = byParent[t.parentId||""]||[]).push(t);
+      });
+      Object.values(byParent).forEach(list=>{
+        for(let i=1;i<list.length;i++){
+          const prev = list[i-1], cur = list[i];
+          cur.deps = Array.from(new Set((cur.deps||[]).concat(prev.uid)));
+        }
+      });
+    });
+    toast("Siblings chained"); schedRerender();
+  }catch(e){ fail(e); }
+}
+
+/* Shift every task forward (positive) or back (negative) by N calendar days. */
+async function schedShift(pid, days){
+  const p = getProj(pid); if(!p) return;
+  try{
+    await mutateProject(pid, q=>{
+      ensureSchedule(q);
+      q.schedule.tasks.forEach(t=>{
+        if(t.start && validIsoDate(t.start)) t.start = schedAddDays(t.start, days);
+        if(t.end   && validIsoDate(t.end  )) t.end   = schedAddDays(t.end,   days);
+      });
+    });
+    toast(`Shifted ${days>0?"+":""}${days} days`); schedRerender();
+  }catch(e){ fail(e); }
+}
+
+function setSchedGroup(g){ schedGroup = g; schedRerender(); }
+
+
+async function schedPatch(pid, uid, patch){
+  try{
+    await mutateProject(pid, q=>{
+      ensureSchedule(q);
+      const t = q.schedule.tasks.find(x=>x.uid===uid); if(!t) return;
+      Object.assign(t, patch);
+      // If start > end, nudge end to start
+      if(t.start && t.end && t.start > t.end) t.end = t.start;
+      t.upd = nowISO();
+    });
+    schedRerender();
+  }catch(e){ fail(e); }
+}
+
+async function schedDel(pid, uid){
+  if(!confirm("Delete this task and all its subtasks?")) return;
+  try{
+    await mutateProject(pid, q=>{
+      ensureSchedule(q);
+      // collect descendants
+      const kill = new Set([uid]);
+      let changed = true;
+      while(changed){
+        changed = false;
+        q.schedule.tasks.forEach(t=>{ if(t.parentId && kill.has(t.parentId) && !kill.has(t.uid)){ kill.add(t.uid); changed = true; } });
+      }
+      q.schedule.tasks = q.schedule.tasks.filter(t=>!kill.has(t.uid));
+      // Remove any deps pointing to removed uids
+      q.schedule.tasks.forEach(t=>{ t.deps = (t.deps||[]).filter(d=>!kill.has(d)); });
+    });
+    schedSel = null;
+    schedRerender();
+  }catch(e){ fail(e); }
+}
+
+async function schedMove(pid, uid, dir){
+  try{
+    await mutateProject(pid, q=>{
+      ensureSchedule(q);
+      const sib = q.schedule.tasks.filter(t=>t.parentId === (q.schedule.tasks.find(x=>x.uid===uid)||{}).parentId)
+                                  .sort((a,b)=>(a.ord||0)-(b.ord||0));
+      const idx = sib.findIndex(x=>x.uid===uid); if(idx<0) return;
+      const swap = dir==="up" ? idx-1 : idx+1;
+      if(swap<0 || swap>=sib.length) return;
+      const a = sib[idx], b = sib[swap];
+      const t = a.ord; a.ord = b.ord; b.ord = t;
+    });
+    schedRerender();
+  }catch(e){ fail(e); }
+}
+
+async function schedAddDep(pid, uid){
+  const sel = byId("depPick"); if(!sel || !sel.value) return;
+  const d = sel.value;
+  try{
+    await mutateProject(pid, q=>{
+      ensureSchedule(q);
+      const t = q.schedule.tasks.find(x=>x.uid===uid); if(!t) return;
+      t.deps = t.deps||[];
+      if(!t.deps.includes(d)) t.deps.push(d);
+    });
+    schedRerender();
+  }catch(e){ fail(e); }
+}
+async function schedRemoveDep(pid, uid, depUid){
+  try{
+    await mutateProject(pid, q=>{
+      ensureSchedule(q);
+      const t = q.schedule.tasks.find(x=>x.uid===uid); if(!t) return;
+      t.deps = (t.deps||[]).filter(d=>d!==depUid);
+    });
+    schedRerender();
+  }catch(e){ fail(e); }
+}
+
 /* ---------- Tab: Change Orders ---------- */
 function pdCos(p){
   const cos = (p.cos||[]).filter(co=>!co.del);
@@ -3950,23 +5365,37 @@ function pdCos(p){
   return `<div class="pd-section">
     <h4>Change orders</h4>
     ${cos.map(co=>{
-      const sel = num(co.sell);
+      const sel  = num(co.sell);
       const cost = CATS.reduce((s,c)=>s+num(co.cost&&co.cost[c]),0);
-      const cls = co.status==="Approved"?"ok":co.status==="Draft"?"warn":"err";
+      const cls  = co.status==="Approved"?"ok":co.status==="Draft"?"warn":"err";
+      const sub  = co.subId ? MOCK_SUBS.find(s=>s.id===co.subId) : null;
+      const agrState = co.agreementFile ? "signed" : (co.subId ? (co.agreementStatus || "pending") : "");
+      const agrCls = agrState==="signed"?"ok":(agrState==="sent"?"warn":"gray");
+      const agrLab = agrState==="signed"?"Addendum signed"
+                   : agrState==="sent"?"Addendum sent"
+                   : agrState==="pending"?"Addendum needed"
+                   : "";
       return `<div class="sub-row">
-        <span class="avatar">#${co.num||"?"}</span>
+        <span class="avatar">${esc(coNum(co))}</span>
         <div class="info">
-          <div class="n">${esc(co.title||"Untitled")}</div>
+          <div class="n">${esc(co.title||"Untitled")}${co.building?` <span class="hint" style="font-weight:400">· ${esc(co.building)}</span>`:""}${co.trade?` <span class="hint" style="font-weight:400">· ${esc(co.trade)}</span>`:""}</div>
           <div class="m">
             <span class="chip-tag ${cls}">${esc(co.status)}</span>
             ${sel?`<span>${money(sel)} to client</span>`:""}
             ${cost?`<span style="color:var(--muted)">${money(cost)} cost</span>`:""}
             ${co.reason?`<span style="color:var(--muted)">${esc(co.reason)}</span>`:""}
           </div>
+          ${sub ? `<div class="m">
+            <span class="chip-tag ${agrCls}">${esc(agrLab)}</span>
+            <span style="color:var(--ink-2)">${esc(sub.name)}</span>
+          </div>` : `<p class="hint" style="margin:4px 0 0">No sub picked yet — <a href="#" onclick="openProject('${esc(p.id)}');closeProjectDrawer();return false;">open the full page</a> to assign one.</p>`}
+          ${co.agreementFile ? `<div class="sub-files"><span class="file-lab">Addendum</span><a class="file-chip" href="${esc(co.agreementFile.url)}" target="_blank" rel="noopener">${esc(co.agreementFile.name)}</a></div>`:""}
         </div>
-        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+        <div class="sub-row-actions">
           ${co.status==="Submitted"&&isManager()?`<button class="btn sm primary" onclick="approveChangeOrder('${esc(p.id)}','${esc(co.uid||'')}')">Approve</button>`:""}
           ${co.status==="Draft"?`<button class="btn sm" onclick="submitChangeOrder('${esc(p.id)}','${esc(co.uid||'')}')">Submit</button>`:""}
+          ${co.subId ? `<label class="btn sm uplbtn">${co.agreementFile?"Replace":"Upload"} addendum<input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="uploadAgreementFile('${esc(p.id)}','co_${esc(co.uid)}','co',this)"></label>`:""}
+          ${co.agreementFile?`<button class="btn sm" onclick="viewFile('${esc(co.agreementFile.url)}')">View addendum</button>`:""}
         </div>
       </div>`;
     }).join("")}
